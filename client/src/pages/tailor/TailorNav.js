@@ -20,9 +20,14 @@ const TailorNav = ({ toggleSidebar }) => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  // Logout function
   const handleLogout = async () => {
-      navigate('/logout');
+    const token = localStorage.getItem('token');
+    if (!token) {
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      navigate('/login');
+    }
+    navigate('/logout');
   };
 
   // Handle navigation to profile page

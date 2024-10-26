@@ -20,8 +20,13 @@ const AdminNav = ({ toggleSidebar }) => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  // Logout function
   const handleLogout = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      navigate('/login');
+    }
     navigate('/logout');
   };
 

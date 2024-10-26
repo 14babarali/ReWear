@@ -97,43 +97,14 @@ const AppHeader = () => {
   };
 
   const handleLogout = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        navigate('/login');
-        return;
-      }
-
-      await axios.post(
-        'http://localhost:3001/api/logout',
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+    const token = localStorage.getItem('token');
+    if (!token) {
       localStorage.removeItem('user');
       localStorage.removeItem('token');
-
-      console.log('User Logged out Successfully');
-      navigate('/logout');
-    } catch (error) {
-      let errorMsg = 'An unexpected error occurred.';
-      if (error.response) {
-        errorMsg = error.response.data.message;
-        console.log(errorMsg);
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        navigate('/logout');
-      } else if (error.request) {
-        errorMsg = 'Network error. Please try again later.';
-        console.log(errorMsg);
-      }
+      navigate('/login');
+      return;
     }
+    navigate('/logout');
   };
 
   const isLoggedIn = !!localStorage.getItem('token');

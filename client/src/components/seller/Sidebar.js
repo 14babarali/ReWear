@@ -26,44 +26,14 @@ const Sidebar = () => {
   const cnicFrontExists = user?.profile?.cnicfront; // Check if cnicFront exists
   const cnicBackExists = user?.profile?.cnicback; // Check if cnicBack exists
 
-  // Handle logout
   const handleLogout = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
-        navigate("/login");
-        return;
-      }
-
-      await axios.post(
-        "http://localhost:3001/api/logout",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Fix: Backticks for token interpolation
-          },
-        }
-      );
-
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-      console.log("User Logged out Successfully");
-      navigate("/seller/logout"); // Redirect to login page
-    } catch (error) {
-      let errorMsg = "An unexpected error occurred.";
-      if (error.response) {
-        errorMsg = error.response.data.message;
-        console.log(errorMsg);
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
-        navigate("/login");
-      } else if (error.request) {
-        errorMsg = "Network error. Please try again later.";
-        console.log(errorMsg);
-      }
+    const token = localStorage.getItem('token');
+    if (!token) {
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      navigate('/login');
     }
+    navigate('/logout');
   };
 
   return (

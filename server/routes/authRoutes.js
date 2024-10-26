@@ -116,13 +116,13 @@ router.get('/fetchorders',authmiddleware.verifyToken, order.buyersOrders);
 // router.put('/orders/:orderId/status', authmiddleware.verifyToken, order.updateOrderStatus);
 
 
-
-                      // Reviews  for products 
+// Reviews  for products 
 router.post('/addreviews',authmiddleware.verifyToken, reviews.createReview); // Route to add a review
-router.get('/:productId/reviews', reviews.getProductReviews);
- // Route to get reviews for a specific product
 
-                      // Seller orders status updation routes
+// Route to get reviews for a specific product
+router.get('/:productId/reviews', reviews.getProductReviews);
+
+// Seller orders status updation routes
 router.patch('/orders/:orderId/status', authmiddleware.verifyToken, order.updateOrderStatus);
 
 module.exports = router;

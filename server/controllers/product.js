@@ -371,7 +371,7 @@ exports.fetchProductsByCategory = async (req, res) => {
     }
   };
 
-  exports.fetchShoes = async (req, res) => {
+exports.fetchShoes = async (req, res) => {
     try {
         let query = {
             qty: { $gt: 0 }, // Only include products with quantity > 0

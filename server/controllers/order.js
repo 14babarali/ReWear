@@ -131,7 +131,7 @@ exports.getOrders = async (req, res) => {
       }
   
       let orders = await Order.find(filters)
-    .populate('buyer_id', 'profile.name email') // Ensure this matches your User model
+    .populate('buyer_id', 'name email') // Ensure this matches your User model
     .populate('products.product_id', 'name price')
     .sort({ created_at: -1 });
 
@@ -180,7 +180,7 @@ exports.buyersOrders = async (req, res) => {
       })
       .populate({
         path: 'buyer_id', // Populate buyer details
-        select: 'profile.name email' // Select only necessary buyer fields
+        select: 'name email' // Select only necessary buyer fields
       })
       .exec();
 

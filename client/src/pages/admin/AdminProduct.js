@@ -1,103 +1,79 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AdminProduct.css'; // Import your external CSS file
+import axios from 'axios';
 
 const AdminProduct = () => {
   // State to store the product list
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-  // Simulate fetching product data
   useEffect(() => {
-    const fetchedProducts = [
-      {
-        id: 1,
-        catalogName: 'Events',
-        productName: 'Bridal Dress',
-        productType: 'Women',
-        isNew: true,
-        condition: null,
-        quantity: 5,
-        description: 'New Type bridal Dress.',
-        price: 1500.00,
-        size: '13 inches',
-        image: 'https://via.placeholder.com/150', // Replace with actual image URL
-      },
-      {
-        id: 2,
-        catalogName: 'Formal',
-        productName: 'Shoes',
-        productType: 'Man',
-        isNew: false,
-        condition: 'Good',
-        quantity: 3,
-        description: 'Brand New Shoes',
-        price: 700.00,
-        size: '6.1 inches',
-        image: 'https://via.placeholder.com/150', // Replace with actual image URL
-      },
-      {
-        id: 3,
-        catalogName: 'Froak',
-        productName: 'Children Dress',
-        productType: 'Children',
-        isNew: true,
-        condition: null,
-        quantity: 2,
-        description: 'Children Dressing.',
-        price: 1200.00,
-        size: '21 cubic feet',
-        image: 'https://via.placeholder.com/150', // Replace with actual image URL
-      },
-    ];
+    const fetchProducts = async () => {
+      try {
+        const token = localStorage.getItem('token'); // Assuming you store the token in localStorage
+        const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+        
+        const response = await axios.get('http://localhost:3001/api/featured_products', config); 
+        setProducts(response.data); // Set the fetched products to state
 
-    // Set products after a delay (simulate API call)
-    setTimeout(() => {
-      setProducts(fetchedProducts);
-    }, 1000);
-  }, []);
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          // Clear any stored token (optional)
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          // Redirect to logout or login page
+          navigate('/logout');
+        } else {
+          console.error('Error fetching products:', error);
+        }
+      }
+      finally{
+        setLoading(false);
+      }
+    };
+
+    fetchProducts(); // Call the function to fetch products
+  }, [navigate]);
 
   return (
     <div className="admin-product-list">
-      <h1 className="admin-product-title">Product Catalog</h1>
+      <h1 className="admin-product-title">Products</h1>
 
-      {products.length === 0 ? (
+      {loading ? (
         <div className="admin-product-loading">Loading products...</div>
       ) : (
         <div className="admin-product-grid">
           {products.map((product) => (
             <div key={product.id} className="admin-product-card">
               {/* Image */}
-              {product.image && (
-                <img
-                  src={product.image}
-                  alt={product.productName}
-                  className="admin-product-image"
-                />
-              )}
+              
+              <img
+                src={`http://localhost:3001/uploads/${product.images[0]}` ? `http://localhost:3001/uploads/${product.images[0]}` : 'https://via.placeholder.com/150'}
+                alt={product.name}
+                className="admin-product-image"
+              />
+              
 
               {/* Product Info */}
               <div className="admin-product-info">
-                <h2 className="admin-product-name">{product.productName}</h2>
-                <p className="admin-product-catalog">
+                <h2 className="admin-product-name">{product.name}</h2>
+                {/* <p className="admin-product-catalog">
                   Catalog: {product.catalogName}
-                </p>
-                <p className="admin-product-type">Type: {product.productType}</p>
+                </p> */}
+                <p className="admin-product-type">Type: {product.type}</p>
 
-                {product.isNew ? (
-                  <p className="admin-product-condition admin-product-new">
-                    Condition: New
-                  </p>
-                ) : (
-                  <p className="admin-product-condition admin-product-used">
-                    Condition: Used ({product.condition})
-                  </p>
-                )}
+                <p className="admin-product-condition admin-product-new">
+                  Condition: {product.condition}
+                </p>
 
                 <p className="admin-product-quantity">
-                  Quantity: {product.quantity}
+                  Quantity: {product.qty}
                 </p>
-                <p className="admin-product-description">
+                {/* <p className="admin-product-description">
                   {product.description}
-                </p>
+                </p> */}
                 <p className="admin-product-price">
                   Price: Rs.{product.price.toFixed(2)}
                 </p>
