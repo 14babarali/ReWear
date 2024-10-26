@@ -7,6 +7,7 @@ const paymentRoute = require('./routes/paymentRoute');
 const errorHandler = require('./utils/errorHandler');
 const admin = require('./routes/admin');
 // const multer = require("multer");
+const gigsRoute = require('./routes/gigs');
 const path = require("path");
 
 require('./database'); // Import the database connection
@@ -34,6 +35,8 @@ app.use('/category', categoriesRoutes);
 app.use('/payment', paymentRoute);
 
 app.use('/admin',admin);
+
+app.use('/gigs', gigsRoute); 
 
 // Register error handling middleware
 app.use(errorHandler);

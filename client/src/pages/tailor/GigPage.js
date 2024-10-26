@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './GigPage.css'; // Custom CSS file for styling
 import Lottie from 'react-lottie';
 import loaderAnimation from './Giff/loader_complete.json'; // Path to your loader JSON file
+import axios from 'axios'; // Import axios for API requests
 
 const GigPage = () => {
   const [gigImage, setGigImage] = useState(null);
@@ -11,6 +12,7 @@ const GigPage = () => {
   const [premiumPrice, setPremiumPrice] = useState('');
   const [loading, setLoading] = useState(false); // Loader state
   const [errorMessage, setErrorMessage] = useState(''); // Error message for validation
+  const [successMessage, setSuccessMessage] = useState(''); // Success message for gig creation
   const [showModal, setShowModal] = useState(false); // Modal visibility state
 
   // Lottie animation settings
@@ -35,7 +37,7 @@ const GigPage = () => {
       return;
     }
 
-    setGigImage(URL.createObjectURL(file));
+    setGigImage(file); // Store the file for uploading
     setErrorMessage(''); // Clear any previous error
   };
 
@@ -85,16 +87,48 @@ const GigPage = () => {
     return true;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setErrorMessage(''); // Clear previous errors
+    setSuccessMessage(''); // Clear previous success message
+
     if (validateForm()) {
       setLoading(true); // Show loader
       setShowModal(true); // Show modal after validation
 
-      setTimeout(() => {
-        setLoading(false); // Hide loader after 2 seconds
+      // Create FormData for the API request
+      const formData = new FormData();
+      formData.append('gigImage', gigImage);
+      formData.append('description', description);
+      formData.append('skills', JSON.stringify(skills));
+      formData.append('basicPrice', basicPrice);
+      formData.append('premiumPrice', premiumPrice);
+
+      try {
+        // Make the API request to create a gig
+        const response = await axios.post('/api/gigs', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // Include token if using authentication
+          },
+        });
+
+        setLoading(false); // Hide loader
+        setSuccessMessage('Your gig has been successfully created!');
         setShowModal(false); // Hide modal after upload is complete
-      }, 4000);
+
+        // Clear form fields
+        setGigImage(null);
+        setDescription('');
+        setSkills(['', '', '']);
+        setBasicPrice('');
+        setPremiumPrice('');
+      } catch (error) {
+        setLoading(false); // Hide loader
+        setShowModal(false); // Hide modal
+        setErrorMessage(
+          error.response?.data?.error || 'Failed to create the gig. Please try again.'
+        );
+      }
     }
   };
 
@@ -112,7 +146,7 @@ const GigPage = () => {
           accept="image/jpeg,image/png,image/jpg"
           onChange={handleImageChange}
         />
-        {gigImage && <img src={gigImage} alt="Gig Preview" className="gig-image-preview" />}
+        {gigImage && <img src={URL.createObjectURL(gigImage)} alt="Gig Preview" className="gig-image-preview" />}
       </div>
 
       {/* Dynamic Description */}
@@ -166,6 +200,9 @@ const GigPage = () => {
       {/* Error Message Display */}
       {errorMessage && <p className="error-message">{errorMessage}</p>}
 
+      {/* Success Message Display */}
+      {successMessage && <p className="success-message">{successMessage}</p>}
+
       {/* Submit Button */}
       <div className="submit-container">
         <button onClick={handleSubmit} disabled={loading}>Submit</button>
@@ -176,7 +213,7 @@ const GigPage = () => {
         <div className="modal-overlay">
           <div className="modal-content">
             <Lottie options={defaultOptions} height={120} width={120} />
-            <p>Your gig has been uploaded</p>
+            <p>Your gig is being uploaded...</p>
           </div>
         </div>
       )}
