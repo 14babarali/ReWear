@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import TailorNav from '../pages/tailor/TailorNav';
 import TailorHome from '../pages/tailor/TailorHome';
 import Gig from '../pages/tailor/GigPage';
@@ -40,28 +40,29 @@ const TailorLayout = () => {
   }, [navigate]);
 
   return (
-    <div>
+    <div className="admin-layout flex flex-col min-h-screen">
       <TailorNav toggleSidebar={toggleSidebar} />
       {isTailor ? (
-      <div style={{ display: 'flex' }}>
-        <TailorSidebar  isOpen={isOpen} toggleSidebar={toggleSidebar}  />
-        <div style={{ flexGrow: 1 }}> {/* Main content area */}
-          <Routes>
-            <Route path="/" element={<TailorHome />} />
-            <Route path="/catalogue" element={<Catalogue />} />
-            <Route path="/product/add" element={<AddProduct />} />
-            <Route path="/profile" element={<TailorProfilePage />} /> {/* Use lowercase for consistency */}
-            <Route path="/gig" element={<Gig />} />
-            <Route path="/order-confirm" element={<OrderConfirm />} /> {/* Use kebab case for URL paths */}
-            <Route path="/view" element={<OrderView />} />
-            <Route path="/work" element={<TailorWork />} />
-            <Route path="/orders" element={<OrdersPage />} />
-            <Route path="/reviews" element={<BuyerReviews />} />
-            <Route path="*" element={<ERR404 />} /> {/* Consider adding a 404 page */}
-          </Routes>
+        <div  className="flex flex-1">
+          
+          <TailorSidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
+          <div  className={`flex-1 ${isOpen ? 'ml-64' : 'ml-0'} transition-all duration-300`}>
+            <Routes>
+              <Route path="/" element={<TailorHome />} />
+              <Route path="/catalogue" element={<Catalogue />} />
+              <Route path="/product/add" element={<AddProduct />} />
+              <Route path="/profile" element={<TailorProfilePage />} />
+              <Route path="/gig" element={<Gig />} />
+              <Route path="/order-confirm" element={<OrderConfirm />} />
+              <Route path="/view" element={<OrderView />} />
+              <Route path="/work" element={<TailorWork />} />
+              <Route path="/orders" element={<OrdersPage />} />
+              <Route path="/reviews" element={<BuyerReviews />} />
+              <Route path="*" element={<ERR404 />} />
+            </Routes>
+          </div>
         </div>
-      </div>
-      ): (
+      ) : (
         // If not Tailor, redirect to login
         <Navigate to="/login" replace={true} />
       )}

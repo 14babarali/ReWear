@@ -36,10 +36,7 @@ const TailorSidebar = ({ isOpen, toggleSidebar }) => {
           <span className="material-icons-outlined">people</span>
           <span className="ml-3">Users</span>
         </Link>
-        <Link to="/tailor/profile" className="sidebar-link">
-          <span className="material-icons-outlined">people</span>
-          <span className="ml-3">profile</span>
-        </Link>
+      
       </nav>
 
       {/* Close Button */}
