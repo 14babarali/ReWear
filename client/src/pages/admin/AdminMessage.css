@@ -1,0 +1,98 @@
+/* Container for the admin messages */
+.admin-messages-container {
+    padding: 2rem;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+  }
+  
+  /* Inbox title */
+  .admin-messages-title {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Loading text */
+  .admin-messages-loading {
+    text-align: center;
+    color: #888;
+    font-size: 1.5rem;
+  }
+  
+  /* List of email items in the inbox */
+  .admin-messages-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Individual email item */
+  .admin-message-item {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .admin-message-item:hover {
+    background-color: #f1f1f1;
+  }
+  
+  /* Email subject */
+  .message-subject {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Email sender and received date */
+  .message-sender,
+  .message-received {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  /* Email detail view */
+  .admin-message-detail {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Email subject in detail view */
+  .email-subject {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  /* Email metadata (from, received) */
+  .email-info {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Email message body */
+  .email-message p {
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  /* Back button */
+  .back-button {
+    font-size: 1rem;
+    color: #007bff;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 1rem;
+  }
+  
+  .back-button:hover {
+    text-decoration: underline;
+  }
+  

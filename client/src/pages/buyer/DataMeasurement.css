@@ -1,0 +1,128 @@
+
+  
+  .container-custom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 40px;
+    width: 900px; /* Adjusted width to fit the image */
+    max-width: 100%;
+  }
+  
+  .form-container-custom {
+    flex: 1;
+    background: #ffffff; /* White background for the form */
+    border-radius: 10px;
+    padding: 30px;
+    margin-right: 20px; /* Space between form and image */
+  }
+  
+  h2-custom {
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  h3-custom {
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: #666;
+  }
+  
+  .form-group-custom {
+    margin-bottom: 20px;
+  }
+  
+  .form-group-custom label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .form-group-custom input,
+  .form-group-custom select {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    color: #333;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.3s ease;
+  }
+  
+  .form-group-custom input:focus,
+  .form-group-custom select:focus {
+    border: 1px solid #888;
+  }
+  
+  .button-group-custom {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .submit-button-custom,
+  .reset-button-custom {
+    width: 48%;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+  }
+  
+  .submit-button-custom {
+    background: #007bb5;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 123, 181, 0.3);
+  }
+  
+  .submit-button-custom:hover {
+    background: #006ba1;
+  }
+  
+  .reset-button-custom {
+    background: #f44336;
+    color: white;
+  }
+  
+  .reset-button-custom:hover {
+    background: #d32f2f;
+  }
+  
+  /* Styling for the image on the right */
+  .image-container-custom {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .image-container-custom img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .container-custom {
+      flex-direction: column;
+      padding: 20px;
+    }
+  
+    .form-container-custom {
+      margin-right: 0;
+      margin-bottom: 20px;
+    }
+  
+    .image-container-custom img {
+      width: 80%;
+    }
+  }
+  

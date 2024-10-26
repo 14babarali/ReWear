@@ -1,0 +1,128 @@
+.container-fluid {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar-container {
+  width: 250px; /* Adjust width as needed */
+  background-color: #333;
+  position: fixed;
+  height: 100%;
+  overflow-y: auto;
+  transition: transform 0.3s ease; /* Smooth transition for sliding */
+}
+
+.sidebar-container.closed {
+  transform: translateX(-250px); /* Hide the sidebar */
+}
+
+.sidebar-toggle {
+  position: absolute;
+  top: 15px;
+  right: -35px; /* Position button outside of the sidebar */
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.main-section {
+  padding: 15px;
+  width: calc(900px - 250px);
+  overflow-y: auto;
+  height: 100vh;
+  transition: margin-left 0.3s ease; /* Smooth transition for content */
+}
+
+.main-section.sidebar-closed {
+  margin-left: 0; /* No margin when sidebar is closed */
+  width: 100%; /* Full width when sidebar is closed */
+}
+
+.main-section.sidebar-open {
+  margin-left: 250px; /* Match the sidebar width when open */
+  width: calc(100% - 250px);
+}
+
+.profile-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Custom styles for the modal */
+.modal-dialog {
+    max-width: 80%; /* Increase the modal width */
+    width: 80%;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.border.rounded.p-4.mb-5 {
+    width: 100%;
+}
+
+/* Primary color of buttons and radio inputs */
+.btn-primary,
+.form-check-input[type="radio"]:checked{
+    background-color: black;
+    border-color: black;
+    border: transparent;
+    cursor: pointer;
+}
+
+.btn-primary:hover{
+    background-color: #363636;
+    border-color: black;
+}
+
+/* Remove blue border on input focus */
+.form-control:focus {
+    border-color: transparent; /* Remove blue border */
+    box-shadow: none; /* Remove box shadow */
+}
+
+/* CSS for the product image tooltip */
+.product-image-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+  .product-image-tooltip {
+    visibility: hidden;
+    width: 100px; /* Initial width of the tooltip image */
+    height: 100px; /* Initial height of the tooltip image */
+    /* background-color: #555; */
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Position the tooltip above the element */
+    left: 50%; /* Center the tooltip */
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s, width 0.3s, height 0.3s; /* Transition for opacity, width, and height */
+  }
+  
+  .product-image-container:hover .product-image-tooltip {
+    visibility: visible;
+    opacity: 1;
+    width: 200px; /* Expanded width of the tooltip image on hover */
+    height: 200px; /* Expanded height of the tooltip image on hover */
+  }
+  
+  .product-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+  }
+  
+  

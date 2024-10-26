@@ -1,0 +1,99 @@
+/* General header styling */
+.header {
+    width: 100%;
+    background-color: black;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  /* Sidebar toggle button */
+  .menu-toggle-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    outline: none;
+  }
+  
+  .menu-toggle-button:hover {
+    color: gray;
+  }
+  
+  /* Admin panel title */
+  .admin-panel-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+  }
+  
+  /* User information container */
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  /* User name display */
+  .user-name {
+    font-size: 0.875rem;
+    color: white;
+  }
+  
+  /* Notifications icon styling */
+  .notifications-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+  }
+  
+  .notifications-button .material-icons-outlined {
+    font-size: 24px;
+    color: white;
+  }
+  
+  .notifications-button:hover .material-icons-outlined {
+    color: gray;
+  }
+  
+  /* Account icon dropdown */
+  .account-dropdown {
+    position: relative;
+
+  }
+
+  .account-icon{
+    background: none;
+  }
+
+  .account-icon:hover{
+    color: gray;
+  }
+  
+  
+  /* Media query for responsiveness */
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .header-right {
+      margin-top: 16px;
+      gap: 8px;
+    }
+  
+    .admin-panel-title {
+      font-size: 1rem;
+    }
+  
+    .user-name {
+      font-size: 0.75rem;
+    }
+  }
+  

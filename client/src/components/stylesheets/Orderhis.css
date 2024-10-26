@@ -1,0 +1,97 @@
+/* Common Style */
+.card-stepper {
+    z-index: 0;
+    background-color: white;
+    border-radius: 16px;
+    padding: 20px; /* Increased padding for more space inside */
+    max-width: 1000px; /* Adjusted max-width to make the box wider */
+    width: 100%; /* Ensure the card-stepper uses full width up to the max-width */
+    margin: auto; /* Center the stepper */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Added box shadow for better appearance */
+  }
+  
+  /* Progress Bar Container */
+  #progressbar-2 {
+    color: #455A64;
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Progress Bar Steps */
+  #progressbar-2 li {
+    list-style-type: none;
+    font-size: 13px;
+    position: relative;
+    flex: 1;
+    text-align: center;
+  }
+  
+  /* Default State of Steps */
+  #progressbar-2 li:before {
+    content: '\f111'; /* Circle icon */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    color: #c5cae9;
+    width: 40px; /* Increased width for larger circles */
+    height: 40px; /* Increased height for larger circles */
+    line-height: 40px; /* Adjusted line-height to center the icon */
+    display: block;
+    margin: 0 auto 10px auto; /* Center the icon */
+    background: #fff;
+    border-radius: 50%;
+    border: 2px solid #c5cae9;
+  }
+  
+  /* Completed State of Steps */
+  #progressbar-2 li.active:before {
+    content: '\f058'; /* Check icon */
+    background: #6520ff;
+    color: #fff;
+    border-color: #6520ff;
+  }
+  
+  /* Connector Lines */
+  #progressbar-2 li:after {
+    content: '';
+    width: calc(100% - 40px); /* Adjusted width to ensure lines do not overlap circles */
+    height: 5px; /* Reduced line thickness */
+    background: #6520ff; /* Changed to purple color */
+    position: absolute;
+    top: 18px; /* Adjusted to align with the middle of the circle */
+    left: calc(50% - 2px); /* Center the line between steps */
+    z-index: -1;
+  }
+  
+  /* Remove Connector Before First Step */
+  #progressbar-2 li:first-child:after {
+    content: none;
+  }
+  
+  /* Inactive State After Active Steps */
+  #progressbar-2 li.active ~ li:after {
+    background: #c5cae9; /* Inactive steps connector color */
+  }
+  
+  /* Flexbox Utility Classes */
+  .d-lg-flex.align-items-center {
+    position: relative;
+    left: 10px; /* Move text slightly to the right */
+    z-index: 3;
+  }
+  
+  .d-flex {
+    display: flex;
+  }
+  
+  .justify-content-between {
+    justify-content: space-between;
+  }
+  
+  .flex-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  

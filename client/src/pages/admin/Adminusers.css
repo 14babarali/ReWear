@@ -1,0 +1,308 @@
+/* Adminusers.css */
+
+/* Styling for the whole page */
+.admin-user-management {
+    padding: 20px;
+  }
+  
+  .admin-user-title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+.search-filter{
+  display: flex;
+  margin: 20px;
+  justify-content: end;
+  align-items: center;
+  gap: 20px;
+}
+  .filters-row{
+    display: flex;
+    gap: 10px;
+  }
+
+  .filter-toggle{
+    display: flex;
+    /* margin: 20px; */
+    border-radius: 5px;
+    background-color: gainsboro;
+    gap: 8px;
+    align-items: center;
+    border-color: #888;
+    padding: 5px;
+  }
+
+  /* Sort/Filter section */
+.sort-filter {
+  display: flex;
+  align-items: center;
+  /* margin: 20px; */
+
+}
+
+.sort-filter label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.sort-filter select {
+  padding: 5px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  outline: none;
+  cursor: pointer;
+}
+
+.sort-filter select:hover {
+  border-color: #333;
+}
+
+
+.filter-role {
+  /* margin: 20px; */
+  padding: 5px;
+  font-size: 16px;
+  border-radius: 4px;
+  /* margin-bottom: 20px; */
+
+}
+
+
+
+  
+  /* Styling for the user cards container */
+  .user-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive card layout */
+    gap: 20px;
+    padding: 10px;
+  }
+  
+  /* Styling for individual user cards */
+  .user-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adding a subtle shadow */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animation for hover effect */
+  }
+  
+  .user-card:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+  }
+  
+  /* Profile picture styling */
+  .profile-pic-small {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+  }
+  
+  /* Styling for user info inside the card */
+  .user-info h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 5px 0;
+  }
+  
+  .user-info p {
+    margin: 2px 0;
+    font-size: 14px;
+    color: #666;
+    text-align: left;
+  }
+
+  .icon-address{
+    margin-right: 5px;
+  }
+  
+  /* Styling for card action buttons */
+  .user-card-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .action-button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  .view-button {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .edit-button {
+    background-color: #2196f3;
+    color: white;
+  }
+  
+  .delete-button {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .action-button:hover {
+    opacity: 0.9;
+  }
+  
+/* Modal background */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Modal content styling */
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    width: 500px;
+    max-width: 90%;
+    border-radius: 8px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    position: relative;
+  }
+  
+  /* Modal close button */
+  .modal .cancel-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+    color: #555;
+    cursor: pointer;
+  }
+  
+  /* Modal action buttons */
+  .action-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-evenly;
+  }
+  
+  .action-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .approve-button {
+    background-color: green;
+    color: white;
+  }
+  
+  .decline-button {
+    background-color: red;
+    color: white;
+  }
+  
+  .cancel-button {
+    color:#333 !important;
+    background-color: white !important;
+  }
+  
+  /* User details view */
+  .user-details-view .admin-details-container {
+    padding: 20px;
+  }
+  
+  .user-details-view .profile-pic-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+  }
+  
+  .cnic-images {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .cnic-pic-large {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+  }
+  
+  
+
+  /* Status Container */
+.status-container {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between the icon and the select dropdown */
+    margin-top: 10px;
+  }
+  
+  /* Status select dropdown */
+  .status-container select {
+    padding: 5px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  /* Icon styles within the status select dropdown */
+  .status-container .fa-icon {
+    font-size: 16px;
+    color: #555; /* You can adjust the color to suit the design */
+  }
+  
+  /* Add hover effect to select */
+  .status-container select:hover {
+    border-color: #999;
+  }
+  
+  /* When status is active */
+  .status-container .active {
+    color: green;
+  }
+  
+  /* When status is restricted */
+  .status-container .restricted {
+    color: orange;
+  }
+  
+  /* When status is banned */
+  .status-container .banned {
+    color: red;
+  }
+  
+  /* Dropdown options (optional styling) */
+  .status-container option {
+    padding: 5px;
+    font-size: 14px;
+    background-color: white;
+  }
+  

@@ -1,0 +1,217 @@
+
+/* Container Styling */
+.register-container {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Container Styling */
+.register-logo {
+  background-size: cover;
+  background-position: center;
+  width: 70%;
+  flex: 1;
+  text-align: center;
+  position: relative;
+  animation: slideInLeft 1s ease-out;
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+
+/* Form Section Styling */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+/* Card Styling */
+.register-card {
+  max-width: 490px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  max-height: 700px;
+  animation: zoomIn 1s ease-out;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Title Styling */
+.register-title {
+  color:#222;
+  font-family: "Vujahday Script", cursive;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Input Field Styling */
+.register-input .form-control {
+  height: 40px;
+  font-size: 14px;
+  border: 1px solid #444; /* Fixed border style */
+  width: 100%; /* Ensures full width */
+  padding-left: 10px; /* Added consistent padding */
+  transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.register-input .form-control:focus {
+  border: 1px solid #444; /* Thicker border on focus */
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Added shadow for focus */
+  outline: none; /* Removed outline */
+}
+
+/* Password Input and Show/Hide Button Styling */
+.register-input-password .input-group-password {
+  position: relative;
+  display: flex; /* Use flexbox for alignment */
+  align-items: center; /* Center items vertically */
+}
+
+.register-input-password .form-control-password {
+  height: 40px; /* Set consistent height */
+  font-size: 14px;
+  border: 1px solid #444; /* Initial border color */
+  border-radius: 5px;
+  width: 100%; /* Ensure full width */
+  padding-right: 45px; /* Adjusted to fit the button */
+  padding-left: 10px; /* Added padding for consistency */
+  transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.register-input-password .form-control-password:focus {
+  border-color: #444; /* Set border color on focus */
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Added focus shadow */
+  outline: none; /* Remove default focus outline */
+}
+
+/* Show/Hide Button Styling */
+.register-input-password .toggle-password-btn {
+  position: absolute;
+  right: 10px; /* Positioned closer to the input */
+  top: 50%;
+  transform: translateY(-50%); /* Vertically centered */
+  background-color: transparent;
+  border: none;
+  color: #333;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-password-btn:hover {
+  color: #222; /* Change color on hover */
+}
+
+.toggle-password-btn svg {
+  font-size: 18px; /* Adjusted icon size */
+}
+
+/* Additional Button Styling */
+.toggle-password-btn {
+  background-color: transparent; /* Transparent background */
+  color: white; /* Set text color */
+  border-top-right-radius: 5px; /* Rounded corners */
+  border-bottom-right-radius: 5px;
+}
+
+.register-input-password .toggle-password-btn:focus {
+  outline: none; /* Remove focus outline */
+}
+
+.register-input-password .input-group-password {
+  margin-bottom: 0; /* Ensure no extra margin */
+}
+
+
+/* Submit Button Styling */
+.register-submit .btn {
+  background-color:#222;
+  border: none;
+  width: 100%;
+}
+
+/* Submit Button Hover Effect */
+.register-submit .btn:hover {
+  background-color: #555; /* Darker shade of maroon */
+}
+
+/* Error Message Styling */
+.register-error-message {
+  color: red;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+
+/* Terms Checkbox Styling */
+.register-terms .form-check-input {
+  margin-right: 10px;
+  border: 1px solid #333; /* Secondary color for border */
+  background-color: #fff; /* Primary color for background */
+  width: 20px; /* Adjust checkbox size */
+  height: 20px; /* Adjust checkbox size */
+  transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition */
+  outline: none;
+  box-shadow: none; /* Remove focus shadow */
+}
+
+.register-terms .form-check-input:focus {
+  outline: none;
+  box-shadow: none; /* Remove focus shadow */
+}
+/* Additional rule to remove any focus-related effects */
+.register-terms .form-check-input:focus-visible {
+  outline: none; /* Remove focus outline */
+  box-shadow: none; /* Remove focus shadow */
+}
+
+.register-terms .form-check-input:checked {
+  background-color: #333; /* Secondary color when checked */
+  border: 1px solid #fff; /* White border when checked */
+  color: #fff; /* White color if applicable */
+}
+
+
+/* Login Link Styling */
+.register-login-link a {
+  color: #666;
+  text-decoration: none;
+}
+
+.register-login-link a:hover {
+  text-decoration: underline;
+}
+
+/* Google Button Styling */
+.register-google .btn {
+  background-color: #db2525;
+  border: none;
+  margin-top: 20px;
+  width: 100%;
+}
+
+/* Google Button Hover Effect */
+.register-google .btn:hover {
+  background-color: #bd1111; /* Darker shade of red */
+}

@@ -1,0 +1,52 @@
+.otp-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.otp-container h2 {
+  margin-bottom: 10px;
+  color: #28292B;
+}
+
+.otp-container p {
+  margin-bottom: 20px;
+}
+
+.otp-input-group {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.otp-input {
+  width: 40px;
+  height: 40px;
+  margin: 0 5px;
+  text-align: center;
+  font-size: 18px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+}
+
+.otp-input:focus {
+  border-color: #FFE473;
+  outline: none;
+}
+
+.otp-error {
+  border-color: red;
+}
+
+.otp-error-message {
+  color: red;
+  margin-bottom: 20px;
+}
+
+.Otp_Button{
+     border-radius: 5px;
+     background-color: #333;
+}

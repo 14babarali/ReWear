@@ -1,0 +1,69 @@
+.super-dooper-unique-user-details-container-23947 {
+  margin-top: 10px; /* Space below the seller profile */
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0;
+  background: none; /* Ensures no background color */
+  box-shadow: none; /* Removes any box shadow if applied */
+  border: none; /* Removes any border if applied */
+}
+
+.super-dooper-unique-user-details-23947,
+.super-dooper-unique-user-info-23947,
+.super-dooper-unique-profile-image-23947,
+.super-dooper-unique-parent-container-23947 {
+  background: none !important; /* Force no background */
+  box-shadow: none !important; /* Ensure no shadow */
+  border: none !important; /* Remove any borders */
+  padding: 0;
+  margin: 0; /* Prevent unwanted margins */
+}
+
+.super-dooper-unique-user-details-23947 {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between image and text */
+  background: none; /* Ensures no background color */
+  box-shadow: none; /* Ensures no shadow */
+  border: none; /* Ensures no border */
+}
+
+.super-dooper-unique-user-info-23947 {
+  display: flex;
+  flex-direction: column;
+  background: none; /* Ensures no background color */
+  box-shadow: none; /* Ensures no shadow */
+  border: none; /* Ensures no border */
+}
+
+.super-dooper-unique-user-name-23947 {
+  font-size: 1rem; /* Make name slightly larger than the rest */
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+  background: none; /* No background color */
+}
+
+.super-dooper-unique-published-by-23947 {
+  font-size: 0.5rem; /* Make the text below the name smaller */
+  color: #666;
+  margin: 0;
+  background: none; /* No background color */
+}
+
+.super-dooper-unique-separator-23947 {
+  margin: 0 5px; /* Space around the separator */
+  color: #888; /* Grey color for the separator */
+  background: none; /* No background color */
+}
+
+.super-dooper-unique-profile-image-23947 {
+  width: 35px; /* Smaller profile image */
+  height: 35px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+  background: none; /* Ensures no background color */
+  border: none; /* Ensures no border */
+}

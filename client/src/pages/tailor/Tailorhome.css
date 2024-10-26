@@ -1,0 +1,38 @@
+.content {
+  flex: 1; /* Allow content area to grow */
+  transition: margin-left 0.3s ease; /* Smooth transition */
+  margin-left: 240px; /* Space for the sidebar when opened */
+}
+
+.content.open {
+  margin-left: 0; /* No margin when sidebar is closed */
+}
+
+.content-area {
+  padding: 20px; /* Add some padding for better layout */
+  background-color: #f8f8f8; /* Optional background color */
+  height: 100vh; /* Full height */
+  overflow: auto; /* Enable scrolling if content overflows */
+}
+
+.container-fluid {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Ensure the container covers the full viewport height */
+    padding: 0;
+  }
+  
+  .profile-container {
+    display: flex;
+    flex: 1; /* Allows the container to grow and fill available space */
+    justify-content: space-between;
+    align-items: flex-start; /* Align items to the top */
+    padding: 20px; /* Optional padding for spacing */
+  }
+  
+  .dashboard-content, .seller-statistics {
+    flex: 1; /* Ensures both components take equal space */
+    margin: 0 10px; /* Optional margin for spacing between components */
+    /* Add additional styles as needed */
+  }
+  

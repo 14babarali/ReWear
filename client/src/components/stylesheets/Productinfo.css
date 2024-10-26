@@ -1,0 +1,45 @@
+.info-section-container {
+    margin-top: 20px;
+   margin-bottom: 100px;
+   height: 400px;
+  }
+  
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
+    color: #555;
+    cursor: pointer;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+    transition: color 0.3s ease;
+  }
+  
+  .info-item:hover {
+    color: #4c8bf5;
+  }
+  
+  .info-label {
+    font-weight: bold;
+  }
+  
+  .info-arrow {
+    color: #888;
+  }
+  
+  .info-content {
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.6;
+    margin-top: 10px;
+    padding: 0 0 10px 0; /* Add padding below each content section */
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .info-content p {
+    margin: 0 0 10px;
+  }
+  

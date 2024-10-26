@@ -1,0 +1,48 @@
+.user-details-view {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .user-details-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .profile-pic-large {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-right: 20px;
+  }
+  
+  .user-info {
+    text-align: left;
+  }
+  
+  .cnic-images {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  
+  .cnic-pic-large {
+    width: 150px;
+    height: 100px;
+    margin: 0 10px;
+  }
+  
+  .back-button {
+    padding: 10px 20px;
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .back-button:hover {
+    background-color: #1976d2;
+  }
+  

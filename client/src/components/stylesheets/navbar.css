@@ -1,0 +1,228 @@
+/* Navbar Styling */
+.navbar {
+  padding: 0rem 1rem;
+  margin: 0%;
+}
+
+.grid-container{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Creates three equal columns */
+  grid-template-rows: repeat(3, 1fr); /* Creates three equal rows */
+  height: 50px; /* Set the height for the navbar */
+}
+
+.logo-container {
+  grid-column: 1; /* Logo in the first column */
+  grid-row: 1 / span 3; /* Span all three rows */
+  display: flex; 
+  justify-content: center; /* Align logo to the center */
+  margin-right: 10px;
+  align-items: center; /* Center logo vertically in its container */
+}
+
+/* Category links container */
+.category-container {
+  grid-column: 2; /* Occupies the second column */
+  grid-row: 2; /* Places the links in the second row */
+  display: flex; /* Optional: flexbox for spacing */
+  justify-content: center; /* Align items to the left */
+  align-items: center; /* Center items vertically */
+  gap: 24px;
+}
+
+/* Other links or content */
+.link-container {
+  grid-column: 3; /* Occupies the third column */
+  grid-row: 2; /* Places other links in the second row */
+  display: flex; /* Optional: flexbox for spacing */
+  justify-content: flex-end; /* Align items to the left */
+  align-items: center; /* Center items vertically */
+}
+
+.category-link {
+  text-align: left; /* Align text to the left */
+  padding: 10px; /* Padding for clickable area */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.navbar-logo {
+  width: 80px;
+  height: auto;
+  border-radius: 50%;
+}
+
+.navbar-nav .nav-link {
+  font-size: 16px;
+  padding: 0.25rem 1rem; /* Adjust padding to reduce height */
+
+}
+
+
+/* Category Group */
+.category-group {
+  position: relative;
+  display: inline-block; /* Align categories inline */
+}
+
+/* Category Button */
+.category-button {
+  color: #333; /* Text color */
+  font-weight: 600;
+  background: none; /* Remove background */
+  border: none; /* Remove border */
+  cursor: pointer; /* Pointer cursor on hover */
+  padding: 8px 16px; /* Add padding */
+}
+
+/* Dropdown Menu Styling */
+.dropdown-menu {
+  display: none; /* Hidden by default */
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 200px; /* Set dropdown width */
+  background-color: #333; /* Dark background */
+  color: #fff; /* White text */
+  border-radius: 4px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Shadow */
+  z-index: 1000; /* Place above other content */
+  opacity: 0; /* Start invisible */
+  transition: opacity 0.3s ease; /* Smooth fade-in */
+}
+
+/* Show Dropdown on Hover */
+.category-group:hover .dropdown-menu {
+  display: block;
+  opacity: 1;
+}
+
+/* Dropdown Item Styling */
+.dropdown-item {
+  display: block;
+  padding: 10px 20px;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Dropdown Item Hover */
+.dropdown-item:hover {
+  background-color: #555; /* Darker background */
+}
+
+/* Search Container */
+.search-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 0;
+  margin: 0;
+}
+
+/* Search Input */
+.search-input {
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  flex: 1;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  margin: 0;
+}
+
+/* Search Button */
+.search-button {
+  background-color: white !important;
+  color: #555 !important;
+  padding: 14.5px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  margin: 0;
+}
+
+/* Search Button and Hover State */
+.search-btn, .search-btn:hover {
+  background-color: #fff;
+}
+
+.nav-item, 
+.nav-link{
+  text-decoration: none;
+}
+
+/* Logout Button */
+.logout-btn {
+  background-color: #fff;
+  color: #444;
+  /* text-decoration: underline; */
+  font-size: 12pt;
+}
+
+.logout-btn:hover {
+  background-color: #fff;
+  color: #222;
+  /* text-decoration: underline; */
+}
+
+
+/* Mobile View Adjustments */
+@media (max-width: 768px) {
+  .category-container {
+    display: none; /* Hide categories on small screens */
+  }
+}
+
+
+.category-container {
+  background-color: #333; /* Dark background */
+  color: white; /* Text color */
+  /* padding: 20px; */
+  border-radius: 5px;
+}
+
+.category-button,
+.subcategory-button {
+  background-color: #333; /* Match container background */
+  color: white; /* Text color */
+  font-size: 12pt;
+  font-weight: lighter;
+  border: none; /* Remove default border */
+  padding: 10px 15px; /* Add padding */
+  margin: 5px 0; /* Add some margin between buttons */
+  cursor: pointer; /* Show pointer on hover */
+  text-align: left; /* Align text to the left */
+  width: 100%; /* Make the button take the full width of the container */
+  border-radius: 5px; /* Optional rounding */
+}
+
+.category-button:hover,
+.subcategory-button:hover {
+  background-color: #444; /* Slightly lighter color on hover */
+}
+
+.dropdown-menu,
+.subdropdown-menu {
+  background-color: #444; /* Slightly lighter dropdown background */
+  padding-left: 20px; /* Indentation for child categories */
+  text-decoration: none;
+}
+
+.dropdown-item {
+  color: white; /* Text color for links */
+  display: block; /* Make the links take up the full line */
+  padding: 5px 10px; /* Add some padding to the links */
+  text-decoration: none; /* Remove underline */
+}
+
+.dropdown-item:hover {
+  background-color: #555; /* Slightly lighter background on hover */
+  color: white; /* Keep text white */
+}
+
+.noCategoriesMessage {
+  color: white; /* Text color for message */
+}
+

@@ -1,0 +1,132 @@
+.navbar {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: #333; /* Background color */
+  color: white;
+}
+
+.sidebar-toggler {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.connection-status {
+  display: flex;
+  align-items: flex-end; /* Align bars at the bottom */
+  height: 40px; /* Container height */
+  padding-bottom: 5px;
+}
+
+.signal-bar {
+  width: 5px; /* Slightly narrower for compactness */
+  margin-right: 1px; /* Reduced margin for compact spacing */
+  background-color: white; /* Default color */
+}
+
+.connection-status.online .signal-bar {
+  background-color: greenyellow; /* Color when online */
+}
+
+.connection-status.offline .signal-bar {
+  background-color: red; /* Color when offline */
+}
+
+.bar-1 {
+  height: 15%; /* Reduced height for compactness */
+  background-color: white;
+}
+
+.bar-2 {
+  height: 25%; /* Reduced height for compactness */
+  background-color: white;
+
+}
+
+.bar-3 {
+  height: 35%; /* Reduced height for compactness */
+  background-color: white;
+
+}
+
+.bar-4 {
+  background-color: white;
+  height: 50%; /* Reduced height for compactness */
+}
+
+
+
+.navbar-content {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-image {
+  width: 40px; /* Adjust size as needed */
+  height: 40px; /* Adjust size as needed */
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.navbar-left h5 {
+  margin: 0;
+  font-size: 16px; /* Adjust font size as needed */
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.language-selector {
+  position: relative;
+  margin-left: 20px;
+}
+
+.language-icon {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.language-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff;
+  color: #333;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  min-width: 100px;
+  z-index: 1000;
+}
+
+.language-dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.language-dropdown li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.language-dropdown li:hover {
+  background-color: #f0f0f0;
+}

@@ -1,0 +1,106 @@
+.card {
+  transition: transform 0.2s;
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 250px; /* Fixed width for the card */
+  height: 250px; /* Fixed height for the card */
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.image-container {
+  position: relative;
+  height: 250px; /* Fixed height for the image container */
+}
+
+.card-img-top {
+  height: 100%; /* Image fits the container height */
+  object-fit: cover;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  text-align: left !important;
+  height: calc(100% - 250px); /* Remaining height for the card body */
+}
+
+.product-card-title {
+  font-weight: 600;
+  color: #343a40 !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-text {
+  font-size: 0.86rem;
+  color: #6c757d;
+}
+
+.text {
+  font-size: 1rem;
+  text-decoration: none;
+  color: #343a40;
+}
+
+.text:hover {
+  color: black;
+}
+
+.add-to-cart-btn {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: white;
+  background-color: black;
+  text-align: center;
+  padding: 10px 0;
+  border: none;
+  border-radius: 0;
+  transition: background-color 0.3s;
+}
+
+.card:hover .add-to-cart-btn {
+  display: block; /* Make the button visible on hover */
+  opacity: 85%;
+  background-color: black;
+  
+}
+
+.add-to-cart-btn:hover {
+  background-color: black;
+  color: white;
+  /* opacity: 100%; */
+}
+
+.badge-condition {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: grey;
+  cursor: default;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.75rem;
+}
+
+.wishlist-btn {
+  background: none;
+  border: none;
+}
+
+.wishlist-btn:hover {
+  color: red;
+}
+
+.btn-sm {
+  background: none;
+  border: none;
+}

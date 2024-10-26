@@ -1,0 +1,217 @@
+/* Container Styling */
+.login-container {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 1s ease-in;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Container Styling */
+  .login-logo {
+    background-size: cover;
+    background-position: center;
+    width: 70%;
+    flex: 1;
+    text-align: center;
+    position: relative;
+    animation: slideInLeft 1s ease-out;
+  }
+  
+  /* Logo Text Styling */
+  .logo-text {
+    position: absolute;
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: center;
+    font-family: cursive;
+    bottom: 20px;
+    left: 20px;
+    color: #11506d;
+    padding: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 0;
+    animation: typing 5s ease-in forwards 5s infinite;
+  }
+  
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideInLeft {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+  }
+  /* Form Section Styling */
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+  
+  /* Card Styling */
+  .login-card {
+    max-width: 490px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    max-height: 700px;
+    animation: zoomIn 1s ease-out;
+  }
+  
+  @keyframes zoomIn {
+    from {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  /* Title Styling */
+  .login-title {
+    color:#222;
+    font-family: "Vujahday Script", cursive;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+    animation: fadeIn 1s ease-in;
+  }
+  
+ /* Input Field Styling */
+.login-input .form-control {
+  height: 40px;
+  font-size: 14px;
+  border: 1px solid #444;
+  width: 100%;
+  padding-left: 10px; /* Added padding for consistency */
+  transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.login-input .form-control:focus {
+  border: 1px solid #444;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+/* Password Input and Show/Hide Button Styling */
+.login-input-password .input-group-password {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.login-input-password .form-control-password {
+  height: 40px;
+  font-size: 14px;
+  border: 1px solid #444;
+  border-radius: 5px;
+  width: 100%;
+  padding-right: 45px; /* Adjusted for the eye icon */
+  padding-left: 10px; /* Consistent padding */
+  transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.login-input-password .form-control-password:focus {
+  border-color: #444;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+/* Eye Icon Button */
+.login-input-password .toggle-password-btn {
+  position: absolute;
+  right: 10px; /* Positioned closer to the input */
+  top: 50%;
+  transform: translateY(-50%); /* Vertically centered */
+  background-color: transparent;
+  border: none;
+  color: #333;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-password-btn:hover {
+  color: #222;
+}
+
+.toggle-password-btn svg {
+  font-size: 18px; /* Adjusted icon size for better visibility */
+}
+
+  
+  /* Submit Button Styling */
+  .login-submit .btn {
+    background-color:#222;
+    border: none;
+    width: 100%;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  /* Submit Button Hover Effect */
+  .login-submit .btn:hover {
+    background-color: #555;
+  }
+  
+  /* Error Message Styling */
+  .login-error-message {
+    color: red;
+    font-size: 12px;
+    margin-bottom: 15px;
+    animation: fadeIn 0.5s ease-in;
+  }
+  
+  /* Terms Checkbox Styling */
+  .login-terms .form-check-input {
+    margin-right: 10px;
+    border: 1px solid #333;
+    background-color: #fff;
+    width: 20px;
+    height: 20px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    outline: none;
+  }
+  
+  .login-terms .form-check-input:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  
+  .login-terms .form-check-input:checked {
+    background-color: #333;
+    border: 1px solid #fff;
+    color: #fff;
+  }
+  
+  /* Google Button Styling */
+  .login-google .btn {
+    background-color: #db2525;
+    border: none;
+    margin-top: 20px;
+    width: 100%;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  /* Google Button Hover Effect */
+  .login-google .btn:hover {
+    background-color: #bd1111;
+  }
+  

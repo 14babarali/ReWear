@@ -1,0 +1,91 @@
+.rewear-aboutUs-container-xy123 {
+  font-family: Arial, sans-serif;
+}
+
+.rewear-aboutUs-header-xy123 .rewear-aboutUs-imageContainer-xy123 {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+.rewear-aboutUs-image-xy123 {
+  width: 100%;
+  height: auto;
+}
+
+.rewear-aboutUs-header-xy123 .rewear-aboutUs-overlay-xy123 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.rewear-aboutUs-textOverlay-xy123 {
+  color: white;
+  font-size: 36px;
+  font-weight: bold;
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+.rewear-aboutUs-contentContainer-xy123 {
+  padding: 40px;
+  background-color: #fff;
+  position: relative;
+  z-index: 2;
+}
+
+.rewear-aboutUs-section-xy123, .rewear-aboutUs-missionSection-xy123, 
+.rewear-aboutUs-visionSection-xy123, .rewear-aboutUs-teamSection-xy123 {
+  margin-bottom: 30px;
+}
+
+.rewear-aboutUs-heading-xy123 {
+  font-size: 28px;
+  color: #ac130e;
+  margin-bottom: 10px;
+}
+
+.rewear-aboutUs-contentContainer-xy123 p {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #555;
+}
+
+.rewear-aboutUs-teamSection-xy123 {
+  margin-top: 30px;
+}
+
+.rewear-aboutUs-teamMembers-xy123 {
+  display: flex;
+  gap: 30px;
+  justify-content: space-between;
+}
+
+.rewear-aboutUs-teamMember-xy123 {
+  text-align: center;
+  max-width: 200px;
+}
+
+.rewear-aboutUs-teamMemberImage-xy123 {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
+
+.rewear-aboutUs-teamMember-xy123 h3 {
+  font-size: 20px;
+  margin: 10px 0 5px;
+}
+
+.rewear-aboutUs-teamMember-xy123 p {
+  font-size: 16px;
+  color: #333;
+}

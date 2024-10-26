@@ -1,0 +1,104 @@
+/* General container */
+.reviews-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Title */
+  .reviews-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #333;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  /* Reviews grid layout */
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  /* Review card */
+  .review-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+  }
+  
+  .review-card:hover {
+    transform: translateY(-10px);
+  }
+  
+  /* Review header - flexbox for layout */
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  /* Buyer info */
+  .buyer-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .buyer-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+  
+  .buyer-details h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #333;
+  }
+  
+  .buyer-details p {
+    font-size: 0.9rem;
+    color: #999;
+  }
+  
+  /* Star rating */
+  .rating .star {
+    font-size: 1.2rem;
+    color: #ccc;
+  }
+  
+  .rating .star.filled {
+    color: #f5c518;
+  }
+  
+  /* Review text */
+  .review-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+  }
+  
+  /* No reviews message */
+  .no-reviews {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #888;
+  }
+  
+  /* Loader styling */
+  .loader {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #555;
+    padding: 50px;
+  }
+  

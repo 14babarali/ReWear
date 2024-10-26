@@ -1,0 +1,149 @@
+/* Container for the product page */
+.product-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Flex layout for product content */
+.product-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+
+.product-image-section {
+  width: 55%;
+  text-align: center;
+  height: 500px; /* Adjust this height based on your design */
+  margin-top: 20px; /* Moves the image down by 20px */
+}
+
+.product-image {
+  width: 100%;
+  height: 100%; /* Ensures the image takes up the entire container height */
+  object-fit: contain; /* Ensures the image stays within the bounds without being cut off */
+  border-radius: 10px;
+}
+/* Thumbnails under product image */
+.image-thumbnails {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.thumbnail {
+  width: 80px;
+  height: 80px;
+  margin: 0 10px;
+  cursor: pointer;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.thumbnail.active {
+  border: 3px solid #4c8bf5;
+}
+
+/* Right section for product details */
+.product-details-section {
+  width: 40%;
+  padding: 20px;
+}
+
+.product-title {
+  font-size: 2.0rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Product description */
+.product-description {
+  font-size: 1.1rem;
+  color: #666;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+/* Specifications styling */
+.product-specs {
+  font-size: 1rem;
+  list-style-type: none;
+  padding: 0;
+}
+
+.product-specs li {
+  margin-bottom: 10px;
+}
+
+/* Buttons */
+.product-action-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.add-to-bag-btn {
+  background-color: #4c8bf5;
+  color: white;
+  padding: 10px 25px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.add-to-bag-btn:hover {
+  background-color: #3b72d1;
+}
+
+.wishlist-btn {
+  background-color: transparent;
+  color: #e74c3c;
+  padding: 10px 25px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  border: 2px solid #e74c3c;
+  transition: all 0.3s ease;
+}
+
+.wishlist-btn:hover {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.leave-review-btn {
+  background-color: transparent;
+  border: 2px solid #4c8bf5;
+  color: #4c8bf5;
+  padding: 10px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.leave-review-btn:hover {
+  background-color: #4c8bf5;
+  color: white;
+}
+
+/* Suggested products section */
+.suggested-products-section {
+  margin-top: 40px;
+}
+
+.suggested-products-section h3 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.suggested-products {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}

@@ -1,0 +1,98 @@
+.horizontal-card {
+    /* position: relatives; */
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 600px; /* Adjust as needed */
+    margin: 10px 0;
+    background-color: #f9f9f9; /* Optional: Adds a background color */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
+  }
+
+  .delete-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color:#dc3545;
+    cursor: pointer;
+}
+  
+  .horizontal-card-image {
+    width: 110px; /* Adjust as needed */
+    height: 120px; /* Adjust as needed */
+    object-fit: cover;
+    border-radius: 8px 0 0 8px; /* Rounded corners on the left side */
+  }
+  
+  .horizontal-card-content {
+    padding: 5px;
+    flex: 1;
+    /* display: flex;
+    flex-direction: column;
+    justify-content: space-between; */
+  }
+
+  .horizontal-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+  
+  .horizontal-card-title {
+    font-size: 18px;
+    font-weight: bold; /* Makes the title stand out */
+    margin: 0;
+    color: #333; /* Darker color for better readability */
+  }
+
+  .horizontal-card-info {
+    display: flex;
+    justify-content: space-between; /* Space between price and quantity */
+    align-items: center;
+  }
+  
+  .horizontal-card-quantity {
+    font-size: 14px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+  }
+  
+  .quantity-button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 3px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+    margin: 0 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .quantity-button:hover {
+    background-color: #666;
+  }
+  
+  .quantity-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .horizontal-card-price {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin: 5px 0;
+  }
+  
+  .horizontal-card-size {
+    font-size: 16px;
+    color: #666;
+    margin: 5px 0;
+  }
+  

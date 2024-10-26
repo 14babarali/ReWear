@@ -1,0 +1,63 @@
+/* cart.css */
+
+/* Ensure the container takes up the full height of the viewport */
+.cart-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full viewport height */
+  }
+  
+  /* Container for scrollable cart items */
+  .cart-items {
+    flex: 1; /* Take up remaining space */
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding: 20px;
+  }
+  
+  /* List styling */
+  .cart-items ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Each cart item wrapper */
+  .cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+  }
+  
+  /* Checkbox styling */
+  .cart-item input[type="checkbox"] {
+    margin-right: 20px;
+    cursor: pointer;
+  }
+  
+  /* Ensure HorizontalCard takes available space */
+  .cart-item .horizontal-card {
+    flex: 1;
+  }
+  
+  /* Cart summary section */
+  .cart-summary {
+    padding: 20px;
+    border-top: 1px solid #ddd;
+    text-align: right;
+    background-color: #f9f9f9; /* Slight background color for differentiation */
+  }
+  
+  .cart-summary h4 {
+    margin-bottom: 10px;
+  }
+  
+  .cart-summary p {
+    margin: 5px 0;
+  }
+  
+  .cart-summary span {
+    font-weight: bold;
+  }
+  

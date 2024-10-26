@@ -1,0 +1,46 @@
+.slim-navbar {
+  padding: 0.5rem 1rem;
+  height: 50px; /* Adjust the height as necessary */
+}
+
+.navbar-dark .navbar-nav .nav-item .dropdown-toggle {
+  padding: 0.25rem 0.5rem;
+}
+
+.navbar-dark .navbar-nav .nav-item .dropdown-menu {
+  margin-top: 0;
+}
+
+.btn-dark {
+  padding: 0.25rem 0.5rem;
+}
+
+.dropdown-menu {
+  background-color: #343a40; /* Dark background for the dropdown */
+  border: none;
+}
+
+.dropdown-item {
+  color: #fff; /* White text for normal state */
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #495057; /* Darker background on hover */
+  color: #fff; /* Ensure text remains white on hover */
+}
+
+.dropdown-item a {
+  color: #fff; /* White text for normal state */
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-item a:hover {
+  color:lemonchiffon; /* Lighter color for text on hover */
+}
+
+.dropdown-item.subcategory-item {
+  padding-left: 2rem; /* Indent subcategory items */
+}

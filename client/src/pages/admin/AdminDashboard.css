@@ -1,0 +1,25 @@
+/* src/pages/Dashboard.module.css */
+.container {
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  .links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .link {
+    padding: 1rem 2rem;
+    background-color: #4a90e2;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+  }
+  
+  .link:hover {
+    background-color: #357ab8;
+  }
+  

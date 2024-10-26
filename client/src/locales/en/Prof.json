@@ -1,0 +1,23 @@
+{
+    "profile": "Profile",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "editProfile": "Edit Profile",
+    "closeEditProfile": "Close Edit Profile",
+    "changePassword": "Change Password",
+    "closeChangePassword": "Close Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "showPassword": "Show Password",
+    "hidePassword": "Hide Password",
+    "removeAddress": "Remove Address",
+    "addNewAddress": "Add New Address",
+    "updateProfile": "Update Profile",
+    "profilePicture": "Profile Picture",
+    "cnicFrontImage": "CNIC Front Image",
+  "cnicBackImage": "CNIC Back Image"
+  }
+  

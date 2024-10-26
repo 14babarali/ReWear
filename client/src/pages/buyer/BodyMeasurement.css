@@ -1,0 +1,189 @@
+/* Global styles */
+body {
+  margin: 0;
+  padding: 0;
+  /* font-family: 'Roboto', sans-serif; */
+  /* background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); */
+}
+
+.measurement-container-super-dooper-complex {
+  text-align: center;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+h2-super-dooper-complex {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #333;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.card-container-super-dooper-complex {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.card-super-dooper-complex {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  width: 200px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-super-dooper-complex img {
+  width: 100%;
+  height: 150px;
+  border-radius: 8px;
+}
+
+.card-super-dooper-complex p {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 10px;
+  color: #555;
+}
+
+.card-super-dooper-complex:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Captured Images Section */
+.captured-images-super-dooper-complex {
+  margin-top: 40px;
+  text-align: left;
+}
+
+h3-super-dooper-complex {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.image-grid-super-dooper-complex {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.image-card-super-dooper-complex img {
+  width: 100px;
+  height: 100px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Action Buttons */
+.action-buttons-super-dooper-complex {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+  margin-top: 40px;
+  padding-bottom: 20px;
+}
+
+.show-measurements-button-super-dooper-complex,
+.reset-button-super-dooper-complex {
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  background-color: #333; /* Default color for submit button */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 150px; /* Ensure both buttons are the same width */
+  text-align: center;
+}
+
+.reset-button-super-dooper-complex {
+  background-color: #f44336; /* Red for reset button */
+}
+
+.show-measurements-button-super-dooper-complex:hover {
+  background-color: #000;
+}
+
+.reset-button-super-dooper-complex:hover {
+  background-color: #c0392b;
+}
+
+.show-measurements-button-super-dooper-complex:focus,
+.reset-button-super-dooper-complex:focus {
+  outline: none;
+}
+
+/* Popup Styles */
+.popup-super-dooper-complex {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* Ensure popup is above all other elements */
+}
+
+.popup-content-super-dooper-complex {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 400px; /* Limit popup width for better readability */
+}
+
+.popup-content-super-dooper-complex p {
+  font-size: 1.2rem; /* Reduced font size for better fitting */
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.popup-content-super-dooper-complex button {
+  padding: 10px 20px;
+  font-size: 1.1rem;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.popup-content-super-dooper-complex button:hover {
+  background-color: #3e8e41;
+}
+
+/* Media Query for Smaller Screens */
+@media (max-width: 768px) {
+  .card-container-super-dooper-complex {
+      flex-direction: column;
+  }
+
+  .card-super-dooper-complex {
+      width: 100%;
+  }
+
+  .image-grid-super-dooper-complex {
+      grid-template-columns: repeat(2, 1fr);
+  }
+
+  .action-buttons-super-dooper-complex {
+      flex-direction: column;
+  }
+}

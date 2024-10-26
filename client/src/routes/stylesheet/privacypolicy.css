@@ -1,0 +1,21 @@
+.privacy-policy {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    line-height: 1.6;
+  }
+  
+  .privacy-policy h1 {
+    font-size: 2em;
+    margin-bottom: 0.5em;
+  }
+  
+  .privacy-policy h2 {
+    font-size: 1.5em;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+  }
+  
+  .privacy-policy p {
+    margin-bottom: 1em;
+  }
+  

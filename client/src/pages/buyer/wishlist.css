@@ -1,0 +1,15 @@
+.wishlist-page {
+  padding: 20px;
+}
+
+.wishlist-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+
+.col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

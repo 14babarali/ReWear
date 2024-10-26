@@ -1,0 +1,149 @@
+/* General Styling for the App */
+.seller-statistics {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  
+  /* Sale Statistics & Lifetime Sales Styles */
+  .statistics-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .sale-statistics {
+    width: 100%;
+    max-width: 60%;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    flex-grow: 1;
+  }
+  
+  .lifetime-sales {
+    width: 100%;
+    max-width: 35%;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
+  }
+  
+  .lifetime-info {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .lifetime-info p {
+    margin: 8px 0;
+    font-weight: 500;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .lifetime-chart {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .circle-chart {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .circle-bg {
+    fill: none;
+    stroke: #e0e0e0;
+    stroke-width: 3.8;
+  }
+  
+  .circle {
+    fill: none;
+    stroke: #22caec;
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    animation: progress 1s ease-out forwards;
+  }
+  
+  /* Keyframe animation for circle progress */
+  @keyframes progress {
+    0% {
+      stroke-dasharray: 0, 100;
+    }
+  }
+  
+  /* Recent Orders Styling */
+  .recent-orders {
+    margin-top: 40px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .order-item:last-child {
+    border-bottom: none;
+  }
+  
+  .order-image img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+  
+  .order-details {
+    flex: 1;
+    margin-left: 20px;
+  }
+  
+  .order-details h4 {
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  .order-details p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .order-price p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .statistics-container {
+      flex-direction: column;
+    }
+  
+    .sale-statistics, .lifetime-sales {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+  

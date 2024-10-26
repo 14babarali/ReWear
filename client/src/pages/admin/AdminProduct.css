@@ -1,0 +1,93 @@
+/* General Layout */
+.admin-product-list {
+    min-height: 100vh;
+    padding: 2rem;
+    background-color: #f4f4f4;
+  }
+  
+  /* Title */
+  .admin-product-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+  }
+  
+  /* Loading Message */
+  .admin-product-loading {
+    text-align: center;
+    color: #777;
+    font-size: 1.5rem;
+  }
+  
+  /* Product Grid */
+  .admin-product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  /* Product Card */
+  .admin-product-card {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    transition: transform 0.3s;
+  }
+  
+  .admin-product-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Product Image */
+  .admin-product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Product Info */
+  .admin-product-info {
+    text-align: left;
+  }
+  
+  .admin-product-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .admin-product-catalog,
+  .admin-product-type,
+  .admin-product-condition,
+  .admin-product-quantity,
+  .admin-product-description,
+  .admin-product-price,
+  .admin-product-size {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #555;
+  }
+  
+  .admin-product-condition {
+    font-weight: bold;
+  }
+  
+  .admin-product-new {
+    color: green;
+  }
+  
+  .admin-product-used {
+    color: orange;
+  }
+  
+  .admin-product-price {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  
