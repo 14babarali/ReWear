@@ -34,34 +34,34 @@ const TailorProfilePage = () => {
 
   const imageUrl = `http://localhost:3001/uploads/${profileImage}`;
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   const storedUser = JSON.parse(localStorage.getItem('user'));
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const storedUser = JSON.parse(localStorage.getItem('user'));
 
-  //   if (!token || !storedUser) {
-  //     navigate('/login');
-  //     return;
-  //   }
+    if (!token || !storedUser) {
+      navigate('/login');
+      return;
+    }
 
-  //   setUser(storedUser);
-  //   setName(storedUser.profile.name);
-  //   setEmail(storedUser.email);
-  //   setPhone(storedUser.profile.phone);
-  //   setAddresses(storedUser.profile.addresses || []);
-  //   setProfileImage(storedUser.profile.profilePicture);
-  //   setCnicFrontImage(storedUser.profile.cnicfront);
-  //   setCnicBackImage(storedUser.profile.cnicback);
+    setUser(storedUser);
+    setName(storedUser.profile.name);
+    setEmail(storedUser.email);
+    setPhone(storedUser.profile.phone);
+    setAddresses(storedUser.profile.addresses || []);
+    setProfileImage(storedUser.profile.profilePicture);
+    setCnicFrontImage(storedUser.profile.cnicfront);
+    setCnicBackImage(storedUser.profile.cnicback);
 
-  //   if (storedUser.profile.cnicfront && storedUser.profile.cnicback) {
-  //     setCnicUploaded(true);
-  //   }
+    if (storedUser.profile.cnicfront && storedUser.profile.cnicback) {
+      setCnicUploaded(true);
+    }
 
-  //   if (storedUser.role === 'Tailor') {
-  //     navigate('/tailor');
-  //   } else if (storedUser.role === 'Buyer') {
-  //     navigate('/');
-  //   }
-  // }, [navigate]);
+    if (storedUser.role === 'tailor') {
+      navigate('/tailor');
+    } else if (storedUser.role === 'Buyer') {
+      navigate('/');
+    }
+  }, [navigate]);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
