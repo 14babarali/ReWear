@@ -105,7 +105,7 @@ const GigPage = () => {
 
       try {
         // Make the API request to create a gig
-        const response = await axios.post('/api/gigs', formData, {
+        await axios.post('http://localhost:3001/gigs', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${localStorage.getItem('token')}`, // Include token if using authentication

@@ -9,7 +9,7 @@ const admin = require('./routes/admin');
 // const multer = require("multer");
 const gigsRoute = require('./routes/gigs');
 const path = require("path");
-
+const morgan = require('morgan');
 require('./database'); // Import the database connection
 
 const app = express();
@@ -26,7 +26,7 @@ app.use(cors({
 
 // Middleware to parse JSON bodies
 app.use(express.json());
-
+app.use(morgan('dev'));
 // Mount the auth routes
 app.use('/api', authRoutes);
 
