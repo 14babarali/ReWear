@@ -42,6 +42,26 @@ const createGig = async (req, res) => {
     res.status(500).json({ error: 'Error creating gig' });
   }
 };
+ 
+
+// Get Gigs of the Authenticated User
+const getUserGigs = async (req, res) => {
+
+  const userId = req.user.id; 
+
+
+  try {
+    // Find gigs that belong to the authenticated user
+    const userGigs = await Gig.find({ user: userId }).populate('user', 'name');
+
+    res.status(200).json(userGigs);
+  } catch (error) {
+    console.error('Error fetching user gigs:', error);
+    res.status(500).json({ error: 'Error fetching user gigs' });
+  }
+};
+
+
 
 
 // Get all Gigs
@@ -135,10 +155,13 @@ const getAllGigs = async (req, res) => {
     }
   };
   
+
+
   module.exports = {
     createGig,
     getAllGigs,
     getGigById,
     updateGig,
-    deleteGig
+    deleteGig,
+    getUserGigs, 
   };
