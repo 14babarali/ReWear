@@ -146,7 +146,18 @@ const GigPage = () => {
           accept="image/jpeg,image/png,image/jpg"
           onChange={handleImageChange}
         />
-        {gigImage && <img src={URL.createObjectURL(gigImage)} alt="Gig Preview" className="gig-image-preview" />}
+        <div className='w-20'>
+          {gigImage ? (
+            <img
+              src={URL.createObjectURL(gigImage)}
+              alt="Preview of the gig image" // More descriptive alt text
+              className="gig-image-preview w-20"
+            />
+          ) : (
+            ''
+          )}
+        </div>
+
       </div>
 
       {/* Dynamic Description */}
