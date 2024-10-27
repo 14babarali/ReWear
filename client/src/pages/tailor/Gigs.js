@@ -8,16 +8,16 @@ const Gigs = () => {
 
   useEffect(() => {
     const fetchGigs = async () => {
-      const user = JSON.parse(localStorage.getItem('user'));
-      if (!user || !user._id) {
-        console.error('User not found in localStorage');
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No Token');
         return;
       }
   
       try {
-        const response = await axios.get(`http://localhost:3001/gigs/mygig`, {
+        const response = await axios.get('http://localhost:3001/gigs/my-gigs', {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // Include token if using authentication
+            Authorization: `Bearer ${token}`, // Include token if using authentication
           },
         });
         setGigs(response.data);
