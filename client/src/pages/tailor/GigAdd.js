@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import './GigPage.css'; // Custom CSS file for styling
+import './GigAdd.css'; // Custom CSS file for styling
 import Lottie from 'react-lottie';
 import loaderAnimation from './Giff/loader_complete.json'; // Path to your loader JSON file
 import axios from 'axios'; // Import axios for API requests
 
-const GigPage = () => {
+const GigAdd = () => {
   const [gigImage, setGigImage] = useState(null);
   const [description, setDescription] = useState('');
   const [skills, setSkills] = useState(['', '', '']);
@@ -209,10 +209,10 @@ const GigPage = () => {
       </div>
 
       {/* Error Message Display */}
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      {errorMessage && <p className="error-message text-red-500 text-center">{errorMessage}</p>}
 
       {/* Success Message Display */}
-      {successMessage && <p className="success-message">{successMessage}</p>}
+      {successMessage && <p className="success-message text-green-500 text-center">{successMessage}</p>}
 
       {/* Submit Button */}
       <div className="submit-container">
@@ -232,4 +232,4 @@ const GigPage = () => {
   );
 };
 
-export default GigPage;
+export default GigAdd;

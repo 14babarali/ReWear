@@ -1,0 +1,58 @@
+.gig-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .gig-card {
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+  }
+  
+  .gig-card-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .gig-card-content {
+    padding: 15px;
+  }
+  
+  .gig-card-content h3 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .gig-card-content p {
+    color: #666;
+    margin: 5px 0;
+  }
+  
+  .gig-skills {
+    margin-top: 10px;
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  
+  .skill {
+    background-color: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9em;
+  }
+  
+  .gig-prices p {
+    margin: 8px 0;
+    font-weight: bold;
+    color: #444;
+  }
+  

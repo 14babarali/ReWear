@@ -30,7 +30,7 @@ const TailorSidebar = ({ isOpen, toggleSidebar }) => {
           <span className="material-icons-outlined">inventory_2</span>
           <span className="ml-3 text-base">Products</span>
         </Link>
-        <Link to="/tailor/gig" className="sidebar-link">
+        <Link to="/tailor/Gigs" className="sidebar-link">
           <span className="material-icons-outlined">analytics</span>
           <span className="ml-3 text-base">Gig</span>
         </Link>
