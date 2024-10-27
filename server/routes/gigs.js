@@ -4,13 +4,14 @@ const { createGig , getAllGigs, getGigById, updateGig, deleteGig} = require('../
 const { verifyToken } = require('../middleware/authMiddleware'); 
 const checkIfVerified = require('../middleware/verifyUser'); 
 const router = express.Router();
+const upload = require('../middleware/multer');
 
 
-router.post('/', verifyToken, createGig);
-
+//  
+router.post('/add', verifyToken,upload.single('gigImage'), createGig);
 
 // Get all Gigs
-router.get('/', getAllGigs);
+router.get('/all', getAllGigs);
 
 // Get a Gig by ID
 router.get('/:id', getGigById);

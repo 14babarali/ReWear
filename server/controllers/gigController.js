@@ -4,7 +4,10 @@ const User = require('../models/User');
 
 // Create a Gig (only for verified Tailor users with uploaded CNIC)
 const createGig = async (req, res) => {
-  const { gigImage, description, skills, basicPrice, premiumPrice } = req.body;
+  const { description, skills, basicPrice, premiumPrice } = req.body;
+  
+  let gigPic = req.file ? req.file.filename : '';
+
   const userId = req.user.id; // Use the authenticated user's ID
 
   try {
@@ -23,7 +26,7 @@ const createGig = async (req, res) => {
     // Create the new gig
     const newGig = new Gig({
       user: userId,
-      gigImage,
+      gigImage: gigPic,
       description,
       skills,
       basicPrice,

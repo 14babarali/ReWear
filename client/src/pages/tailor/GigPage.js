@@ -99,13 +99,13 @@ const GigPage = () => {
       const formData = new FormData();
       formData.append('gigImage', gigImage);
       formData.append('description', description);
-      formData.append('skills', JSON.stringify(skills));
+      skills.forEach((skill, index) => formData.append(`skills[${index}]`, skill));
       formData.append('basicPrice', basicPrice);
       formData.append('premiumPrice', premiumPrice);
 
       try {
         // Make the API request to create a gig
-        await axios.post('http://localhost:3001/gigs', formData, {
+        await axios.post('http://localhost:3001/gigs/add', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${localStorage.getItem('token')}`, // Include token if using authentication
