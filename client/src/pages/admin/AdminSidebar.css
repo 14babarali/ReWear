@@ -4,7 +4,7 @@
     top: 0;
     left: 0;
     height: 100%;
-    width: 16rem; /* 64px */
+    width: 10rem; /* 64px */
     background-color: black;
     color: white;
     transform: translateX(-100%);
@@ -14,23 +14,26 @@
   
   .sidebar.open {
     transform: translateX(0);
+    gap: 0;
   }
   
   /* Sidebar Header */
   .sidebar-header {
-    padding: 2rem;
+    padding: 0.65rem;
     font-size: 1.5rem; /* 2xl */
     font-weight: bold;
     text-align: center;
     border-bottom: 1px solid #333;
+    margin: 0;
   }
   
   /* Navigation Links */
   .sidebar-nav {
     display: flex;
     flex-direction: column;
-    padding: 1.5rem; /* p-6 */
-    gap: 1.5rem; /* space-y-6 */
+    padding: 1.0rem; /* p-6 */
+    gap: 1.0rem; /* space-y-6 */
+    margin: 0;
   }
   
   .sidebar-link {
@@ -46,6 +49,7 @@
   
   .sidebar-link:hover {
     background-color: #333;
+    color: white;
   }
   
   /* Close Button */

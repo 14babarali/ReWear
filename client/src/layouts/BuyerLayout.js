@@ -31,27 +31,22 @@ import OTP from '../routes/OTPinput';
 import ERR404 from '../components/error404';
 
 const BuyerLayout = () => {
-  const [isBuyer, setIsBuyer] = useState(true); // Buyer state
   const navigate = useNavigate();
+  const [hasNavigated,setHasNavigated] = useState(false);
   useEffect(() => {
-    // Check for token and user role in local storage
-    const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
 
-    if (token && user) {
-      if (user.role === 'Buyer' || user.role ==='') {
-        setIsBuyer(true); // Set buyer state to true
-      } else {
-        // Redirect based on user role
-        navigate(`/${user.role.toLowerCase()}`);
+    if (user && !hasNavigated) {
+      if (user.role !== 'Buyer') {
+        setHasNavigated(true); // Set to true after navigating
+        navigate('/' + user.role.toLowerCase());
       }
     }
-  }, [navigate]);
+  }, [navigate, hasNavigated]);
 
   return (
     <div>
       <AppHeader/>
-      {isBuyer ? (
         <Routes>
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/cart" element={<Cart />} />
@@ -83,10 +78,6 @@ const BuyerLayout = () => {
           <Route path='/' element={<Home />} />
           <Route path="*" element={<ERR404 />} /> {/* Consider adding a 404 page */}
         </Routes>
-         ) : (
-        // If not buyer, redirect to login
-        <Navigate to="/login" replace={true} />
-      )}
       <Footer/>
     </div>
   );

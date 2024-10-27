@@ -5,7 +5,7 @@
     left: -240px; /* Hide sidebar initially */
     width: 240px;
     height: 100%;
-    background-color: #2c3e50;
+    /* background-color: #2c3e50; */
     color: white;
     padding: 20px;
     transition: left 0.3s ease;
@@ -67,7 +67,7 @@
     position: fixed;
     top: 100px;
     left: 10px;
-    background-color: #2c3e50;
+    /* background-color: #2c3e50; */
     color: white;
     border: none;
     padding: 10px;

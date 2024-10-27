@@ -10,47 +10,28 @@ import AdminUsers from '../pages/admin/Adminusers.js';
 import AdminProfilePage from '../pages/admin/AdminProfilePage.js';
 import UserDetails from '../pages/admin/UserDetails.js';
 import Navbar from '../pages/admin/AdminNav.js';
+import ERR404 from '../components/error404';
 
 const AdminLayout = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false); // Set initial sidebar state to closed
-  const [isAdmin, setIsAdmin] = useState(false);
+  // const [isAdmin, setIsAdmin] = useState(false);
   const [hasNavigated, setHasNavigated] = useState(false);
+  
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
   useEffect(() => {
-    // Check for token and user role in local storage
-    const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
-    // Only navigate if not already navigated
-    if (!hasNavigated) {
-      if (token && user) {
-        if (user.role === 'Admin') {
-          setIsAdmin(true); // Set admin state to true
-          setHasNavigated(true); // Set navigation flag
-          navigate('/admin');
-        } else if (user.role === 'Seller') {
-          setHasNavigated(true);
-          navigate('/seller');
-        } else if (user.role === 'Buyer') {
-          setHasNavigated(true);
-          navigate('/buyer');
-        } else if (user.role === 'Tailor') {
-          setHasNavigated(true);
-          navigate('/tailor');
-        } else {
-          setHasNavigated(true);
-          navigate('/logout');
-        }
-      } else {
-        // If no token or user, navigate to login
-        setHasNavigated(true);
-        navigate('/login');
+
+    if (user && !hasNavigated) {
+      if (user.role !== 'Admin') {
+        setHasNavigated(true); // Set to true after navigating
+        navigate('/' + user.role.toLowerCase());
       }
     }
-  }, [navigate, hasNavigated ]);
+  }, [navigate, hasNavigated]);
 
   return (
     <div className="admin-layout flex flex-col min-h-screen">
@@ -61,7 +42,6 @@ const AdminLayout = () => {
 
         {/* Main content area */}
         <div className={`flex-1 ${isOpen ? 'ml-64' : 'ml-0'} transition-all duration-300`}>
-        {isAdmin ? (
           <Routes>
             {/* Admin Dashboard route */}
             <Route path="/" element={<AdminDashboard />} />
@@ -73,11 +53,8 @@ const AdminLayout = () => {
             <Route path="/Users" element={<AdminUsers />} />
             <Route path="/Profile" element={<AdminProfilePage />} />
             <Route path="/Details" element={<UserDetails />} />
+            <Route path="*" element={<ERR404 />} />
           </Routes>
-          ) : (
-            // Redirect if isAdmin is false
-            <Navigate to="/login" replace={true} />
-          )}
         </div>
       </div>
     </div>

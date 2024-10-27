@@ -16,35 +16,28 @@ import TailorSidebar from '../pages/tailor/TailorSidebar';
 import ERR404 from '../components/error404';
 
 const TailorLayout = () => {
-  const [isTailor, setIsTailor] = useState(true);
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false); // Set initial sidebar state to closed
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
+  const [hasNavigated,setHasNavigated] = useState(false);
   useEffect(() => {
-    // Check for token and user role in local storage
-    const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
 
-    if (token && user) {
-      if (user.role === 'Tailor') {
-        setIsTailor(true); // Set buyer state to true
-      } else {
-        navigate(`/${user.role.toLowerCase()}`);
+    if (user && !hasNavigated) {
+      if (user.role !== 'Buyer') {
+        setHasNavigated(true); // Set to true after navigating
+        navigate('/' + user.role.toLowerCase());
       }
-    } else {
-      navigate('/login'); // Redirect to login if no token
     }
-  }, [navigate]);
+  }, [navigate, hasNavigated]);
 
   return (
     <div className="admin-layout flex flex-col min-h-screen">
       <TailorNav toggleSidebar={toggleSidebar} />
-      {isTailor ? (
         <div  className="flex flex-1">
-          
           <TailorSidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
           <div  className={`flex-1 ${isOpen ? 'ml-64' : 'ml-0'} transition-all duration-300`}>
             <Routes>
@@ -62,10 +55,6 @@ const TailorLayout = () => {
             </Routes>
           </div>
         </div>
-      ) : (
-        // If not Tailor, redirect to login
-        <Navigate to="/login" replace={true} />
-      )}
     </div>
   );
 };

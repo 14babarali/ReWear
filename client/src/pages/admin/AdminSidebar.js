@@ -5,13 +5,14 @@ import './AdminSidebar.css'; // Import the CSS file
 const AdminSidebar = ({ isOpen, toggleSidebar }) => {
   return (
     <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
-      {/* Sidebar Header */}
-      <div className="sidebar-header">
+      <div className='d-flex' style={{flexDirection: 'column'}}>
+        {/* Sidebar Header */}
+      <div className="sidebar-header m-0">
         Admin
       </div>
 
       {/* Navigation Links */}
-      <nav className="sidebar-nav">
+      <nav className="sidebar-nav mt-2">
         <Link to="/admin/Dashboard" className="sidebar-link">
           <span className="material-icons-outlined">dashboard</span>
           <span className="ml-3">Dashboard</span>
@@ -42,6 +43,7 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
       <button className="sidebar-close-btn" onClick={toggleSidebar}>
         <span className="material-icons-outlined">close</span>
       </button>
+      </div>
     </aside>
   );
 };
