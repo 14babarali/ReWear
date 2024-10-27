@@ -5,44 +5,47 @@ import './TailorSidebar.css'; // Import the CSS file
 const TailorSidebar = ({ isOpen, toggleSidebar }) => {
   return (
     <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
-      {/* Sidebar Header */}
-      <div className="sidebar-header">
-        ReWear
-      </div>
+      <div className='d-flex' style={{flexDirection: 'column'}}>
+        {/* Sidebar Header */}
+        <div className="sidebar-header p-2">
+          <span className='text-base'>
+            <h3 className='m-0'><strong>ReWear</strong></h3>
+          </span>
+          <button className="sidebar-close-btn p-0" onClick={toggleSidebar}>
+            <span className="material-icons-outlined text-2xl"><strong>close</strong></span>
+           </button>
+        </div>
 
       {/* Navigation Links */}
-      <nav className="sidebar-nav">
+      <nav className="sidebar-nav mt-3 p-0">
         <Link to="/tailor/" className="sidebar-link">
           <span className="material-icons-outlined">dashboard</span>
-          <span className="ml-3">Dashboard</span>
+          <span className="ml-3 text-base">Dashboard</span>
         </Link>
         <Link to="/tailor/orders" className="sidebar-link">
           <span className="material-icons-outlined">shopping_cart</span>
-          <span className="ml-3">Orders</span>
+          <span className="ml-3 text-base">Orders</span>
         </Link>
         <Link to="/tailor/catalogue" className="sidebar-link">
           <span className="material-icons-outlined">inventory_2</span>
-          <span className="ml-3">Products</span>
+          <span className="ml-3 text-base">Products</span>
         </Link>
         <Link to="/tailor/gig" className="sidebar-link">
           <span className="material-icons-outlined">analytics</span>
-          <span className="ml-3">Gig</span>
+          <span className="ml-3 text-base">Gig</span>
         </Link>
         <Link to="/tailor/view" className="sidebar-link">
           <span className="material-icons-outlined">message</span>
-          <span className="ml-3">Messages</span>
+          <span className="ml-3 text-base">Messages</span>
         </Link>
         <Link to="/tailor/reviews" className="sidebar-link">
           <span className="material-icons-outlined">people</span>
-          <span className="ml-3">Users</span>
+          <span className="ml-3 text-base">Users</span>
         </Link>
       
       </nav>
 
-      {/* Close Button */}
-      <button className="sidebar-close-btn" onClick={toggleSidebar}>
-        <span className="material-icons-outlined">close</span>
-      </button>
+      </div>
     </aside>
   );
 };

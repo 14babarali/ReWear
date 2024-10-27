@@ -27,7 +27,7 @@ const TailorLayout = () => {
     const user = JSON.parse(localStorage.getItem('user'));
 
     if (user && !hasNavigated) {
-      if (user.role !== 'Buyer') {
+      if (user.role !== 'Tailor') {
         setHasNavigated(true); // Set to true after navigating
         navigate('/' + user.role.toLowerCase());
       }

@@ -1,0 +1,67 @@
+/* Sidebar styles */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: auto;
+  background-color: black;
+  color: white;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.sidebar.open {
+  transform: translateX(0);
+  padding: 30px;
+}
+
+/* Sidebar Header */
+.sidebar-header {
+  padding: 2rem;
+  font-size: 1.5rem; /* 2xl */
+  font-weight: bold;
+  text-align: center;
+  border-bottom: 1px solid #333;
+}
+
+/* Navigation Links */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem; /* p-6 */
+  gap: 1.5rem; /* space-y-6 */
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1.25rem;
+  text-decoration: none;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.sidebar-link:hover {
+  background-color: #333;
+  color: white;
+}
+
+/* Close Button */
+.sidebar-close-btn {
+  position: absolute;
+  top: 1.7rem;
+  right: 0rem;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.sidebar-close-btn:hover {
+  color: #aaa;
+}

@@ -5,7 +5,6 @@ import SellerStatistics from './SellerStatistics';
 import './DashboardContent.css';
 // import './sellerhome.css';
 import { Bounce, ToastContainer } from 'react-toastify';
-import Sidebar from '../../components/seller/Sidebar';
 
 export default function SellerHome() {
     const navigate = useNavigate();
@@ -27,7 +26,6 @@ export default function SellerHome() {
 
     return (
         <>
-        <Sidebar/>
             <div className="content-area mt-5 w-full">
                 <div className="container-fluid">
                     <ToastContainer

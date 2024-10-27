@@ -8,6 +8,8 @@ import { ToastContainer, toast, Bounce } from 'react-toastify';
 import './Tailorprofile.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
+import undereview from '../../assests/under_review.gif';
+
 
 const TailorProfilePage = () => {
   const { t } = useTranslation();
@@ -212,7 +214,7 @@ const TailorProfilePage = () => {
   };
 
   return (
-<div className="sellerprofile-container-fluid d-flex h-100 p-0">
+<div className="sellerprofile-container-fluid d-flex h-100 p-0 m-5 w-auto">
   <ToastContainer
     position='top-right'
     autoClose={2000}
@@ -252,23 +254,31 @@ const TailorProfilePage = () => {
       {/* Profile Details Tab */}
       {activeTab === 'profile' && user && (
         <div className="profile-details">
-          <div className="profile-card row">
-            <div className="profile-card-header">
-              <h4>{t('Profile Details')}</h4>
-            </div>
+          
             <div className="profile-card-body">
              {/* User Info */}
               <div className="profile-info">
-                <div className="profile-image">
-                  <img src={imageUrl} alt="Profile" />
+                <div className="seller-profile-image mr-6">
+                  <img 
+                    cla
+                    src={imageUrl} 
+                    alt="Profile" />
                 </div>
                 <div className="profile-details-info">
-                  <p><strong>{t('Name')}:</strong> {user.profile.name}</p>
-                  <p><strong>{t('Email')}:</strong> {user.email}</p>
-                  <p><strong>{t('Phone')}:</strong> {user.profile.phone}</p>
+                <p className="text-lg  text-gray-800 mb-2">
+                  <strong>{t('Name')}:</strong> {user.profile.name}
+                </p>
+                <p className="text-lg  text-gray-800 mb-2">
+                  <strong>{t('Email')}:</strong> {user.email}
+                </p>
+                <p className="text-lg  text-gray-800 mb-2">
+                  <strong>{t('Phone')}:</strong> {user.profile.phone}
+                </p>
                   {user.profile.addresses && user.profile.addresses.length > 0 && (
                     <div className="addresses">
-                      <p><strong>{t('Addresses')}:</strong></p>
+                       <p className="text-lg  text-gray-800 mb-2">
+                        <strong>{t('Addresses')}:</strong>
+                      </p>
                       <ul>
                         {user.profile.addresses.map((address, index) => (
                           <li key={index}>
@@ -281,17 +291,14 @@ const TailorProfilePage = () => {
                 </div>
               </div>
             </div>
-          </div>
+          
         </div>
       )}
 
       {/* Edit Profile Tab */}
       {activeTab === 'edit' && (
         <div className="edit-profile">
-          <div className="profile-card row">
-            <div className="profile-card-header">
-              <h4>{t('Edit Profile')}</h4>
-            </div>
+          
             <div className="profile-card-body">
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
@@ -376,30 +383,30 @@ const TailorProfilePage = () => {
                       </div>
                     </>
                   ) : (
-                    <div className="cnic-status">
-                      <p>{t('CNIC is being reviewed.')}</p>
-                    </div>
+                    <div className="cnic-status mb-4">
+                    <p>{t('CNIC is being reviewed.')}</p>
+                    <img src={undereview} alt="loading icon" />
+                  </div>
                   )}
                 <div className="form-group">
                   <button type="submit">{t('Save Changes')}</button>
                 </div>
               </form>
             </div>
-          </div>
+          
         </div>
       )}
 
       {/* Change Password Tab */}
       {activeTab === 'password' && (
         <div className="change-password">
-          <div className="profile-card row">
-            <div className="profile-card-header">
-              <h4>{t('Change Password')}</h4>
-            </div>
+          
             <div className="profile-card-body">
               <form onSubmit={handlePasswordChange}>
                 <div className="form-group">
-                  <label htmlFor="currentPassword">{t('Current Password')}</label>
+                  <label htmlFor="currentPassword">
+                    {t('Current Password')} <span className="required-asterisk">*</span>
+                  </label>
                   <input
                     type={showPassword ? 'text' : 'password'}
                     id="currentPassword"
@@ -408,7 +415,9 @@ const TailorProfilePage = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="newPassword">{t('New Password')}</label>
+                  <label htmlFor="newPassword">{t('New Password')}
+                  <span className="required-asterisk">*</span>
+                  </label>
                   <input
                     type={showPassword ? 'text' : 'password'}
                     id="newPassword"
@@ -417,7 +426,9 @@ const TailorProfilePage = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="confirmNewPassword">{t('Confirm New Password')}</label>
+                  <label htmlFor="confirmNewPassword">{t('Confirm New Password')}
+                  <span className="required-asterisk">*</span>
+                  </label>
                   <input
                     type={showPassword ? 'text' : 'password'}
                     id="confirmNewPassword"
@@ -432,14 +443,14 @@ const TailorProfilePage = () => {
                     checked={showPassword}
                     onChange={(e) => setShowPassword(e.target.checked)}
                   />
-                  <label htmlFor="showPassword">{t('Show Password')}</label>
+                  <label htmlFor="showPassword"> {t('Show Password')}</label>
                 </div>
                 <div className="form-group">
                   <button type="submit">{t('Change Password')}</button>
                 </div>
               </form>
             </div>
-          </div>
+          
         </div>
       )}
     </div>

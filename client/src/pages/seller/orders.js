@@ -187,7 +187,7 @@ const OrdersPage = () => {
                 {order._id.slice(-8)}
               </span>
               </td>
-              <td><h3>{order.buyer_id.profile.name}</h3><p>{order.buyer_id.email}</p><p>{order.phone}</p></td>
+              <td><p>{order.buyer_id.profile.name}</p><p>{order.buyer_id.email}</p><p>{order.phone}</p></td>
               <td>
                 <ul>
                   {order.products.map((product) => (

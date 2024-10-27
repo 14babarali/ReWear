@@ -5,7 +5,6 @@ import TailorStatistics from './TailorStatistics';
 import './DashboardTailor.css';
 // import './Tailorhome.css';
 import { Bounce, ToastContainer } from 'react-toastify';
-import Sidebar from '../../components/seller/Sidebar';
 
 export default function TailorHome() {
     const navigate = useNavigate();

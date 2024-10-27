@@ -14,6 +14,7 @@
   
   .sidebar.open {
     transform: translateX(0);
+    padding: 30px;
   }
   
   /* Sidebar Header */
@@ -29,7 +30,6 @@
   .sidebar-nav {
     display: flex;
     flex-direction: column;
-    padding: 1.5rem; /* p-6 */
     gap: 1.5rem; /* space-y-6 */
   }
   
@@ -51,8 +51,8 @@
   /* Close Button */
   .sidebar-close-btn {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    top: 1.7rem;
+    right: 0rem;
     color: white;
     background: none;
     border: none;

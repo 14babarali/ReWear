@@ -110,6 +110,12 @@ body {
   font-weight: bold;
 }
 
+.required-asterisk {
+  color: red;
+  font-weight: bold;
+  margin-left: 4px; /* Optional: adjust spacing between label and asterisk */
+}
+
 .form-group input {
   width: 100%;
   padding: 10px;
@@ -157,6 +163,7 @@ body {
 /* Password Visibility */
 .show-password {
   margin-top: 10px;
+  gap: 10px;
 }
 
 /* CNIC Status */

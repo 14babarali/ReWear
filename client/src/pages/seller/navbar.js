@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes, faGlobe } from '@fortawesome/free-solid-svg-icons';
-import Sidebar from '../../components/seller/Sidebar';
 import seller_logo from '../../assests/rewear-logo.png';
 import './navbar.css';
 import '../../i18n'; // Assumes the i18n configuration is in the src folder
@@ -92,9 +91,9 @@ const Navbar = () => {
   // Adjust the bar rendering based on signal strength
   
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen); // Toggle Sidebar visibility
-  };
+  // const toggleSidebar = () => {
+  //   setIsSidebarOpen(!isSidebarOpen); // Toggle Sidebar visibility
+  // };
 
   const toggleLanguage = (lang) => {
     i18next.changeLanguage(lang); 
@@ -185,7 +184,7 @@ const Navbar = () => {
         </div>
       </nav>
       
-      {/* Sidebar rendering based on isSidebarOpen */}
+      {/* Sidebar rendering based on isSidebarOpen
       {isSidebarOpen && (
         <div
           ref={sidebarRef}
@@ -195,7 +194,7 @@ const Navbar = () => {
         >
           <Sidebar />
         </div>
-      )}
+      )} */}
     </>
   );
 };
