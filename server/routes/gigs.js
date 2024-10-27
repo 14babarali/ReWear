@@ -1,12 +1,12 @@
 // routes/gigs.js
 const express = require('express');
 const { createGig , getAllGigs, getGigById, updateGig, deleteGig} = require('../controllers/gigController');
-const { verifyToken } = require('../middleware/authMiddleware'); // Ensure user authentication
+const { verifyToken } = require('../middleware/authMiddleware'); 
 const checkIfVerified = require('../middleware/verifyUser'); 
 const router = express.Router();
 
 
-router.post('/', verifyToken, checkIfVerified, createGig);
+router.post('/', verifyToken, createGig);
 
 
 // Get all Gigs

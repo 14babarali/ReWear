@@ -26,7 +26,7 @@ app.use(cors({
 
 // Middleware to parse JSON bodies
 app.use(express.json());
-
+app.use(morgan('dev'));
 // Mount the auth routes
 app.use('/api', authRoutes);
 
