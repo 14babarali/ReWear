@@ -6,10 +6,16 @@ import axios from 'axios'; // Import axios for API requests
 
 const GigAdd = () => {
   const [gigImage, setGigImage] = useState(null);
+  const [title, setTitle] = useState(''); // New state for gig title
   const [description, setDescription] = useState('');
-  const [skills, setSkills] = useState(['', '', '']);
+  const [serviceType, setServiceType] = useState('Custom Suit'); // Default value for serviceType
+  const [fabricType, setFabricType] = useState('Cotton'); // Default value for fabricType
+  const [measurementsRequired, setMeasurementsRequired] = useState(true); // Default for measurementsRequired
+  const [measurementInstructions, setMeasurementInstructions] = useState("Please provide measurements in inches or centimeters.");
   const [basicPrice, setBasicPrice] = useState('');
   const [premiumPrice, setPremiumPrice] = useState('');
+  const [basicDeliveryDays, setBasicDeliveryDays] = useState(14); // Default value
+  const [premiumDeliveryDays, setPremiumDeliveryDays] = useState(15); // Default value
   const [loading, setLoading] = useState(false); // Loader state
   const [errorMessage, setErrorMessage] = useState(''); // Error message for validation
   const [successMessage, setSuccessMessage] = useState(''); // Success message for gig creation
@@ -41,23 +47,16 @@ const GigAdd = () => {
     setErrorMessage(''); // Clear any previous error
   };
 
-  const handleSkillChange = (index, value) => {
-    const updatedSkills = [...skills];
-    updatedSkills[index] = value;
-    setSkills(updatedSkills);
-  };
-
-  const handlePriceChange = (setter, value) => {
-    // Allow only numeric values
-    if (!isNaN(value)) {
-      setter(value);
-    }
-  };
-
   const validateForm = () => {
     // Check if image is uploaded
     if (!gigImage) {
       setErrorMessage('Please upload a gig picture.');
+      return false;
+    }
+
+    // Check if title is provided
+    if (!title.trim()) {
+      setErrorMessage('Title is required.');
       return false;
     }
 
@@ -78,13 +77,20 @@ const GigAdd = () => {
       return false;
     }
 
-    // Check if all skills are filled
-    if (skills.some((skill) => skill.trim() === '')) {
-      setErrorMessage('All three skills are required.');
+    // Check delivery days
+    if (!premiumDeliveryDays || premiumDeliveryDays < 5 || premiumDeliveryDays > 30) {
+      setErrorMessage('Premium delivery days must be between 5 and 30.');
       return false;
     }
 
     return true;
+  };
+
+  const handlePriceChange = (setter, value) => {
+    // Allow only numeric values
+    if (!isNaN(value)) {
+      setter(value);
+    }
   };
 
   const handleSubmit = async () => {
@@ -98,10 +104,16 @@ const GigAdd = () => {
       // Create FormData for the API request
       const formData = new FormData();
       formData.append('gigImage', gigImage);
+      formData.append('title', title); // New field for title
       formData.append('description', description);
-      skills.forEach((skill, index) => formData.append(`skills[${index}]`, skill));
+      formData.append('serviceType', serviceType); // New field for service type
+      formData.append('fabricType', fabricType); // New field for fabric type
+      formData.append('measurementsRequired', measurementsRequired);
+      formData.append('measurementInstructions', measurementInstructions);
       formData.append('basicPrice', basicPrice);
       formData.append('premiumPrice', premiumPrice);
+      formData.append('basicDeliveryDays', basicDeliveryDays);
+      formData.append('premiumDeliveryDays', premiumDeliveryDays);
 
       try {
         // Make the API request to create a gig
@@ -118,10 +130,16 @@ const GigAdd = () => {
 
         // Clear form fields
         setGigImage(null);
+        setTitle('');
         setDescription('');
-        setSkills(['', '', '']);
+        setServiceType('Custom Suit');
+        setFabricType('Cotton');
+        setMeasurementsRequired(true);
+        setMeasurementInstructions("Please provide measurements in inches or centimeters.");
         setBasicPrice('');
         setPremiumPrice('');
+        setBasicDeliveryDays(14);
+        setPremiumDeliveryDays(15);
       } catch (error) {
         setLoading(false); // Hide loader
         setShowModal(false); // Hide modal
@@ -140,7 +158,7 @@ const GigAdd = () => {
 
       {/* Image Upload */}
       <div className="gig-image-upload">
-        <label>Upload your Gig Picture:</label>
+        <label>Upload your Gig Picture: <span style={{ color: 'red' }}>*</span></label>
         <input
           type="file"
           accept="image/jpeg,image/png,image/jpg"
@@ -157,12 +175,22 @@ const GigAdd = () => {
             ''
           )}
         </div>
+      </div>
 
+      {/* Title Input */}
+      <div className="gig-title mt-2" style={{gap:'10px'}}>
+        <label>Gig Title: <span style={{ color: 'red' }}>* </span></label>
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Enter gig title"
+        />
       </div>
 
       {/* Dynamic Description */}
       <div className="gig-description">
-        <label>Gig Description:</label>
+        <label>Gig Description: <span style={{ color: 'red' }}>*</span></label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -170,28 +198,69 @@ const GigAdd = () => {
         />
       </div>
 
-      {/* Dynamic Skills */}
-      <div className="gig-skills">
-        <label>Gig Skills (Max 3):</label>
-        {skills.map((skill, index) => (
+      <div className='d-flex mt-2 mb-2' style={{ gap: '15px', flexDirection: 'row', alignItems: 'center',justifyContent:'start' }}>
+          {/* Service Type Selection */}
+          <div className="d-flex gig-service-type" style={{ alignItems: 'center'}}>
+              <label htmlFor="serviceType" className='m-0' style={{ whiteSpace: 'nowrap', minWidth: '120px' }}>
+                Service Type: <span style={{ color: 'red' }}>*</span>
+              </label>
+              <select id="serviceType" className='m-0' value={serviceType} onChange={(e) => setServiceType(e.target.value)}>
+                  <option value="Custom Suit">Custom Suit</option>
+                  <option value="Dressmaking">Dressmaking</option>
+                  <option value="Alteration">Alteration</option>
+                  <option value="Waist-Coat">Waist-Coat</option>
+                  <option value="Leather Jacket">Leather Jacket</option>
+                  <option value="Leather Shoes">Leather Shoes</option>
+                  <option value="Sherwani">Sherwani</option>
+                  <option value="Bridal-Dress">Bridal-Dress</option>
+                  <option value="Other">Other</option>
+              </select>
+          </div>
+
+          {/* Fabric Type Selection */}
+          <div className="d-flex gig-fabric-type" style={{ alignItems: 'center'}}>
+              <label htmlFor="fabricType" className='m-0' style={{ whiteSpace: 'nowrap', minWidth: '120px' }}>
+                Fabric Type:
+                <span style={{ color: 'red' }}>*</span>
+              </label>
+              <select id="fabricType" className='m-0' value={fabricType} onChange={(e) => setFabricType(e.target.value)}>
+                  <option value="Cotton">Cotton</option>
+                  <option value="Wool">Wool</option>
+                  <option value="Linen">Linen</option>
+                  <option value="Silk">Silk</option>
+                  <option value="Leather">Leather</option>
+                  <option value="Synthetic">Synthetic</option>
+                  <option value="Other">Other</option>
+              </select>
+          </div>
+      </div>
+
+
+      {/* Measurements Required */}
+      <div className="gig-measurements-required mt-2">
+        <label>
           <input
-            key={index}
-            type="text"
-            value={skill}
-            onChange={(e) => handleSkillChange(index, e.target.value)}
-            placeholder={`Skill ${index + 1}`}
+            type="checkbox"
+            checked={measurementsRequired}
+            onChange={(e) => setMeasurementsRequired(e.target.checked)}
           />
-        ))}
-        <div className="skills-display">
-          {skills.map((skill, index) => (
-            skill && <span key={index} className="skill-badge">{skill}</span>
-          ))}
-        </div>
+          &nbsp;Measurements Required <span style={{ color: 'red' }}>*</span>
+        </label>
+      </div>
+
+      {/* Measurement Instructions */}
+      <div className="gig-measurement-instructions">
+        <label>Measurement Instructions: <span style={{ color: 'red' }}>*</span></label>
+        <textarea
+          value={measurementInstructions}
+          onChange={(e) => setMeasurementInstructions(e.target.value)}
+          placeholder="Provide measurement instructions..."
+        />
       </div>
 
       {/* Price Input for Basic and Premium */}
       <div className="gig-price">
-        <label>Basic Price (PKR):</label>
+        <label>Basic Price (PKR): <span style={{ color: 'red' }}>*</span></label>
         <input
           type="text"
           value={basicPrice}
@@ -199,12 +268,28 @@ const GigAdd = () => {
           placeholder="Enter basic price"
         />
 
-        <label>Premium Price (PKR):</label>
+        <label>Premium Price (PKR): <span style={{ color: 'red' }}>*</span></label>
         <input
           type="text"
           value={premiumPrice}
           onChange={(e) => handlePriceChange(setPremiumPrice, e.target.value)}
           placeholder="Enter premium price"
+        />
+
+        <label>Basic Delivery Days: <span style={{ color: 'red' }}>*</span></label>
+        <input
+          type="number"
+          value={basicDeliveryDays}
+          onChange={(e) => setBasicDeliveryDays(e.target.value)}
+          placeholder="Enter delivery days"
+        />
+
+        <label>Premium Delivery Days: <span style={{ color: 'red' }}>*</span></label>
+        <input
+          type="number"
+          value={premiumDeliveryDays}
+          onChange={(e) => setPremiumDeliveryDays(e.target.value)}
+          placeholder="Enter delivery days"
         />
       </div>
 

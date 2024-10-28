@@ -37,30 +37,36 @@ const Gigs = () => {
                 Add New Gig
             </Link>
         </div> 
-      {gigs.map((gig) => (
-        <div className="gig-card" key={gig._id}>
-          <img
-            src={`http://localhost:3001/uploads/${gig.gigImage}`}
-            alt="Gig"
-            className="gig-card-image"
-          />
-          <div className="gig-card-content">
-            <h3>{gig.user.username}</h3>
-            <p>{gig.description}</p>
-            <div className="gig-skills">
-              {gig.skills.map((skill, index) => (
-                <span key={index} className="skill">
-                  {skill}
-                </span>
-              ))}
-            </div>
-            <div className="gig-prices">
-              <p>Basic Price: PKR {gig.basicPrice}</p>
-              <p>Premium Price: PKR {gig.premiumPrice}</p>
+        {gigs.length === 0 ? (
+        <p>No gigs available.</p>
+      ) : (
+        gigs.map((gig) => (
+          <div className="gig-card" key={gig._id}>
+            <img
+              src={`http://localhost:3001/uploads/${gig.gigImage}`}
+              alt="Gig"
+              className="gig-card-image"
+            />
+            <div className="gig-card-content">
+              <h3>{gig.title}</h3> {/* Display Gig Title */}
+              {/* <h4>Created by: {gig.user.username}</h4> */}
+              <p>{gig.description}</p> {/* Display Gig Description */}
+              <div className="gig-service-fabric">
+                <p><strong>Service Type:</strong> {gig.serviceType}</p> {/* Display Service Type */}
+                <p><strong>Fabric Type:</strong> {gig.fabricType}</p> {/* Display Fabric Type */}
+              </div>
+              <div className="gig-prices">
+                <p>Basic Price: PKR {gig.basicPrice}</p> {/* Display Basic Price */}
+                <p>Premium Price: PKR {gig.premiumPrice}</p> {/* Display Premium Price */}
+              </div>
+              <p><strong>Delivery Days:</strong> 
+                <p>Basic: {gig.basicDeliveryDays} days</p>
+                <p>Premium: {gig.premiumDeliveryDays} days</p>
+              </p> {/* Delivery Days */}
             </div>
           </div>
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 };

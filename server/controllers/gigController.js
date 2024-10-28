@@ -4,9 +4,20 @@ const User = require('../models/User');
 
 // Create a Gig (only for verified Tailor users with uploaded CNIC)
 const createGig = async (req, res) => {
-  const { description, skills, basicPrice, premiumPrice } = req.body;
-  
-  let gigPic = req.file ? req.file.filename : '';
+  const {
+    title,
+    description,
+    serviceType,
+    fabricType,
+    measurementsRequired,
+    measurementInstructions,
+    basicPrice,
+    premiumPrice,
+    basicDeliveryDays,
+    premiumDeliveryDays
+  } = req.body;
+
+  let gigPic = req.file ? req.file.filename : ''; // Handle image upload if applicable
 
   const userId = req.user.id; // Use the authenticated user's ID
 
@@ -26,11 +37,17 @@ const createGig = async (req, res) => {
     // Create the new gig
     const newGig = new Gig({
       user: userId,
+      title, // New field for gig title
       gigImage: gigPic,
       description,
-      skills,
+      serviceType,
+      fabricType,
+      measurementsRequired,
+      measurementInstructions,
       basicPrice,
       premiumPrice,
+      basicDeliveryDays,
+      premiumDeliveryDays,
     });
 
     // Save the gig
@@ -42,6 +59,7 @@ const createGig = async (req, res) => {
     res.status(500).json({ error: 'Error creating gig' });
   }
 };
+
  
 
 // Get Gigs of the Authenticated User
@@ -60,8 +78,6 @@ const getUserGigs = async (req, res) => {
     res.status(500).json({ error: 'Error fetching user gigs' });
   }
 };
-
-
 
 
 // Get all Gigs

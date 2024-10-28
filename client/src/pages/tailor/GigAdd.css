@@ -1,178 +1,179 @@
 /* Basic reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  /* Container styling */
-  .gig-container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: 'Arial', sans-serif;
-  }
-  
-  /* Header styling */
-  .gig-header {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .gig-header h2 {
-    font-size: 28px;
-    color: #333;
-  }
-  
-  /* Image upload styling */
-  .gig-image-upload label {
-    font-weight: bold;
-    margin-bottom: 10px;
-    display: block;
-    color: #555;
-  }
-  
-  .gig-image-upload input {
-    display: block;
-    margin-top: 10px;
-  }
-  
-  .gig-image-preview {
-    width: 100%;
-    height: auto;
-    margin-top: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Description styling */
-  .gig-description label {
-    font-weight: bold;
-    margin-bottom: 10px;
-    display: block;
-    color: #555;
-  }
-  
-  .gig-description textarea {
-    width: 100%;
-    height: 100px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    margin-top: 10px;
-    resize: none;
-    background-color: #fff;
-  }
-  
-  /* Skills section */
-  .gig-skills label {
-    font-weight: bold;
-    margin-bottom: 10px;
-    display: block;
-    color: #555;
-  }
-  
-  .gig-skills input {
-    width: 30%;
-    margin-right: 10px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    margin-top: 10px;
-    background-color: #fff;
-  }
-  
-  .skills-display {
-    margin-top: 10px;
-  }
-  
-  .skill-badge {
-    display: inline-block;
-    background-color: #007bff;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 20px;
-    margin-right: 5px;
-    font-size: 14px;
-  }
-  
-  /* Price section */
-  .gig-price label {
-    font-weight: bold;
-    margin-bottom: 10px;
-    display: block;
-    color: #555;
-  }
-  
-  .gig-price input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    margin-top: 10px;
-    background-color: #fff;
-  }
-  
-  /* Modal Overlay */
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-  }
-  
-  .modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .modal-content p {
-    margin-top: 20px;
-    font-size: 18px;
-    color: #28a745;
-  }
-  
-  /* Error message styling */
-  .error-message {
-    color: red;
-    font-size: 14px;
-    margin-top: 10px;
-    text-align: center;
-  }
-  
-  /* Submit button styling */
-  .submit-container {
-    text-align: center;
-    margin-top: 20px;
-  }
-  
-  .submit-container button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .submit-container button:disabled {
-    background-color: #ccc;
-  }
-  
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Container styling */
+.gig-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+}
+
+/* Header styling */
+.gig-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.gig-header h2 {
+  font-size: 28px;
+  color: #333;
+}
+
+/* Image upload styling */
+.gig-image-upload label {
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: block;
+  color: #555;
+}
+
+.gig-image-upload input {
+  display: block;
+  margin-top: 10px;
+}
+
+/* Image preview styling */
+.gig-image-preview {
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Description styling */
+.gig-title label,
+.gig-description label,
+.gig-price label,
+.gig-service-type label,
+.gig-fabric-type label,
+.gig-measurements-required label,
+.gig-measurement-instructions label {
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: block;
+  color: #555;
+}
+
+.gig-description textarea,
+.gig-price input,
+.gig-service-type select,
+.gig-fabric-type select,
+.gig-measurement-instructions textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-top: 10px;
+  resize: none; /* Disable resizing for textarea */
+  background-color: #fff;
+}
+
+/* Skills section */
+.gig-skills label {
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: block;
+  color: #555;
+}
+
+.gig-skills input {
+  width: calc(30% - 10px); /* Adjust width for spacing */
+  margin-right: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-top: 10px;
+  background-color: #fff;
+}
+
+.skills-display {
+  margin-top: 10px;
+}
+
+.skill-badge {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  margin-right: 5px;
+  font-size: 14px;
+}
+
+/* Price section */
+.gig-price input {
+  margin-bottom: 10px; /* Space between inputs */
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content p {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #28a745;
+}
+
+/* Error message styling */
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Submit button styling */
+.submit-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.submit-container button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.submit-container button:hover:not(:disabled) {
+  background-color: #0056b3; /* Darker shade on hover */
+}
+
+.submit-container button:disabled {
+  background-color: #ccc;
+}

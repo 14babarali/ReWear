@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
 import BuyerLayout from './layouts/BuyerLayout';
 import SellerLayout from './layouts/SellerLayout';
@@ -35,8 +35,26 @@ const getNavbarByRole = () => {
   }
 };
 
-function App() {
+function AppRoutes () {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const navigate = useNavigate();
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token'); // Check for token
+    const user = JSON.parse(localStorage.getItem('user')); // Get user info
+
+    // If a token exists and it's the initial load, redirect to the user's specific layout
+    if (isInitialLoad && token && user) {
+      navigate('/' + user.role.toLowerCase());
+    } else{
+      const currentPath = window.location.pathname;
+      navigate(currentPath);
+    }
+
+    // Set initial load to false after checking
+    setIsInitialLoad(false);
+  }, [navigate, isInitialLoad]);
 
   useEffect(() => {
     // Update network status
@@ -58,8 +76,6 @@ function App() {
 }, [isOnline]);
 
   return (
-    <Router>
-
       <Routes>
         
         {/* General Routes For all type of users */}
@@ -81,7 +97,13 @@ function App() {
         <Route path="/tailor/*" element={<TailorLayout />} />
 
       </Routes>
+  );
+}
 
+function App() {
+  return (
+    <Router>
+      <AppRoutes />
     </Router>
   );
 }

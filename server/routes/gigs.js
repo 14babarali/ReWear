@@ -11,6 +11,7 @@ const upload = require('../middleware/multer');
 router.post('/add', verifyToken,upload.single('gigImage'), createGig);
 
 router.get('/my-gigs', verifyToken, getUserGigs);
+
 // Get all Gigs
 router.get('/all',verifyToken, getAllGigs);
 
