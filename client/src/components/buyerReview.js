@@ -5,7 +5,7 @@ import './stylesheets/buyerReview.css';
 const BuyerReviews = () => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const token = localStorage.getItem('token');
   // Static review data
   const staticReview = {
     buyerName: 'Talha Masood',
@@ -19,28 +19,35 @@ const BuyerReviews = () => {
     // Fetching reviews data from the server
     const fetchReviews = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/reviews'); // Replace with your API endpoint
-        setReviews([staticReview, ...response.data]); // Add static review to the fetched reviews
+        const response = await axios.get('http://localhost:3001/reviews/getall', {
+
+          headers: {
+            'Authorization': `Bearer ${token}`
+        }
+
+        } ); // Replace with your API endpoint
+        setReviews([]);
+        setReviews(response.data); // Add static review to the fetched reviews
         setLoading(false);
       } catch (error) {
         console.error('Error fetching reviews:', error);
-        setReviews([staticReview]); // Show static review if there's an error fetching others
+        // setReviews([staticReview]);
         setLoading(false);
       }
     };
     fetchReviews();
-  }, []);
+  }, [token]);
 
   if (loading) {
     return <div className="loader">Loading reviews...</div>;
   }
 
   return (
-    <div className="reviews-container">
+    <div className="reviews-container h-full w-full mt-3 bg-white">
       <h2 className="reviews-title">Buyer Reviews</h2>
       <div className="reviews-grid">
         {reviews.length === 0 ? (
-          <p className="no-reviews">No reviews available.</p>
+          <p className="no-reviews text-center">No reviews available.</p>
         ) : (
           reviews.map((review, index) => (
             <div key={index} className="review-card">

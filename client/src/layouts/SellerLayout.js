@@ -36,11 +36,11 @@ const SellerLayout = () => {
 
 
   return (
-    <div className="admin-layout flex flex-col min-h-screen">
+    <div className="admin-layout flex flex-col min-h-screen m-0">
       <SellerNav toggleSidebar={toggleSidebar} />
         <div  className="flex flex-1">
           <SellerSidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
-          <div  className={`flex-1 ${isOpen ? 'ml-64' : 'ml-0'} transition-all duration-300`}>
+          <div  className={`flex-1 ${isOpen ? 'ml-60' : 'ml-0'} transition-all duration-300`} style={{justifyContent:'center', alignItems: 'center'}}>
             <Routes>
               <Route path='/Dashboard' element={<SellerHome />} />
               {/* <Route path= '/OTP/verify' element={<OTP/>}/> */}

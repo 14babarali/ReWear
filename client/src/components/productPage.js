@@ -95,7 +95,7 @@ const ProductPage = () => {
     const fetchReviews = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`http://localhost:3001/api/reviews/${id}`, {
+        const response = await axios.get(`http://localhost:3001/reviews/get/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -194,8 +194,8 @@ const ProductPage = () => {
   };
 
   // Open and close modal handlers
-  const handleShowModal = () => setShowReviewModal(true);
-  const handleCloseModal = () => setShowReviewModal(false);
+  const handleShowModal = () => {setShowReviewModal(true);}
+  const handleCloseModal = () => {setShowReviewModal(false);}
 
   // Filter out the current product from suggested products and match the category
   const suggestedProducts = products.filter(p => p._id !== product._id && p.category === category);
@@ -259,6 +259,7 @@ const ProductPage = () => {
             <button className="btn leave-review-btn mt-3" onClick={handleShowModal}>
               Leave a Review
             </button>
+            
 
             {/* Modal for Review Form */}
             <Modal 
@@ -297,7 +298,7 @@ const ProductPage = () => {
           </div>
         </div>
             {/* Customer Reviews */}
-            {/* <h4 className="mt-4">Customer Reviews</h4>
+            <h4 className="mt-4">Customer Reviews</h4>
             {reviews.length > 0 ? (
               reviews.map((review) => (
                 <div key={review._id} className="review">
@@ -308,7 +309,7 @@ const ProductPage = () => {
               ))
             ) : (
               <p>No reviews yet. Be the first to review!</p>
-            )} */}
+            )}
           </div>
         </div>
 

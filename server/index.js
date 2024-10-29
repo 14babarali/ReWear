@@ -6,8 +6,9 @@ const categoriesRoutes = require('./routes/categoriesRoutes');
 const paymentRoute = require('./routes/paymentRoute');
 const errorHandler = require('./utils/errorHandler');
 const admin = require('./routes/admin');
-// const multer = require("multer");
+const review = require('./routes/reviews');
 const gigsRoute = require('./routes/gigs');
+
 const path = require("path");
 const morgan = require('morgan');
 require('./database'); // Import the database connection
@@ -36,7 +37,9 @@ app.use('/payment', paymentRoute);
 
 app.use('/admin',admin);
 
-app.use('/gigs', gigsRoute); 
+app.use('/gigs', gigsRoute);
+
+app.use('/reviews',review);
 
 // Register error handling middleware
 app.use(errorHandler);

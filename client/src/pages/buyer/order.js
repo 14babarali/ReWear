@@ -49,24 +49,24 @@ const OrdersPage = () => {
                                 <p className="order-status">Status: <span className={`status ${order.status}`}>{order.status}</span></p>
                                 
                                 <div className="order-products">
-                                    {order.products.map((item) => (
-                                        <div key={item.product_id._id} className="product-item">
-                                            <div className='d-flex' style={{gap:'10px'}}>
+                                {order.products.map((item, index) => (
+                                    <div key={`${order._id}-${item.product_id?._id || index}`} className="product-item">
+                                        <div className='d-flex' style={{gap:'10px'}}>
                                             <img 
                                                 src={`http://localhost:3001/uploads/${item.productImage}`} 
-                                                alt={item.product_id.name} 
-                                                onError={(e) => { e.target.onerror = null; e.target.src = {noImg} }}
-                                                style={{width:'120px', height:'120px', objectFit:'cover'}}/>
+                                                alt={item.product_id?.name} 
+                                                style={{width:'120px', height:'120px', objectFit:'cover'}}
+                                            />
                                             <div>
-                                            <p className="product-name">{item.product_id.name}</p>
-                                            <p className="product-quantity">Quantity: {item.quantity}</p>
+                                                <p className="product-name">{item.product_id?.name ? item.product_id?.name : 'Product No Longer Available'}</p>
+                                                <p className="product-quantity">Quantity: {item.quantity}</p>
                                             </div>
-                                            </div>
-                                            <p className="order-type">Payment Method: {order.type}</p>
-                                            <p className="product-price">Price: Rs{item.price}</p>
-                                            <p className="order-total">Total Price: Rs{order.total_price.toFixed(2)}</p>
                                         </div>
-                                    ))}
+                                        <p className="order-type">Payment Method: {order.type}</p>
+                                        <p className="product-price">Price: Rs{item.price}</p>
+                                        <p className="order-total">Total Price: Rs{order.total_price.toFixed(2)}</p>
+                                    </div>
+                                ))}
                                 </div>
                             </div>
                         );

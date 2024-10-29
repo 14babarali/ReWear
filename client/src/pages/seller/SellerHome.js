@@ -25,26 +25,24 @@ export default function SellerHome() {
     }, [navigate]);
 
     return (
-        <>
-            <div className="content-area mt-5 w-full">
-                <div className="container-fluid">
-                    <ToastContainer
-                        position='top-right'
-                        autoClose={2000}
-                        hideProgressBar={false}
-                        newestOnTop={false}
-                        closeOnClick
-                        rtl={false}
-                        theme='dark'
-                        transition={Bounce}
-                        limit={4}
-                    />
-                    <div className="profile-container">
-                        <DashboardContent className="dashboard-content"/>
-                        <SellerStatistics className="seller-statistics"/>
-                    </div>
+        <div className="content-area">
+            <div className="container-fluid bg-white rounded-lg p-3">
+                <ToastContainer
+                    position='top-right'
+                    autoClose={2000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    theme='dark'
+                    transition={Bounce}
+                    limit={4}
+                />
+                <div className="m-0 width-full size-full bg-white rounded-lg justify-center">
+                    <DashboardContent className="dashboard-content"/>
+                    <SellerStatistics className="seller-statistics"/>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

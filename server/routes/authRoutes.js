@@ -38,20 +38,21 @@ router.post("/verify_otp", authController.verifyOTP);
 // Upload/Add New Product
 router.post('/uploadproduct', authmiddleware.verifyToken,upload.array('images'), product.upload);
 
+// Fetching Products 
+router.get('/fetchproducts', authmiddleware.verifyToken, product.fetch);
+
 // Edit product and save
 router.put('/editproduct/:id', authmiddleware.verifyToken,upload.array('images'), product.edit);
+
+// Delete Product
+router.delete('/products/:id', authmiddleware.verifyToken, product.delete);
 
 // Get Product by ID
 router.get('/product/:id', product.getProductsById);
 
-// Fetching Products 
-router.get('/fetchproducts', authmiddleware.verifyToken, product.fetch);
-
 // Route for fetching all products
 router.get('/featured_products',authmiddleware.verifyToken, product.fetchall);
 
-// Delete Product
-router.delete('/products/:id', authmiddleware.verifyToken, product.delete);
 
 // Fetch Products by Category
 router.post('/category/item', product.getProductsByCategory);

@@ -4,20 +4,20 @@ import axios from 'axios';
 const ReviewForm = ({ productId }) => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0); // to highlight stars on hover
-  const [review, setReview] = useState('');
+  const [comment, setComment] = useState('');
   const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:3001/api/buyerReview', {
+      await axios.post('http://localhost:3001/reviews/add', {
         productId,
         rating,
-        review
+        comment
       });
       setMessage('Review submitted successfully!');
       setRating(0);
-      setReview('');
+      setComment('');
     } catch (error) {
       console.error("Error submitting review: ", error.response || error.message);
       setMessage('Error submitting review.');
@@ -58,11 +58,11 @@ const ReviewForm = ({ productId }) => {
           </div>
         </div>
         <div className="form-group">
-          <label htmlFor="review">Review:</label>
+          <label htmlFor="comment">Comment:</label>
           <textarea
-            id="review"
-            value={review}
-            onChange={(e) => setReview(e.target.value)}
+            id="comment"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
             required
             style={{
               border: '2px solid black',
@@ -78,7 +78,6 @@ const ReviewForm = ({ productId }) => {
         <button 
           type="submit" 
           className="btn btn-primary" 
-          disabled={rating === 0 || review.trim() === ''}
         >
           Submit Review
         </button>

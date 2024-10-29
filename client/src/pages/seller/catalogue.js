@@ -98,8 +98,8 @@ const Catalogue = () => {
 
     const [noCategoriesMessage, setNoCategoriesMessage] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
-    const [show, setShow] = useState(false);
-    const [currentProduct, setCurrentProduct] = useState({}); 
+    
+    
     const [token] = useState(localStorage.getItem('token'));
     const [expandedCategories, setExpandedCategories] = useState({});
     const [loading, setLoading] = useState(false);
@@ -120,21 +120,6 @@ const Catalogue = () => {
 
 
     const [productList, setProductList] = useState([]);
-    const [previews, setPreviews] = useState([]);
-    const [product, setProduct] = useState({
-        name: '',
-        type: '',
-        material: '',
-        category: '', 
-        subcategory: '',
-        subChildCategory: '',
-        size: '',
-        description: '',
-        price: '',
-        qty: '',
-        condition: '',
-        images: []
-    });
 
     // Fetch products from backend when component mounts
     useEffect(() => {
@@ -162,36 +147,28 @@ const Catalogue = () => {
      // Function to filter products based on the selected category (parent/child/subchild)
      const filteredProducts = productList.filter((product) => {
         if (selectedCategory.category) {
-            if (selectedCategory.category._id === product.subChildCategory) {
+            if (selectedCategory.category._id === product.subChildCategory._id) {
                 return true;
             }
-            if (selectedCategory.category._id === product.subcategory) {
+            if (selectedCategory.category._id === product.subcategory._id) {
                 return true;
             }
-            if (selectedCategory.category._id === product.category) {
+            if (selectedCategory.category._id === product.category._id) {
                 return true;
             }
         }
         return false;
     });
 
-    // Confirmation modal state
-    const [showConfirmModal, setShowConfirmModal] = useState(false);
-    const [productToDelete, setProductToDelete] = useState(null);
 
     // Function to show confirmation modal
-    const showDeleteConfirmation = (product) => {
-        setProductToDelete(product);
-        setShowConfirmModal(true);
-    };
+    // const showDeleteConfirmation = (product) => {
+    //     const confirmDelete = window.confirm(`Are you sure you want to delete "${product.name}" ?`);
+    //     if(confirmDelete){
+    //         handleDelete(product._id);
+    //     }
 
-    // Function to hide confirmation modal
-    const hideDeleteConfirmation = () => {
-        setProductToDelete(null);
-        setShowConfirmModal(false);
-    };
-
-      
+    // };
     
     const handleDelete = async (id) => {
 
@@ -213,31 +190,11 @@ const Catalogue = () => {
         } catch (error) {
             console.error('Error:', error);
             toast.error('An error occurred while deleting the product.');
-        }finally {
-            hideDeleteConfirmation(); // Close the confirmation modal regardless of the outcome
+        }
+        finally{
+            hideDeleteConfirmation();
         }
     };
-
-    const handleShow = (product) => {
-        setCurrentProduct(product);
-        setProduct({
-            id: product._id || '', // Set the product id if it exists (for editing)
-            name: product.name || '',
-            type: product.type || '',
-            material: product.material || '',
-            category: product.category || '',
-            size: product.size || '',
-            description: product.description || '',
-            price: product.price || '',
-            qty: product.qty || '',
-            condition: product.condition || '',
-            images: [] // Clear the images array, as we will handle image uploads separately
-        });
-        setPreviews(product.images ? product.images.map(image => `http://localhost:3001/uploads/products/${image}`) : []);
-        setShow(true);
-    };
-
-
 
     const handleAddCategory = async (categoryData) => {
         try {
@@ -322,6 +279,21 @@ const Catalogue = () => {
         }
     };
     
+    // Confirmation modal state
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [productToDelete, setProductToDelete] = useState(null);
+
+    // Function to show confirmation modal
+    const showDeleteConfirmation = (product) => {
+        setProductToDelete(product);
+        setShowConfirmModal(true);
+    };
+
+    // Function to hide confirmation modal
+    const hideDeleteConfirmation = () => {
+        setProductToDelete(null);
+        setShowConfirmModal(false);
+    };
 
     // Add hover effect on the card
     const handleMouseEnter = (e) => {
@@ -332,13 +304,76 @@ const Catalogue = () => {
         e.currentTarget.style.transform = 'none';
     };
 
+    // ProductCard component
+    const ProductCard = ({ product }) => (
+        <div
+            className="seller-product-card"
+            style={styles.sellerProductCard}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
+            <div className="seller-product-card-image" style={styles.sellerProductCardImage}>
+                {product.images && product.images.length > 0 && (
+                    <img
+                        src={`http://localhost:3001/uploads/${product.images[0]}`}
+                        alt={product.name}
+                        className="seller-product-image"
+                        style={styles.sellerProductImage}
+                    />
+                )}
+            </div>
+            <div className="seller-product-card-details" style={styles.sellerProductCardDetails}>
+                <div style={styles.titleContainer}>
+                    <h5 style={styles.productTitle} title={product.name}>
+                        {product.name.length > 20 ? `${product.name.substring(0, 20)}...` : product.name}
+                    </h5>
+                    <div className="seller-product-card-actions" style={styles.sellerProductCardActions}>
+                        <Button variant="warning" onClick={() => navigate('/seller/product/add', { state: { product } })} style={styles.editButton}>
+                            <FontAwesomeIcon icon={faPen} />
+                        </Button>
+                        <Button variant="danger" onClick={() => showDeleteConfirmation(product)} style={styles.deleteBtn}>
+                            <FontAwesomeIcon icon={faTrash} />
+                        </Button>
+                    </div>
+                </div>
+                <p>
+                    Type: {product.type} {product.type === 'Used' && `(${product.condition}/10)`}
+                </p>
+                <p>Size: {product.size}</p>
+                <p>QTY: {product.qty}</p>
+                <p>Price: Rs {product.price}</p>
+            </div>
+        </div>
+    );
+
     return (
+        <>
+        <Button className='bg-transparent text-black tracking-wider' style={{textDecoration: 'underline'}} onClick={() => {window.history.back()}}>{'<Back'}</Button>
         <div style={styles.container}>
+            {/* Modal for Delete Confirmation */}
+            <Modal show={showConfirmModal} onHide={hideDeleteConfirmation}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm Delete</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {productToDelete && (
+                        <p>Are you sure you want to delete the product "{productToDelete.name}"?</p>
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={hideDeleteConfirmation}>
+                        Cancel
+                    </Button>
+                    <Button variant="danger" onClick={() => handleDelete(productToDelete._id)}>
+                        Delete
+                    </Button>
+                </Modal.Footer>
+            </Modal>
            <div style={styles.sidebar}>
                 <div style={styles.headerContainer}>
                     <h2 style={styles.header}>Category</h2>
                     <button onClick={handleOpenModal} style={styles.addButton}>
-                        <FontAwesomeIcon icon={faPlusCircle} style={{ marginRight: '8px' }} />  Category
+                        <FontAwesomeIcon icon={faPlusCircle} style={{ marginRight: '8px' }} />
                     </button>
                 </div>
                 {noCategoriesMessage && <p>{noCategoriesMessage}</p>}
@@ -449,84 +484,34 @@ const Catalogue = () => {
                                 {selectedCategory.grandParent ? `${selectedCategory.grandParent.name} / ` : ''}
                                 {selectedCategory.parent ? `${selectedCategory.parent.name} / ` : ''}
                                 {selectedCategory.category.name}
+                                <a style={{cursor:'pointer', color:'red', marginLeft:'10px'}} onClick={()=>{setSelectedCategory('')}}>All categories</a>
                             </p>
-                            {/* <p>{selectedCategory.category.description}</p> */}
+
+                            {/* Display Products */}
+                            <div className="seller-product-list">
+                                {filteredProducts.length === 0 ? (
+                                    // Check if there are products in the product list    
+                                    <div className="d-flex flex-col justify-center">
+                                        <img src={NoProduct} alt="No products" style={{ maxWidth: '200px', marginBottom: '10px' }} />
+                                        <span>No Products Found in your selected Category</span>
+                                    </div>                            
+                                ) : (
+                                    <div className="seller-product-grid" style={styles.sellerProductGrid}>
+                                        {filteredProducts.map((product) => (
+                                            <ProductCard key={product.id} product={product} />
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </>
                     ) : (
-                        <p>Please select a category to view its details.</p>
+                        <div className="seller-product-grid" style={styles.sellerProductGrid}>
+                            {productList.map((product) => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
                     )}
                     
-                    {/* Display Products */}
-                    <div className="seller-product-list">
-                        {filteredProducts.length === 0 ? (
-                            <div className="no-product">
-                                <img src={NoProduct} alt="No products" style={{ maxWidth: '150px', marginBottom: '10px' }} />
-                                <span>No Product Added Yet</span>
-                            </div>
-                        ) : (
-                            <div className="seller-product-grid" style={styles.sellerProductGrid}>
-                                {filteredProducts.map((product) => (
-                                    <div
-                                        key={product.id}
-                                        className="seller-product-card"
-                                        style={styles.sellerProductCard}
-                                        onMouseEnter={handleMouseEnter}
-                                        onMouseLeave={handleMouseLeave}
-                                    >
-                                        <div className="seller-product-card-image" style={styles.sellerProductCardImage}>
-                                            {product.images && product.images.length > 0 && (
-                                                <img
-                                                    src={`http://localhost:3001/uploads/${product.images[0]}`}
-                                                    alt={product.name}
-                                                    className="seller-product-image"
-                                                    style={styles.sellerProductImage}
-                                                />
-                                            )}
-                                        </div>
-                                        <div className="seller-product-card-details" style={styles.sellerProductCardDetails}>
-                                            <div style={styles.titleContainer}>
-                                                <h5 style={styles.productTitle}>{product.name}</h5>
-                                                <div className="seller-product-card-actions" style={styles.sellerProductCardActions}>
-                                                    <Button variant="warning" onClick={() => handleShow(product)} style={styles.editButton}>
-                                                       <FontAwesomeIcon icon={faPen} />
-                                                    </Button>
-                                                    <Button variant="danger" onClick={() => showDeleteConfirmation(product)} style={styles.deleteButton}>
-                                                       <FontAwesomeIcon icon={faTrash} />
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                            <p>Type: {product.type}</p>
-                                            <p>Size: {product.size}</p>
-                                            <p>QTY: {product.qty}</p>
-                                            <p>Price: Rs {product.price}</p>
-                                            <p>Condition: {product.condition}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-
-
-                     {/* Modal for Delete Confirmation */}
-                     <Modal show={showConfirmModal} onHide={hideDeleteConfirmation}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Confirm Delete</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            {productToDelete && (
-                                <p>Are you sure you want to delete the product "{productToDelete.name}"?</p>
-                            )}
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={hideDeleteConfirmation}>
-                                Cancel
-                            </Button>
-                            <Button variant="danger" onClick={() => handleDelete(productToDelete._id)}>
-                                Delete
-                            </Button>
-                        </Modal.Footer>
-                    </Modal>
             </div>
         {/* Modal Component */}
         <Modal
@@ -539,6 +524,7 @@ const Catalogue = () => {
             categories={categories}
         />
         </div>
+        </>
     );    
 };
 
@@ -546,8 +532,10 @@ const styles = {
     container: {
         display: 'flex',
         height: '100vh',
-        padding: '20px',
+        // padding: '20px',
         backgroundColor: '#f4f4f4',
+        margin: '10px',
+        marginTop: '0px'
     },
     sidebar: {
         width: '300px',
@@ -581,6 +569,7 @@ const styles = {
     
     contentArea: {
         flex: 1,
+        height:'100%',
         backgroundColor: '#fff',
         borderRadius: '10px',
         padding: '20px',
@@ -639,8 +628,7 @@ const styles = {
         transition: 'background-color 0.3s, border-left 0.3s, padding-left 0.3s',
         paddingLeft: '20px',  // Additional padding for hierarchy effect
     },
-    deleteButton: {
-        display: 'none', 
+    deleteButton: { 
         marginLeft: '8px',  // Add margin for spacing
         backgroundColor: 'transparent',
         border: 'none',
@@ -669,59 +657,72 @@ const styles = {
     sellerProductGrid: {
         display: 'flex',
         flexWrap: 'wrap', // Allow cards to wrap onto the next line
-        justifyContent: 'space-between', // Space out the cards
-        gap: '15px', // Space between cards
+        justifyContent: 'left', // Space out the cards
+        gap: '20px', // Space between cards
     },
     sellerProductCard: {
-        flex: '0 1 calc(45% - 15px)', // Each card takes up 50% of the width minus the gap
-        maxWidth: 'calc(45% - 15px)', // Ensures max width of card
-        marginBottom: '10px', // Space below each card
-        borderRadius: '6px', // Rounded corners for a modern look
-        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)', // Softer shadow for a slimmer appearance
-        transition: 'transform 0.3s, box-shadow 0.3s', // Smooth transition for hover effects
-        backgroundColor: '#fff', // Card background color
-        overflow: 'hidden', // Prevent overflow for a cleaner look
-        padding: '5px',
-        height: '320px',
+        flex: '0 1 calc(30% - 10px)', // More compact width calculation
+        maxWidth: 'calc(30% - 10px)',
+        marginBottom: '10px',
+        borderRadius: '5px',
+        boxShadow: '0 1px 5px rgba(0, 0, 0, 0.15)', // Slightly deeper shadow for card definition
+        transition: 'transform 0.2s, box-shadow 0.2s',
+        backgroundColor: '#fff',
+        overflow: 'hidden',
+        padding: '5px', // Adjusted padding for content breathing space
+        height: '300px',
     },
     sellerProductCardImage: {
-        height: '150px', // Reduced height for the image
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'hidden', // Hide overflow from image
+        height: '130px', // Reduced image height for a compact look
+        overflow: 'hidden',
+        borderRadius: '6px',
+        marginBottom: '10px', // Spacing below image
     },
     sellerProductImage: {
-        width: '100%', // Full width of the card
-        height: '100%', // Full height of the container
-        objectFit: 'cover', // Maintain aspect ratio while covering the container
-        transition: 'transform 0.3s', // Smooth zoom effect
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+        transition: 'transform 0.2s ease-in-out', // Smooth zoom on hover
     },
     titleContainer: {
-        display: 'flex', // Use flexbox for title and buttons
-        justifyContent: 'space-between', // Space between title and buttons
-        alignItems: 'center', // Align vertically
-        marginBottom: '8px', // Space below title container
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '4px',
+    },
+    productTitle: {
+        fontSize: '16px',
+        fontWeight: 'bold',
+        color: '#333',
+        overflow: 'hidden', // Prevents overflow text
+        whiteSpace: 'nowrap', // Keeps title in one line
+        textOverflow: 'ellipsis', // Adds ellipsis for long titles
     },
     sellerProductCardDetails: {
-        padding: '5px', // Reduced padding around the details
+        padding: '5px',
         display: 'flex',
-        flexDirection: 'column', // Stack text vertically
-        flexGrow: 1, // Take up remaining space
-        fontFamily: 'Arial, sans-serif', // Font for better readability
-        fontSize: '12px', // Smaller font size for a slimmer look
-        lineHeight: '0.5', // Reduced line height for compactness
+        flexDirection: 'column',
+        fontSize: '14px',
+        color: '#555',
+        lineHeight: '0.5',
     },
     sellerProductCardActions: {
-        marginTop: '6px', // Reduced space above the buttons
         display: 'flex',
-        justifyContent: 'space-between', // Space between buttons
-        alignItems: 'center', // Center buttons vertically
-        fontSize: '12px', // Consistent font size for buttons
+        gap: '5px', // Adds spacing between buttons
+    },
+    editButton: {
+        fontSize: '12px',
+        padding: '4px 8px',
+        borderRadius: '4px',
+    },
+    deleteBtn: {
+        fontSize: '12px',
+        padding: '4px 8px',
+        borderRadius: '4px',
     },
     sellerProductCardHover: {
-        transform: 'scale(1.02)', // Slight zoom on hover
-        boxShadow: '0 3px 8px rgba(0, 0, 0, 0.2)', // Deeper shadow on hover for emphasis
+        transform: 'scale(1.02)',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
     },
 
     modalOverlay: {

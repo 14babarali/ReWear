@@ -146,7 +146,11 @@ exports.edit = async (req, res) => {
 exports.fetch = async (req, res) => {
     const userId = req.user.id;
     try {
-        const products = await Product.find({ userId: userId });
+        const products = await Product.find({ userId: userId })
+        .populate('category')         // Populate category details
+        .populate('subcategory')      // Populate subcategory details
+        .populate('subChildCategory'); // Populate sub-child category details;
+        
         res.status(200).json(products);
     } catch (err) {
         console.error('Error fetching products:', err);

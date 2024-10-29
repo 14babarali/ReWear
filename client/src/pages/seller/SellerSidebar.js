@@ -43,8 +43,8 @@ const SellerSidebar = ({ isOpen, toggleSidebar }) => {
           <span className="ml-3 text-base">Messages</span>
         </Link>
         <Link to="/seller/users" className="sidebar-link">
-          <span className="material-icons-outlined">people</span>
-          <span className="ml-3 text-base">Users</span>
+          <span className="material-icons-outlined">report</span>
+          <span className="ml-3 text-base">Complaints</span>
         </Link>
       </nav>
       </div>

@@ -34,7 +34,7 @@ try {
 
     const wishlistItem = await Wishlist.findOne({ userId, productId });
 
-    res.json({ isWishlisted:!!wishlistItem });
+    res.status(200).json({ isWishlisted:!!wishlistItem });
 
 } catch (error) {
 

@@ -6,6 +6,7 @@ const reviewSchema = new mongoose.Schema({
     product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
     rating: { type: Number, min: 1, max: 5, required: true },
     comment: String,
+    images: [{ type: String }],  // Added images array to store image URLs or paths
     created_at: { type: Date, default: Date.now }
 });
 

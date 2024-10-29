@@ -188,16 +188,6 @@ const GigAdd = () => {
         />
       </div>
 
-      {/* Dynamic Description */}
-      <div className="gig-description">
-        <label>Gig Description: <span style={{ color: 'red' }}>*</span></label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Enter gig description here..."
-        />
-      </div>
-
       <div className='d-flex mt-2 mb-2' style={{ gap: '15px', flexDirection: 'row', alignItems: 'center',justifyContent:'start' }}>
           {/* Service Type Selection */}
           <div className="d-flex gig-service-type" style={{ alignItems: 'center'}}>
@@ -233,6 +223,16 @@ const GigAdd = () => {
                   <option value="Other">Other</option>
               </select>
           </div>
+      </div>
+
+      {/* Dynamic Description */}
+      <div className="gig-description">
+        <label>Description: <span style={{ color: 'red' }}>*</span></label>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Enter description here..."
+        />
       </div>
 
 

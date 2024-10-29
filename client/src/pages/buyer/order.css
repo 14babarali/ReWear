@@ -75,6 +75,11 @@
     color: #fff;
 }
 
+.status.cancelled {
+    background-color: #f04343;
+    color: #fff;
+}
+
 .order-total {
     font-size: 1rem;
     font-weight: 500;

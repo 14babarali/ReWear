@@ -2,6 +2,7 @@
   flex: 1; /* Allow content area to grow */
   transition: margin-left 0.3s ease; /* Smooth transition */
   margin-left: 240px; /* Space for the sidebar when opened */
+  border-radius: 10px;
 }
 
 .content.open {
@@ -28,6 +29,7 @@
     justify-content: space-between;
     align-items: flex-start; /* Align items to the top */
     padding: 20px; /* Optional padding for spacing */
+    border-radius: 30px;
   }
   
   .dashboard-content, .seller-statistics {

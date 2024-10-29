@@ -1,14 +1,15 @@
 const Reviews = require('../models/Reviews'); // Import the Reviews model
 const Product = require('../models/Product');
+const User = require('../models/User');
 
 // Create a new review
-const createReview = async (req, res) => {
+exports.createReview = async (req, res) => {
     try {
-        const { product_id, rating, comment } = req.body;
+        const { productId, rating, comment } = req.body;
         const reviewer_id = req.user.id; // Extract the logged-in user's ID (reviewer_id)
 
         // Fetch the product by its ID to get the user who added it
-        const product = await Product.findById(product_id);
+        const product = await Product.findById(productId);
         if (!product) {
             return res.status(404).json({ message: 'Product not found.' });
         }
@@ -16,7 +17,7 @@ const createReview = async (req, res) => {
         const reviewee_id = product.userId; // userId is the seller who added the product
 
         // Validate that all required fields are present
-        if (!reviewer_id || !reviewee_id || !product_id || !rating) {
+        if (!reviewer_id || !reviewee_id || !productId || !rating) {
             return res.status(400).json({ message: "Missing required fields." });
         }
 
@@ -24,7 +25,7 @@ const createReview = async (req, res) => {
         const newReview = new Reviews({
             reviewer_id,
             reviewee_id,
-            product_id,
+            productId,
             rating,
             comment
         });
@@ -40,7 +41,7 @@ const createReview = async (req, res) => {
 };
 
 // Get reviews for a product
-const getProductReviews = async (req, res) => {
+exports.getProductReviews = async (req, res) => {
     try {
         const { productId } = req.params;
 
@@ -54,4 +55,22 @@ const getProductReviews = async (req, res) => {
     }
 };
 
-module.exports = { createReview, getProductReviews };
+// Get All Reviews of Seller Products
+exports.getAllReviews = async (req,res) => {
+    try {
+        const sellerId = req.user.id;  // Retrieve seller ID from request params
+
+        // Fetch all reviews where reviewee_id matches the seller's ID
+        const reviews = await Reviews.find({ reviewee_id: sellerId })
+            .populate('reviewer_id', 'name')     // Optionally populate reviewer details
+            .populate('product_id', 'name')      // Optionally populate product details
+            .exec();
+
+        res.status(200).json(reviews);
+    } catch (error) {
+        console.error('Error fetching reviews:', error);
+        res.status(500).json({ error: 'An error occurred while fetching reviews' });
+    }
+
+    
+};

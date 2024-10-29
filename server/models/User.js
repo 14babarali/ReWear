@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
   role: { 
     type: String, 
     enum: ['Buyer', 'Seller', 'Tailor'], 
-    default: 'buyer' 
+    default: 'Buyer' 
   },
   profile: {
     name: { type: String },

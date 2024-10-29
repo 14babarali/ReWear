@@ -30,7 +30,7 @@ const TailorNav = ({ toggleSidebar }) => {
   };
 
   return (
-    <header className="header">
+    <header className="header w-full">
       {/* Sidebar toggle button */}
       <button className="menu-toggle-button" onClick={toggleSidebar}>
         <span className="material-icons-outlined">menu</span>

@@ -39,8 +39,8 @@ const TailorSidebar = ({ isOpen, toggleSidebar }) => {
           <span className="ml-3 text-base">Messages</span>
         </Link>
         <Link to="/tailor/reviews" className="sidebar-link">
-          <span className="material-icons-outlined">people</span>
-          <span className="ml-3 text-base">Users</span>
+          <span className="material-icons-outlined">reviews</span>
+          <span className="ml-3 text-base">Reviews</span>
         </Link>
       
       </nav>
