@@ -52,6 +52,7 @@ exports.getCart = async (req, res) => {
     const userId = req.user.id;
 
     try {
+        if(userId){
         const user = await User.findById(userId).populate({
             path: 'cart',
             populate: {
@@ -77,8 +78,13 @@ exports.getCart = async (req, res) => {
                 quantity: cartItem.quantity  // Quantity from the cartItem
             };
         });
+        
 
         res.status(200).json({ products });
+        }
+        else{
+            res.status(404).json({message: 'UserId Not Found'});
+        }
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: error.message });

@@ -34,6 +34,7 @@ exports.placeOrder = async (req, res) => {
                     product_id: item.product_id,
                     productImage: product.images[0],
                     quantity: item.quantity,
+                    size: item.size,
                     price: product.price
                 }],
                 type: type,

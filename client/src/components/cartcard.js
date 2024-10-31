@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
-const HorizontalCard = ({ product, onQuantityChange, onDelete  }) => {
+const HorizontalCard = ({ product, onQuantityChange, onDelete, handleSizeClick, selectedSize  }) => {
 
     const [quantity, setQuantity] = useState(product.quantity);
     const [isUpdating, setIsUpdating] = useState(false);
@@ -74,7 +74,20 @@ const HorizontalCard = ({ product, onQuantityChange, onDelete  }) => {
           </div>
         </div>
         {/* <p className="horizontal-card-size">Remaining {product.qty} {product.qty > 1 ? 'products' : 'product'}</p> */}
-        <p className="horizontal-card-size">Size {product.size}</p>
+          <div className='d-flex ' style={{justifyContent: 'start', alignItems: 'center'}}>
+              <p className='m-0'><strong>Size: </strong></p>
+              <div className="size-blocks">
+                {product.size.map((s, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSizeClick(s)}
+                    className={`size-block ${selectedSize === s ? 'selected' : ''}`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+          </div>
       </div>
     </div>
   );

@@ -6,10 +6,8 @@ import { faShoppingCart, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import StarRating from './starcomponent';
 import SuggestedProductCard from './suggestedproduct';
-import ReviewForm from './ReviewForm'; // Import the ReviewForm component
 import UserDetails from './UserDetails'; // Import Seller Profile component
 import Productinfo from './Productinfo'; 
-import { Modal } from 'react-bootstrap'; // Bootstrap Modal
 import Error404 from '../assests/error-404.png';
 import './stylesheets/productpage.css'; // CSS file imported
 import { ToastContainer, toast } from 'react-toastify';
@@ -29,7 +27,6 @@ const ProductPage = () => {
   const [products, setProducts] = useState([]);
   const [reviews, setReviews] = useState([]); // For storing reviews
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [showReviewModal, setShowReviewModal] = useState(false); // State for modal visibility
 
   const handleSizeClick = (size) => {
     setSelectedSize(size);
@@ -100,6 +97,10 @@ const ProductPage = () => {
   }, [id]);
 
   
+  useEffect(() => {
+    fetchReviews();
+  },[])
+
   // Fetch reviews for the current product
   const fetchReviews = async () => {
     try {
@@ -201,8 +202,8 @@ const ProductPage = () => {
   };
 
   // Open and close modal handlers
-  const handleShowModal = () => {setShowReviewModal(true);}
-  const handleCloseModal = () => {setShowReviewModal(false);}
+  // const handleShowModal = () => {setShowReviewModal(true);}
+  // const handleCloseModal = () => {setShowReviewModal(false);}
 
   // Filter out the current product from suggested products and match the category
   const suggestedProducts = products.filter(p => p._id !== product._id && p.category === category);
@@ -276,18 +277,9 @@ const ProductPage = () => {
             </div>
 
             {/* Button to open Review Form Modal */}
-            <button className="btn leave-review-btn mt-3" onClick={handleShowModal}>
+            <button className="btn leave-review-btn mt-3">
               Leave a Review
             </button>
-            
-
-            {/* Modal for Review Form */}
-            <Modal 
-              show={showReviewModal} 
-              onHide={handleCloseModal} 
-              centered 
-            />
-            
 
             {/*seller profile details */} 
             <UserDetails />  
@@ -309,7 +301,7 @@ const ProductPage = () => {
             
           </div>
         </div>
-            {/* Customer Reviews */}
+            {/* Customer Reviews
             <h4 className="mt-4">Customer Reviews</h4>
             {reviews.length > 0 ? (
               reviews.map((review) => (
@@ -321,7 +313,7 @@ const ProductPage = () => {
               ))
             ) : (
               <p>No reviews yet. Be the first to review!</p>
-            )}
+            )} */}
           </div>
         </div>
 

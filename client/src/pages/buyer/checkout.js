@@ -327,6 +327,7 @@ const Checkout = () => {
                         <p style={{ color: '#666', fontSize: '12px', margin: '0 0 5px' }}>{item.product._id}</p>
                         <p style={{ fontWeight: 'bold', fontSize: '18px', margin: '5px 0', color: '#333' }}>{item.product.name}</p>
                         <p style={{ fontSize: '14px', margin: '5px 0', color: '#555' }}><strong>QTY:</strong> {item.quantity}</p>
+                        <p style={{ fontSize: '14px', margin: '5px 0', color: '#555' }}><strong>Selected Size:</strong> {item.size}</p>
                         <p style={{ fontSize: '14px', margin: '5px 0', color: '#555' }}><strong>Price:</strong> Rs {item.product.price}</p>
                     </div>
   
