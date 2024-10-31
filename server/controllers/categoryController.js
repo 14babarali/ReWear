@@ -90,8 +90,10 @@ exports.deleteCategory = async (req, res) => {
   const { categoryId } = req.params;
   const userId = req.user.id;
 
+  const user = await User.findById(userId);
+
   try {
-    if(userId && categoryId){
+    if(user.role === 'Admin' && categoryId){
               // Find the category by ID
       const category = await Category.findById(categoryId);
 
