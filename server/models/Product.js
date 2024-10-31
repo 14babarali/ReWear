@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema({
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
     subcategory: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
     subChildCategory: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: false }, 
-    size: { type: String, required: true },
+    size: { type: [String], required: true },
     description: { type: String, required: true },
     price: { type: Number, required: true },
     qty: { type: Number, required: true },

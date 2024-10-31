@@ -66,3 +66,16 @@
     color: #aaa;
   }
   
+  .sidebar-link.report-button {
+    cursor: pointer;
+}
+
+.sidebar-link.report-button:hover {
+  background-color: #333;
+  color:rgb(22, 22, 231)
+}
+
+.sidebar-link.report-button:focus {
+    outline: none;
+    background-color: #333;
+}

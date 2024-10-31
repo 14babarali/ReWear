@@ -6,10 +6,12 @@ import NoProduct from '../../assests/error-404.png';
 import { faPlusCircle, faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import {Button } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
+// import { Model } from 'mongoose';
+
 // import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 
-const Modal = ({ isOpen, onClose, onSubmit, category, setCategory, parentCategories, categories }) => {
+const categoryModel = ({ isOpen, onClose, onSubmit, category, setCategory, parentCategories, categories }) => {
   if (!isOpen) return null;
 
   const handleParentChange = (e) => {
@@ -30,25 +32,25 @@ const Modal = ({ isOpen, onClose, onSubmit, category, setCategory, parentCategor
               <input
                   type="text"
                   placeholder="Category Name"
-                  value={category.name}
+                  value={category?.name}
                   onChange={(e) => setCategory({ ...category, name: e.target.value })}
                   style={styles.input}
               />
               <textarea
                   placeholder="Description"
-                  value={category.description}
+                  value={category?.description}
                   onChange={(e) => setCategory({ ...category, description: e.target.value })}
                   style={styles.textarea}
               />
               <label htmlFor="parentSelect" style={styles.label}>Select Parent Category:</label>
               <select
                   id="parentSelect"
-                  value={category.parent}
+                  value={category?.parent}
                   onChange={handleParentChange}
                   style={styles.select}
               >
                   <option value="">Select Parent Category</option>
-                  {parentCategories.map(parent => (
+                  {parentCategories?.map(parent => (
                       <option key={parent._id} value={parent._id}>
                           {parent.name}
                       </option>
@@ -60,7 +62,7 @@ const Modal = ({ isOpen, onClose, onSubmit, category, setCategory, parentCategor
                       <label htmlFor="childSelect" style={styles.label}>Select Child Category:</label>
                       <select
                           id="childSelect"
-                          value={category.child}
+                          value={category?.child}
                           onChange={(e) => setCategory({ ...category, child: e.target.value })}
                           style={styles.select}
                       >
@@ -98,6 +100,7 @@ const Catalogue = () => {
 
     const [noCategoriesMessage, setNoCategoriesMessage] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
+    const parentCategories = categories.filter(cat => !cat.parent);
     
     
     const [token] = useState(localStorage.getItem('token'));
@@ -170,31 +173,30 @@ const Catalogue = () => {
 
     // };
     
-    const handleDelete = async (id) => {
-
-    try {
-            const token = localStorage.getItem('token');
-            const response = await axios.delete(`http://localhost:3001/api/products/${id}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
+    const handleDeleteProduct = async () => {
+        console.log("Deleting product:", productToDelete); // Debugging log
+        if (productToDelete) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.delete(`http://localhost:3001/api/products/${productToDelete._id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+    
+                if (response.status === 200) {
+                    setProductList((prevList) => prevList.filter(product => product._id !== productToDelete._id));
+                    toast.success('Product deleted successfully!');
+                } else {
+                    toast.error('Failed to delete product');
                 }
-            });
-
-            if (response.status === 200) {
-                setProductList(productList.filter(product => product._id !== id));
-                toast.success('Product deleted successfully!');
-            } else {
-                console.error('Failed to delete product');
-                toast.error('Failed to delete product');
+            } catch (error) {
+                toast.error('An error occurred while deleting the product.');
+            } finally {
+                setShowConfirmModal(false); // Close the modal
+                setProductToDelete(null); // Clear the selected product
             }
-        } catch (error) {
-            console.error('Error:', error);
-            toast.error('An error occurred while deleting the product.');
-        }
-        finally{
-            hideDeleteConfirmation();
         }
     };
+    
 
     const handleAddCategory = async (categoryData) => {
         try {
@@ -252,6 +254,10 @@ const Catalogue = () => {
         setNewCategory({ name: '', description: '', parent: '', child: '', subChild: '' });
     };
 
+    const handleCloseModal = () => {
+        setModalOpen(false);
+    }
+
     const toggleExpand = (categoryId) => {
         setExpandedCategories((prev) => ({
             ...prev,
@@ -285,6 +291,7 @@ const Catalogue = () => {
 
     // Function to show confirmation modal
     const showDeleteConfirmation = (product) => {
+        console.log("Opening delete confirmation for:", product);
         setProductToDelete(product);
         setShowConfirmModal(true);
     };
@@ -348,33 +355,51 @@ const Catalogue = () => {
 
     return (
         <>
-        <Button className='bg-transparent text-black tracking-wider' style={{textDecoration: 'underline'}} onClick={() => {window.history.back()}}>{'<Back'}</Button>
+            <Button className='bg-transparent text-black tracking-wider' style={{textDecoration: 'underline'}} onClick={() => {window.history.back()}}>{'<Back'}</Button>
         <div style={styles.container}>
             {/* Modal for Delete Confirmation */}
-            <Modal show={showConfirmModal} onHide={hideDeleteConfirmation}>
+            <Modal
+                show={showConfirmModal}
+                onHide={() => setShowConfirmModal(false)}
+                style={{ zIndex: 1050 }} // Ensure modal is above other elements
+                backdropStyle={{ zIndex: 1040 }} // Ensure backdrop is behind modal
+            >
                 <Modal.Header closeButton>
                     <Modal.Title>Confirm Delete</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {productToDelete && (
-                        <p>Are you sure you want to delete the product "{productToDelete.name}"?</p>
-                    )}
+                {productToDelete && (
+                <p style={{ color: 'black' }}>
+                    Are you sure you want to delete the product "{productToDelete.name}"?
+                </p>
+            )}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={hideDeleteConfirmation}>
+                    <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>
                         Cancel
                     </Button>
-                    <Button variant="danger" onClick={() => handleDelete(productToDelete._id)}>
+                    <Button variant="danger" onClick={handleDeleteProduct}>
                         Delete
                     </Button>
                 </Modal.Footer>
             </Modal>
+
+
            <div style={styles.sidebar}>
                 <div style={styles.headerContainer}>
                     <h2 style={styles.header}>Category</h2>
                     <button onClick={handleOpenModal} style={styles.addButton}>
                         <FontAwesomeIcon icon={faPlusCircle} style={{ marginRight: '8px' }} />
                     </button>
+                    {categoryModel({
+                        isOpen: modalOpen,
+                        onClose: handleCloseModal,
+                        onSubmit: handleAddCategory,
+                        category: selectedCategory,
+                        setCategory: setSelectedCategory,
+                        parentCategories: parentCategories,
+                        categories: categories
+                    })}
                 </div>
                 {noCategoriesMessage && <p>{noCategoriesMessage}</p>}
 
@@ -514,7 +539,7 @@ const Catalogue = () => {
                     
             </div>
         {/* Modal Component */}
-        <Modal
+        {/* <Model
             isOpen={modalOpen}
             onClose={() => setModalOpen(false)}
             onSubmit={handleAddCategory}
@@ -522,7 +547,7 @@ const Catalogue = () => {
             setCategory={setNewCategory}
             parentCategories={categories.filter(cat => !cat.parent)}
             categories={categories}
-        />
+        /> */}
         </div>
         </>
     );    

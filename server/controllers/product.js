@@ -1,15 +1,26 @@
+const fs = require('fs');
+const path = require('path');
 const Product = require('../models/Product');
 const User = require('../models/User');
 const Category = require('../models/categories')
 
+// Path to the directory where images are stored
+const imageDirectory = path.join(__dirname, '../uploads');
 
 exports.upload = async (req, res) => {
     const userId = req.user.id;
 
     // Check if all required fields are provided
-    const { name, type, material, category, subcategory,subChildCategory, size, description, price, qty, condition } = req.body;
+    const { name, type, material, category, subcategory,subChildCategory, description,size, price, qty, condition } = req.body;
 
-    if (!name || !type || !material || !category ||!subcategory || !subChildCategory || !size || !description || !price || !qty || !condition) {
+    // Ensure size is an array if provided
+    const sizes = Array.isArray(size) ? size : (size ? [size] : []);
+
+    // Convert price and qty to numbers
+    const numericPrice = parseFloat(price);
+    const numericQty = parseInt(qty, 10);
+
+    if (!name || !type || !material || !category ||!subcategory || !subChildCategory || sizes.length ===0 || !description || isNaN(numericPrice) || isNaN(numericQty) || (type === 'Used' && !condition) || (type === 'Used' && condition.trim() === '')) {
         return res.status(400).json({ success: false, message: 'All fields are required.' });
     }
 
@@ -37,7 +48,7 @@ exports.upload = async (req, res) => {
         category,
         subcategory,
         subChildCategory,
-        size,
+        size: sizes,
         description,
         price,
         qty,
@@ -52,45 +63,6 @@ exports.upload = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server Error', error: error.message });
     }
 };
-
-
-// exports.upload= async (req, res) => {
-    
-//     const userId = req.user.id;
-
-//     // Check if all required fields are provided
-//     const { name, type, material, category, size, description, price, qty, condition } = req.body;
-    
-//     if (!name || !type || !material || !category || !size || !description || !price || !qty || !condition) {
-//         return res.status(400).json({ success: false, message: 'All fields are required.' });
-//     }
-
-//     // Get image file paths
-//     const imagePaths = req.files ? req.files.map(file => file.filename) : [];
-
-
-//     // Create a new product
-//     const newProduct = new Product({
-//         name,
-//         type,
-//         material,
-//         category,
-//         size,
-//         description,
-//         price,
-//         qty,
-//         condition,
-//         images: imagePaths,
-//         userId
-//     });
-
-//     try {
-//         const savedProduct = await newProduct.save();
-//         res.status(201).json(savedProduct);
-//     } catch (error) {
-//         res.status(500).json({ success: false, message: 'Server Error', error: error.message });
-//     }
-// };
 
 exports.edit = async (req, res) => {
     const { id: productId } = req.params;
@@ -108,10 +80,19 @@ exports.edit = async (req, res) => {
 
     const userId = req.user.id;
 
+    const user = await User.findById(userId);
+
+    if(!user){
+        return res.status(404).json({message: 'User not Found.'});
+    }
+
     // Check if all required fields are provided
     const { name, type, material, category, size, description, price, qty, condition } = req.body;
 
-    if (!name || !type || !material || !category || !size || !description || !price || !qty || !condition) {
+    // Ensure size is an array if provided
+    const sizes = Array.isArray(size) ? size : (size ? [size] : []);
+
+    if (!name || !type || !material || !category || sizes.length === 0 || !description || !price || !qty || !condition) {
         return res.status(400).json({ success: false, message: 'All fields are required.' });
     }
 
@@ -119,11 +100,12 @@ exports.edit = async (req, res) => {
     const imagePaths = req.files ? req.files.map(file => file.filename) : [];
 
     // Update product fields
+    product.userId = userId;
     product.name = name;
     product.type = type;
     product.material = material;
     product.category = category;
-    product.size = size;
+    product.size = sizes;
     product.description = description;
     product.price = price;
     product.qty = qty;
@@ -161,11 +143,25 @@ exports.fetch = async (req, res) => {
 exports.delete = async (req, res) => {
     const { id } = req.params;
     try {
-        const deletedProduct = await Product.findByIdAndDelete(id);
-        if (!deletedProduct) {
+        const product = await Product.findById(id);
+        if (!product) {
             return res.status(404).json({ error: 'Product not found' });
         }
-        res.status(200).json(deletedProduct);
+
+        // Delete images from the file system
+        if (product.images && product.images.length > 0) {
+            product.images.forEach(image => {
+                const imagePath = path.join(imageDirectory, image);
+                fs.unlink(imagePath, (err) => {
+                    if (err) console.error(`Failed to delete image at ${imagePath}:`, err);
+                });
+            });
+        }
+
+        // Delete the product document from the database
+        await Product.findByIdAndDelete(id);
+
+        res.status(200).json({ message: 'Product and associated images deleted successfully' });
     } catch (err) {
         console.error('Error deleting product:', err);
         res.status(500).json({ error: 'Failed to delete product' });

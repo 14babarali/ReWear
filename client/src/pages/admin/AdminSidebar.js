@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import './AdminSidebar.css'; // Import the CSS file
+import generateReport from './AdminReports';
 
 const AdminSidebar = ({ isOpen, toggleSidebar }) => {
   return (
@@ -30,7 +31,7 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
           <span className="material-icons-outlined">inventory_2</span>
           <span className="ml-3 text-base">Products</span>
         </Link>
-        <Link to="#" className="sidebar-link">
+        <Link to="/admin/Report" className="sidebar-link" onClick={generateReport}>
           <span className="material-icons-outlined">analytics</span>
           <span className="ml-3 text-base">Reports</span>
         </Link>
