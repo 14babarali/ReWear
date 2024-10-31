@@ -11,7 +11,7 @@ import AdminProfilePage from '../pages/admin/AdminProfilePage.js';
 import UserDetails from '../pages/admin/UserDetails.js';
 import Navbar from '../pages/admin/AdminNav.js';
 import ERR404 from '../components/error404';
-
+import Catalogue from '../pages/admin/catalogue.js';
 const AdminLayout = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false); // Set initial sidebar state to closed
@@ -54,6 +54,8 @@ const AdminLayout = () => {
             <Route path="/Profile" element={<AdminProfilePage />} />
             <Route path="/Details" element={<UserDetails />} />
             <Route path="*" element={<ERR404 />} />
+            <Route path="/catalogue" element={<Catalogue />} />
+            
           </Routes>
         </div>
       </div>

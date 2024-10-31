@@ -43,6 +43,10 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
           <span className="material-icons-outlined">people</span>
           <span className="ml-3 text-base">Users</span>
         </Link>
+        <Link to="/admin/catalogue" className="sidebar-link">
+          <span className="material-icons-outlined">people</span>
+          <span className="ml-3 text-base">catalogue</span>
+        </Link>
       </nav>
       </div>
     </aside>
