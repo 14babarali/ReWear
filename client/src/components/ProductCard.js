@@ -178,11 +178,16 @@ const ProductCard = ({ product }) => {
           />
         </div>
         <div className="mb-2">
-          <p className="card-text mb-0">Item Remaining: {product.qty}</p>
+        <p className="card-text mb-0">Size: {product.size.join(', ')}</p>
         </div>
         <div className="mb-2">
-          <p className="card-text mb-0">Condition <StarRating condition={product.condition} /> </p>
+          <p className="card-text mb-0">Item Remaining: {product.qty}</p>
         </div>
+        {product.type === 'Used' && (
+          <div className="mb-2">
+            <p className="card-text mb-0">Condition <StarRating condition={product.condition} /> </p>
+          </div>
+        )}
 
       </div>
     </div>

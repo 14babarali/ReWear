@@ -35,7 +35,7 @@ const AppHeader = () => {
       // Store categories in localStorage after organizing and stringifying them
       localStorage.setItem('categories', JSON.stringify(organizedCategories));
       if (data.length === 0) {
-        setNoCategoriesMessage('No categories found. Please add a new category.');
+        setNoCategoriesMessage('No categories added by Administration.');
       } else {
         setNoCategoriesMessage('');
       }

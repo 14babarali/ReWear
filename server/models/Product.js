@@ -15,7 +15,7 @@ const productSchema = new mongoose.Schema({
     description: { type: String, required: true },
     price: { type: Number, required: true },
     qty: { type: Number, required: true },
-    condition: { type: Number, required: true },
+    condition: { type: Number},
     images: { type: [String], required: true },
     created_at: { type: Date, default: () => moment().tz('Asia/Karachi').toDate() },
     updated_at: { type: Date, default: () => moment().tz('Asia/Karachi').toDate() }

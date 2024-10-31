@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './stylesheets/Productinfo.css'; // CSS file for styling
 
-const Productinfo = ({des}) => {
+const Productinfo = ({des, onReviewAdded}) => {
   const [activeSection, setActiveSection] = useState(null); // Track which section is open
 
   const toggleSection = (section) => {

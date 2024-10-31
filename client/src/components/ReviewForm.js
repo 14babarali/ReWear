@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const ReviewForm = ({ productId }) => {
+const ReviewForm = ({ productId, onReviewAdded }) => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0); // to highlight stars on hover
   const [comment, setComment] = useState('');
@@ -10,12 +10,19 @@ const ReviewForm = ({ productId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const token = localStorage.getItem('token');
       await axios.post('http://localhost:3001/reviews/add', {
         productId,
+        // images,
         rating,
         comment
+      },{
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
       });
       setMessage('Review submitted successfully!');
+      onReviewAdded(); 
       setRating(0);
       setComment('');
     } catch (error) {
@@ -40,44 +47,10 @@ const ReviewForm = ({ productId }) => {
     <div className="review-form">
       <h4>Leave a Review</h4>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Rating:</label>
-          <div className="star-rating">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <span
-                key={star}
-                className={`star ${star <= (hoverRating || rating) ? 'filled' : ''}`}
-                onClick={() => handleClick(star)}
-                onMouseOver={() => handleMouseOver(star)}
-                onMouseLeave={handleMouseLeave}
-                style={{ cursor: 'pointer', fontSize: '24px' }}
-              >
-                &#9733;
-              </span>
-            ))}
-          </div>
-        </div>
-        <div className="form-group">
-          <label htmlFor="comment">Comment:</label>
-          <textarea
-            id="comment"
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            required
-            style={{
-              border: '2px solid black',
-              padding: '10px',
-              borderRadius: '5px',
-              width: '100%',
-              boxSizing: 'border-box',
-              fontFamily: 'Lora, serif'
-            }}
-          />
-        </div>
-
+        <input type="number" value={rating} onChange={(e) => setRating(e.target.value)} min="1" max="5" placeholder="Rate 1-5" required />
+        <textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Write your review..." required />
         <button 
           type="submit" 
-          className="btn btn-primary" 
         >
           Submit Review
         </button>

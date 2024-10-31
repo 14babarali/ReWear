@@ -34,13 +34,14 @@ function Home() {
         const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
         const response = await axios.get('http://localhost:3001/api/featured_products', config); 
         setProducts(response.data);
+        console.log(products);
       } catch (error) {
         if (error.response && error.response.status === 401) {
           // Clear any stored token (optional)
           localStorage.removeItem('token');
           localStorage.removeItem('user');
           // Redirect to logout or login page
-          navigate('/buyer/logout');
+          navigate('/logout');
         } else {
           console.error('Error fetching products:', error);
         }

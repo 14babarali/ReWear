@@ -346,7 +346,7 @@ const Catalogue = () => {
                 <p>
                     Type: {product.type} {product.type === 'Used' && `(${product.condition}/10)`}
                 </p>
-                <p>Size: {product.size}</p>
+                <p>Size: {product.size.join(', ')}</p>
                 <p>QTY: {product.qty}</p>
                 <p>Price: Rs {product.price}</p>
             </div>

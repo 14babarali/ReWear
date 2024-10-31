@@ -79,6 +79,35 @@
   margin-bottom: 10px;
 }
 
+.size-block {
+  background-color: #fff;         /* White background */
+  margin: 2px;
+  padding: 5px 10px;              /* Padding for spacing */
+  color: #272727;                    /* Dark text color */
+  border-radius: 5px;             /* Rounded corners */
+  border: 1px solid #ccc;   /* No border by default */
+  font-weight: 600;               /* Slightly bold text */
+  cursor: pointer;                 /* Pointer cursor for button */
+  transition: all 0.3s ease;      /* Smooth transition for effects */
+  outline: none;                  /* Removes outline */
+}
+
+.size-block:hover {
+  background-color: #fff;         /* Keep background white */
+  border-color: #ccc;             /* Light grey border color on hover */
+  color: #111;                    /* Dark text color on hover */
+  transform: translateY(-2px);    /* Slight lift on hover */
+}
+
+.size-block.selected {
+  background-color: #333;         /* White background for selected */
+  border: 1px solid #222; 
+  color: #fff;                    /* Darker text color for selected */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);  /* Slight shadow effect */
+}
+
+
+
 /* Buttons */
 .product-action-buttons {
   display: flex;
@@ -86,7 +115,7 @@
 }
 
 .add-to-bag-btn {
-  background-color: #4c8bf5;
+  background-color: #444;
   color: white;
   padding: 10px 25px;
   border-radius: 8px;
@@ -97,7 +126,8 @@
 }
 
 .add-to-bag-btn:hover {
-  background-color: #3b72d1;
+  background-color: #222;
+  color: #fff;
 }
 
 .wishlist-btn {

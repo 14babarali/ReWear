@@ -20,7 +20,7 @@ exports.upload = async (req, res) => {
     const numericPrice = parseFloat(price);
     const numericQty = parseInt(qty, 10);
 
-    if (!name || !type || !material || !category ||!subcategory || !subChildCategory || sizes.length ===0 || !description || isNaN(numericPrice) || isNaN(numericQty) || (type === 'Used' && !condition) || (type === 'Used' && condition.trim() === '')) {
+    if (!name || !type || !material || !category ||!subcategory || !subChildCategory || sizes.length ===0 || !description || isNaN(numericPrice) || isNaN(numericQty) || (type === 'Used' && (!condition || condition.trim() === ''))) {
         return res.status(400).json({ success: false, message: 'All fields are required.' });
     }
 
@@ -50,9 +50,9 @@ exports.upload = async (req, res) => {
         subChildCategory,
         size: sizes,
         description,
-        price,
-        qty,
-        condition,
+        price: numericPrice,
+        qty: numericQty,
+        condition: type === 'Used' ? condition : undefined,
         images: imagePaths,
     });
 
@@ -267,6 +267,8 @@ exports.fetchall = async (req, res) => {
                 userId: { $ne: userId }
             });
             res.json(products);
+            console.log(products);
+            
         }
     } catch (error) {
         res.status(500).json({ message: error.message });

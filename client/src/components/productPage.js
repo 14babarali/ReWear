@@ -21,11 +21,20 @@ const ProductPage = () => {
 
   const { id } = useParams();
   const { product } = location.state || {};
+
+  // State to track the selected size
+  const [selectedSize, setSelectedSize] = useState('');
+
   const [isWishlisted, setIsWishlisted] = useState(product.wishlist);
   const [products, setProducts] = useState([]);
   const [reviews, setReviews] = useState([]); // For storing reviews
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showReviewModal, setShowReviewModal] = useState(false); // State for modal visibility
+
+  const handleSizeClick = (size) => {
+    setSelectedSize(size);
+  };
+
 
   useEffect(() => {
 
@@ -90,23 +99,21 @@ const ProductPage = () => {
     fetchProducts();
   }, [id]);
 
-  useEffect(() => {
-    // Fetch reviews for the current product
-    const fetchReviews = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`http://localhost:3001/reviews/get/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setReviews(response.data);
-      } catch (error) {
-        console.error('Error fetching reviews:', error);
-      }
-    };
-    fetchReviews();
-  }, [id]);
+  
+  // Fetch reviews for the current product
+  const fetchReviews = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`http://localhost:3001/reviews/get/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setReviews(response.data);
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    }
+  };
 
   if (!product) {
     return <div>Loading...</div>; // Placeholder for loading state if needed
@@ -223,7 +230,7 @@ const ProductPage = () => {
             </div>
 
           
-            <Productinfo  des={description}/>
+            <Productinfo  des={description} onReviewAdded={reviews}/>
           </div>
 
           {/* Right Section for Product Details */}
@@ -235,10 +242,23 @@ const ProductPage = () => {
             {/* Display the product price */}
             <p className="product-price">Price: PKR {price}</p>
             <ul className="list-unstyled product-specs">
-              <li><strong>Size: </strong> {size}</li>
+              <div className='d-flex ' style={{justifyContent: 'start', alignItems: 'center'}}>
+              <li className='m-0'><strong>Size: </strong></li>
+              <div className="size-blocks">
+                {product.size.map((s, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSizeClick(s)}
+                    className={`size-block ${selectedSize === s ? 'selected' : ''}`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+              </div>
               <li><strong>Material: </strong> {material}</li>
               <li><strong>Type: </strong> {type ? type : 'None'}</li>
-              <li><strong>Condition: </strong> <StarRating condition={condition} /> ({condition}/10)</li>
+              {type==='Used'? <li><strong>Condition: </strong> <StarRating condition={condition} /> ({condition}/10)</li>: null}
             </ul>
 
             {/* Product Action Buttons */}
@@ -266,16 +286,8 @@ const ProductPage = () => {
               show={showReviewModal} 
               onHide={handleCloseModal} 
               centered 
-              // Prevent closing on outside click
-              keyboard={false}   // Prevent closing on pressing "Escape"
-            >
-              <Modal.Header closeButton>
-                <Modal.Title style={{ marginBottom: '20px' }}>Leave a Review</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <ReviewForm productId={id} />
-              </Modal.Body>
-            </Modal>
+            />
+            
 
             {/*seller profile details */} 
             <UserDetails />  
