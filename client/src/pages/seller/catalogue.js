@@ -297,10 +297,10 @@ const Catalogue = () => {
     };
 
     // Function to hide confirmation modal
-    const hideDeleteConfirmation = () => {
-        setProductToDelete(null);
-        setShowConfirmModal(false);
-    };
+    // const hideDeleteConfirmation = () => {
+    //     setProductToDelete(null);
+    //     setShowConfirmModal(false);
+    // };
 
     // Add hover effect on the card
     const handleMouseEnter = (e) => {

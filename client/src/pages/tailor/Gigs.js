@@ -5,6 +5,7 @@ import './Gigs.css'; // CSS file for styling
 
 const Gigs = () => {
   const [gigs, setGigs] = useState([]);
+  const [ErrMsg, setErrMsg] = useState('');
 
   useEffect(() => {
     const fetchGigs = async () => {
@@ -20,9 +21,11 @@ const Gigs = () => {
             Authorization: `Bearer ${token}`, // Include token if using authentication
           },
         });
+        setErrMsg('');
         setGigs(response.data);
       } catch (error) {
         console.error('Error fetching gigs:', error);
+        setErrMsg("Error fetching gigs:",error);
       }
     };
   
@@ -32,19 +35,26 @@ const Gigs = () => {
 
   return (
     <div className="gig-card-container">
-        <div>
-            <Link to={'/tailor/Gigs/add'}>
-                Add New Gig
-            </Link>
-        </div> 
         {gigs.length === 0 ? (
-        <p>No gigs available.</p>
+        <p className='d-flex' style={{alignItems: 'center'}}> 
+          Create a Professional Profile to get More reach
+          <Link to={'/tailor/Gigs/add'}>
+            Add New Gig
+          </Link>
+        </p>
       ) : (
         gigs.map((gig) => (
           <div className="gig-card" key={gig._id}>
             <img
-              src={`http://localhost:3001/uploads/${gig.gigImage}`}
+              src={
+                gig.gigImage ? 
+                `http://localhost:3001/uploads/${gig.gigImage}` : 
+                'http://localhost:3001/uploads/no-image.jpg'}
               alt="Gig"
+              onError={(e) => {
+                e.target.onerror = null; // Prevent looping
+                e.target.src = 'http://localhost:3001/uploads/no-image.jpg'; // Fallback image
+              }}
               className="gig-card-image"
             />
             <div className="gig-card-content">

@@ -7,41 +7,59 @@
 
 /* Container styling */
 .gig-container {
-  max-width: 800px;
+  display: grid;
+  grid-template-columns: 1fr; /* Single column layout by default */
+  max-width: 1200px; /* Set a maximum width for larger screens */
   margin: 40px auto;
-  padding: 10px;
+  padding: 30px; /* Consistent padding */
   background-color: #f9f9f9;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   font-family: 'Arial', sans-serif;
 }
 
+/* Responsive layout for larger screens */
+@media (min-width: 1024px) {
+  .gig-container {
+    grid-template-columns: repeat(2, 1fr); /* Two columns layout */
+    gap: 20px; /* Space between columns */
+  }
+}
+
 /* Header styling */
 .gig-header {
+  grid-column: span 2; /* Make the header span across both columns */
   text-align: center;
   margin-bottom: 20px;
 }
 
 .gig-header h2 {
-  font-size: 28px;
+  font-size: 32px; /* Larger font size for headings */
   color: #333;
 }
 
 /* Image upload styling */
-.gig-image-upload label {
+.gig-image-upload label,
+.gig-portfolio-upload label {
   font-weight: bold;
   margin-bottom: 10px;
   display: block;
   color: #555;
 }
 
-.gig-image-upload input {
+.gig-image-upload input,
+.gig-portfolio-upload input {
   display: block;
   margin-top: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
 }
 
 /* Image preview styling */
-.gig-image-preview {
+.gig-image-preview,
+.portfolio-image-preview {
   width: 100%;
   height: auto;
   margin-top: 20px;
@@ -50,71 +68,67 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Description styling */
-.gig-title label,
-.gig-description label,
-.gig-price label,
-.gig-service-type label,
-.gig-fabric-type label,
-.gig-measurements-required label,
-.gig-measurement-instructions label {
+/* Form input styling */
+label {
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   display: block;
   color: #555;
 }
 
-.gig-description textarea,
-.gig-price input,
-.gig-service-type select,
-.gig-fabric-type select,
-.gig-measurement-instructions textarea {
+input[type="text"],
+input[type="number"],
+textarea {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
-  margin-top: 10px;
-  resize: none; /* Disable resizing for textarea */
+  margin-top: 5px;
   background-color: #fff;
+  transition: border 0.3s;
 }
 
-/* Skills section */
-.gig-skills label {
-  font-weight: bold;
-  margin-bottom: 10px;
-  display: block;
-  color: #555;
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+  border-color: #007bff; /* Highlight border color on focus */
 }
 
-.gig-skills input {
-  width: calc(30% - 10px); /* Adjust width for spacing */
-  margin-right: 10px;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-  margin-top: 10px;
-  background-color: #fff;
+/* Error message styling */
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
 }
 
-.skills-display {
-  margin-top: 10px;
-}
-
-.skill-badge {
-  display: inline-block;
+/* Submit button styling */
+.submit-button {
+  margin-top: 20px;
+  padding: 10px 20px;
   background-color: #007bff;
   color: white;
-  padding: 5px 10px;
-  border-radius: 20px;
-  margin-right: 5px;
-  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  width: 100%; /* Full width for better tap area */
 }
 
-/* Price section */
-.gig-price input {
-  margin-bottom: 10px; /* Space between inputs */
+.submit-button:hover:not(:disabled) {
+  background-color: #0056b3; /* Darker shade on hover */
+}
+
+.submit-button:disabled {
+  background-color: #ccc;
+}
+
+/* Loader styling */
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Modal Overlay */
@@ -145,35 +159,58 @@
   color: #28a745;
 }
 
-/* Error message styling */
-.error-message {
-  color: red;
-  font-size: 14px;
+/* Success message styling */
+.success {
+  color: green;
+  font-size: 16px;
   margin-top: 10px;
   text-align: center;
 }
 
-/* Submit button styling */
-.submit-container {
-  text-align: center;
-  margin-top: 20px;
+/* Media Queries for Responsiveness */
+@media (max-width: 1024px) {
+  .gig-container {
+    grid-template-columns: 1fr; /* Single column layout for smaller screens */
+  }
+
+  .gig-header h2 {
+    font-size: 28px; /* Adjust header size */
+  }
 }
 
-.submit-container button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
+@media (max-width: 768px) {
+  .gig-container {
+    padding: 15px; /* Reduce padding on smaller screens */
+  }
+
+  .gig-header h2 {
+    font-size: 24px; /* Smaller header for smaller screens */
+  }
+
+  input[type="text"],
+  input[type="number"],
+  textarea {
+    font-size: 14px; /* Slightly smaller input font size */
+  }
+
+  .submit-button {
+    font-size: 14px; /* Smaller button font size */
+  }
 }
 
-.submit-container button:hover:not(:disabled) {
-  background-color: #0056b3; /* Darker shade on hover */
-}
+@media (max-width: 480px) {
+  .gig-header h2 {
+    font-size: 20px; /* Even smaller header */
+  }
 
-.submit-container button:disabled {
-  background-color: #ccc;
+  input[type="text"],
+  input[type="number"],
+  textarea {
+    padding: 8px; /* Reduce padding in inputs */
+    font-size: 12px; /* Further reduce font size */
+  }
+
+  .submit-button {
+    padding: 8px 16px; /* Smaller button size */
+  }
 }

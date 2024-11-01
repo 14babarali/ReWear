@@ -8,6 +8,7 @@ const errorHandler = require('./utils/errorHandler');
 const admin = require('./routes/admin');
 const review = require('./routes/reviews');
 const gigsRoute = require('./routes/gigs');
+const services = require('./routes/services');
 
 const path = require("path");
 const morgan = require('morgan');
@@ -27,7 +28,9 @@ app.use(cors({
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+
 app.use(morgan('dev'));
+
 // Mount the auth routes
 app.use('/api', authRoutes);
 
@@ -39,6 +42,8 @@ app.use('/admin',admin);
 
 app.use('/gigs', gigsRoute);
 
+app.use('/services',services);
+''
 app.use('/reviews',review);
 
 // Register error handling middleware

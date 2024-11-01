@@ -25,27 +25,24 @@ export default function TailorHome() {
     }, [navigate]);
 
     return (
-        <>
-        {/* <Sidebar/> */}
-            <div className="content-area">
-                <div className="container-fluid">
-                    <ToastContainer
-                        position='top-right'
-                        autoClose={2000}
-                        hideProgressBar={false}
-                        newestOnTop={false}
-                        closeOnClick
-                        rtl={false}
-                        theme='dark'
-                        transition={Bounce}
-                        limit={4}
-                    />
-                    <div className="profile-container">
-                        <DashboardTailor className="dashboard-Tailor"/>
-                        <TailorStatistics className="Tailor-statistics"/>
-                    </div>
-                </div>
+    <div className="content-area">
+        <div className="container-fluid bg-white rounded-lg p-3">
+            <ToastContainer
+                position='top-right'
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                theme='dark'
+                transition={Bounce}
+                limit={4}
+            />
+            <div className="m-0 width-full size-full bg-white rounded-lg justify-center">
+                <DashboardTailor className="dashboard-Tailor"/>
+                <TailorStatistics className="Tailor-statistics"/>
             </div>
-        </>
+        </div>
+    </div>
     );
 }

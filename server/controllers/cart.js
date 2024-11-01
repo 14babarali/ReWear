@@ -160,6 +160,54 @@ exports.qtyupdate = async (req,res) => {
     }  
 };
 
+// Controller method to update size of an item in the cart
+exports.updateCartItemSize = async (req, res) => {
+    const { productId, newSize } = req.body;
+    const userId = req.user.id;
+    console.log(newSize);
+
+    try {
+        // Validate the inputs
+        if (!userId || !productId || !newSize) {
+            return res.status(400).json({ message: 'User ID, Product ID, and new Size are required.' });
+        }
+
+        // Find the user's cart
+        const cart = await Cart.findOne({ userId });
+
+        // Finding Product if available
+        const product = await Product.findById(productId);
+        if (!product) {
+        return res.status(404).json({ message: 'Product not found.' });
+        }
+
+        // Check if newSize exists in the product's size array
+        if (!product.size.includes(newSize)) {
+            return res.status(400).json({ message: 'Selected size is not available for this product.' });
+        }
+
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found.' });
+        }
+
+        const itemIndex = cart.item.findIndex(item => item.productId.toString() === productId);
+        if (itemIndex === -1) {
+            return res.status(404).json({ message: 'Item not found in cart.' });
+        }
+
+        // Update quantity
+        cart.item[itemIndex].size = newSize;
+
+        // Save the updated cart
+        await cart.save();
+
+        return res.status(200).json({ message: 'Item size updated successfully.'});
+    } catch (error) {
+        console.error('Error updating cart item size:', error);
+        return res.status(500).json({ message: 'Internal server error.' });
+    }
+};
+
 // Delete a product from the cart
 exports.deleteCartItem = async (req, res) => {
     try {

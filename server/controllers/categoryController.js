@@ -1,5 +1,5 @@
 const Category = require('../models/categories');
-
+const User = require('../models/User');
 
 const generateSlug = (name) => {
     return name
@@ -40,8 +40,8 @@ exports.getUserCategories = async (req, res) => {
   const userId = req.user.id;
 
   try {
+    
 
-    // Fetch all categories that are not marked as deleted
     const categories = await Category.find({ isDeleted: false });
 
     if (!categories || categories.length === 0) {

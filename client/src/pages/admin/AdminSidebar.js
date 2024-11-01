@@ -31,6 +31,10 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
           <span className="material-icons-outlined">inventory_2</span>
           <span className="ml-3 text-base">Products</span>
         </Link>
+        <Link to="/admin/Services" className="sidebar-link">
+          <span className="material-icons-outlined">work</span>
+          <span className="ml-3 text-base">Services</span>
+        </Link>
         <Link to="/admin/Report" className="sidebar-link" onClick={generateReport}>
           <span className="material-icons-outlined">analytics</span>
           <span className="ml-3 text-base">Reports</span>

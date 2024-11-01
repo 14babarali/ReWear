@@ -4,8 +4,6 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import logo from '../assests/login.png';
-import { Bounce, ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { ClipLoader } from 'react-spinners';
 import './stylesheet/login.css';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
@@ -33,7 +31,7 @@ const Login = () => {
       try {
         // Make login request to the backend
         const response = await axios.post('http://localhost:3001/api/login', { email, password });
-        const { user, token, message } = response.data; // Destructure the response
+        const { user, token } = response.data; // Destructure the response
   
         // Save token and user details to local storage
         localStorage.setItem('token', token);
@@ -56,9 +54,9 @@ const Login = () => {
         }
   
         // Handle unverified users (403)
-        if (response.status === 403) {
-          navigate("/OTPinput", { state: { email } });
-        }
+        // if (response.status === 403) {
+        //   navigate("/OTPinput", { state: { email } });
+        // }
   
       } catch (error) {
         let errorMsg = 'An unexpected error occurred.';
@@ -72,9 +70,10 @@ const Login = () => {
             errorMsg = 'Invalid email or password.';
           }
           // Account not verified (403)
-          else if (error.response.status === 403) {
-            navigate("/OTPinput", { state: { email } });
-          } else {
+          // else if (error.response.status === 403) {
+          //   navigate("/OTPinput", { state: { email } });
+          // }
+           else {
             errorMsg = error.response.data.message;
           }
         } else if (error.request) {
@@ -145,7 +144,7 @@ const Login = () => {
                       required
                       onCopy={(e) => {
                         e.preventDefault();
-                        toast.warn("Please don't copy/paste the password.");
+                        alert("Please don't copy/paste the password.");
                       }}
                       onPaste={(e) => e.preventDefault()}
                       onCut={(e) => e.preventDefault()}

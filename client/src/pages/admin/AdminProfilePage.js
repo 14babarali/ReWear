@@ -1,65 +1,66 @@
 import React, { useState, useEffect } from 'react';
 import ReactPhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-// import axios from 'axios'; // Backend code commented out
+import axios from 'axios'; // Backend code commented out
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import './adminProfile.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 const AdminProfilePage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
-  const [admin, setAdmin] = useState(null);
+  const [user, setUser] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
+  const [cnicFrontImage, setCnicFrontImage] = useState(null);
+  const [cnicBackImage, setCnicBackImage] = useState(null);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  const [addresses, setAddresses] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Dummy profile image URL for frontend preview
-  const imageUrl = `https://via.placeholder.com/150`; // Placeholder image
+  const [activeTab, setActiveTab] = useState('profile');
+
+   // Flag to track if CNIC is already uploaded
+   const [cnicUploaded, setCnicUploaded] = useState(false);
+
+  const imageUrl = `http://localhost:3001/uploads/${profileImage}`;
 
   useEffect(() => {
-    // This effect can be used to fetch the admin details from localStorage or backend
-    // const fetchAdmin = async () => {
-    //   const token = localStorage.getItem('token');
-    //   if (!token) {
-    //     navigate('/login');
-    //     return;
-    //   }
+    const token = localStorage.getItem('token');
+    const storedUser = JSON.parse(localStorage.getItem('user'));
 
-    //   const storedAdmin = localStorage.getItem('admin');
-    //   if (storedAdmin) {
-    //     const adminData = JSON.parse(storedAdmin);
-    //     setAdmin(adminData);
-    //     setName(adminData.name);
-    //     setEmail(adminData.email);
-    //     setPhone(adminData.phone);
-    //     setProfileImage(adminData.profilePicture);
-    //   } else {
-    //     navigate('/login');
-    //     return;
-    //   }
-    // };
+    if (!token || !storedUser) {
+      navigate('/login');
+      return;
+    }
 
-    // Simulating admin data for frontend only
-    const adminData = {
-      name: "Admin User",
-      email: "admin@example.com",
-      phone: "1234567890",
-      profilePicture: "https://via.placeholder.com/150"
-    };
-    setAdmin(adminData);
-    setName(adminData.name);
-    setEmail(adminData.email);
-    setPhone(adminData.phone);
-    setProfileImage(adminData.profilePicture);
+    setUser(storedUser);
+    setName(storedUser.profile.name);
+    setEmail(storedUser.email);
+    setPhone(storedUser.profile.phone);
+    setAddresses(storedUser.profile.addresses || []);
+    setProfileImage(storedUser.profile.profilePicture);
+    setCnicFrontImage(storedUser.profile.cnicfront);
+    setCnicBackImage(storedUser.profile.cnicback);
+
+    if (storedUser.profile.cnicfront && storedUser.profile.cnicback) {
+      setCnicUploaded(true);
+    }
+
+    if (storedUser.role === 'tailor') {
+      navigate('/tailor');
+    } else if (storedUser.role === 'Buyer') {
+      navigate('/');
+    }
   }, [navigate]);
 
   const handleImageChange = (event) => {
@@ -76,32 +77,75 @@ const AdminProfilePage = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Frontend validation and dummy toast success message for form submission
+    
+    // Validation
     const nameRegex = /^[a-zA-Z\s]+$/;
     const phoneRegex = /^[0-9]+$/;
-
+    const addressRegex = /^[a-zA-Z0-9\s,.:#'/-]+$/;
+  
     if (!nameRegex.test(name)) {
       toast.error('Name should not contain special characters or numbers');
       return;
     }
-
+  
     if (name.length > 30) {
       toast.error('Name should be less than 30 characters.');
       return;
     }
-
+  
     if (!phoneRegex.test(phone)) {
       toast.error('Phone should contain only numbers');
       return;
     }
+  
+    if (!addresses.every(addr => addressRegex.test(addr.street) && addressRegex.test(addr.city))) {
+      toast.error('Addresses contain invalid characters');
+      return;
+    }
+  
+    try {
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('email', email);
+      formData.append('phone', phone);
+      formData.append('addresses', JSON.stringify(addresses));
 
-    // Simulate profile update success message
-    toast.success('Profile updated successfully');
+      if (selectedImage) {
+        formData.append('profilePicture', selectedImage);
+      }
+      if (cnicFrontImage) {
+        formData.append('cnicfront', cnicFrontImage);
+      }
+      if (cnicBackImage) {
+        formData.append('cnicback', cnicBackImage);
+      }
+  
+      const token = localStorage.getItem('token');
+      const response = await axios.put('http://localhost:3001/api/editprofile', formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+  
+      if (response.status === 200) {
+        toast.success("Profile updated successfully");
+
+        const updatedUser = response.data.user;
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        setUser(updatedUser);
+      } else {
+        toast.error('Error updating the user profile');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('Error updating profile');
+    }
   };
 
-  const handlePasswordChange = (e) => {
+  const handlePasswordChange = async (e) => {
     e.preventDefault();
 
     if (newPassword !== confirmNewPassword) {
@@ -109,11 +153,29 @@ const AdminProfilePage = () => {
       return;
     }
 
-    // Simulate password change success message
-    toast.success('Password changed successfully');
-    setCurrentPassword('');
-    setNewPassword('');
-    setConfirmNewPassword('');
+    try {
+      const data = { currentPassword, newPassword };
+      const token = localStorage.getItem('token');
+
+      const response = await axios.post('http://localhost:3001/api/changepassword', data, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.status === 200) {
+        toast.success(response.data.message);
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmNewPassword("");
+        navigate('/TailorProfile');
+      } else {
+        toast.error(response.statusText);
+      }
+    } catch (error) {
+      toast.error('An error occurred. Please try again.');
+    }
   };
 
   const [editProfileOpen, setEditProfileOpen] = useState(false);
@@ -132,7 +194,7 @@ const AdminProfilePage = () => {
         transition={Bounce}
         limit={3}
       />
-      {admin && (
+      {user && (
         <div className="admin-profile-card">
           <div className="admin-profile-header">
             <h4>Admin Profile</h4>
@@ -142,17 +204,24 @@ const AdminProfilePage = () => {
             <section className="admin-info">
               <div className="row">
                 <div className="col-md-4 text-center position-relative">
-                  <img src={imageUrl} alt="Admin Profile" className="admin-profile-image" />
+                  <img 
+                    src={imageUrl}
+                    onError={(e) => {
+                      e.target.onerror = null; // Prevent looping
+                      e.target.src = 'http://localhost:3001/uploads/no-image.jfif'; // Fallback image
+                    }}
+                    alt="Admin Profile" 
+                    className="admin-profile-image" />
                 </div>
                 <div className="col-md-8 admin-info">
-                  <h4>{admin?.name || 'Admin Name'}</h4>
+                  <h4>{user.profile?.name || 'Admin Name'}</h4>
 
                   <div className="profile-section">
-                    <p><strong>Email:</strong> {admin?.email || 'No Email Provided'}</p>
+                    <p><strong>Email:</strong> {user?.email || 'No Email Provided'}</p>
                   </div>
 
                   <div className="profile-section">
-                    <p><strong>Phone:</strong> {admin?.phone || 'No Phone Provided'}</p>
+                    <p><strong>Phone:</strong> {user.profile?.phone || 'No Phone Provided'}</p>
                   </div>
                 </div>
               </div>
@@ -181,7 +250,7 @@ const AdminProfilePage = () => {
                       type="text"
                       className="form-control"
                       id="name"
-                      value={name}
+                      value={user.profile.name}
                       onChange={(e) => setName(e.target.value)}
                     />
                   </div>
@@ -191,7 +260,7 @@ const AdminProfilePage = () => {
                     <br />
                     <ReactPhoneInput
                       country={'us'}
-                      value={phone}
+                      value={user.profile.phone}
                       onChange={setPhone}
                       onlyCountries={['pk']}
                       inputProps={{
@@ -266,9 +335,18 @@ const AdminProfilePage = () => {
                       onChange={(e) => setConfirmNewPassword(e.target.value)}
                     />
                   </div>
-                  <button type="button" className="btn btn-secondary" onClick={handleShowPassword}>
-                    {showPassword ? 'Hide Password' : 'Show Password'}
-                  </button>
+                  <div className="d-flex show-password">
+                    <input
+                      type="checkbox"
+                      className='m-0'
+                      id="showPassword"
+                      checked={showPassword}
+                      onChange={(e) => setShowPassword(e.target.checked)}
+                    />
+                    <label
+                      className='m-0'
+                      htmlFor="showPassword">{t('Show Password')}</label>
+                  </div>
                   <button type="submit" className="btn btn-primary mt-3">
                     Change Password
                   </button>

@@ -30,6 +30,7 @@ const ProductPage = () => {
 
   const handleSizeClick = (size) => {
     setSelectedSize(size);
+    console.log(size);
   };
 
 

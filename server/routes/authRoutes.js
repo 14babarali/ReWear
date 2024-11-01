@@ -91,6 +91,9 @@ router.get ('/cartproduct/:id', authmiddleware.verifyToken, product.getcartprodu
 // update the quantity of products in cart 
 router.put ('/qtyupdated', authmiddleware.verifyToken, cart.qtyupdate);
 
+// update size for product in cart
+router.put('/changesize',authmiddleware.verifyToken, cart.updateCartItemSize);
+
 // DELETE route to remove a product from the cart
 router.delete('/deletecartitem/:productId', authmiddleware.verifyToken, cart.deleteCartItem);
 

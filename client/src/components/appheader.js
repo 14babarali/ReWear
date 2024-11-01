@@ -35,7 +35,7 @@ const AppHeader = () => {
       // Store categories in localStorage after organizing and stringifying them
       localStorage.setItem('categories', JSON.stringify(organizedCategories));
       if (data.length === 0) {
-        setNoCategoriesMessage('No categories added by Administration.');
+        setNoCategoriesMessage('No categories added by Administration');
       } else {
         setNoCategoriesMessage('');
       }
@@ -161,7 +161,7 @@ const AppHeader = () => {
         </div>
 
         <div className="category-container ">
-            {noCategoriesMessage && <p>{noCategoriesMessage}</p>}
+            {noCategoriesMessage && <p className='m-0'>{noCategoriesMessage}</p>}
             {categories.map((category) => (
               <div key={category._id} className="category-group">
                 <button className="category-button" onClick={() => toggleCategory(category._id)}>

@@ -4,10 +4,18 @@ import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
-const HorizontalCard = ({ product, onQuantityChange, onDelete, handleSizeClick, selectedSize  }) => {
+const HorizontalCard = ({ product, onQuantityChange, onDelete  }) => {
 
     const [quantity, setQuantity] = useState(product.quantity);
     const [isUpdating, setIsUpdating] = useState(false);
+
+    // State to track the selected size
+    const [selectedSize, setSelectedSize] = useState('');
+
+    const handleSizeClick = (size) => {
+      setSelectedSize(size);
+      console.log(size);
+    };
     
     
     const handleIncrement = async () => {
@@ -74,20 +82,18 @@ const HorizontalCard = ({ product, onQuantityChange, onDelete, handleSizeClick, 
           </div>
         </div>
         {/* <p className="horizontal-card-size">Remaining {product.qty} {product.qty > 1 ? 'products' : 'product'}</p> */}
-          <div className='d-flex ' style={{justifyContent: 'start', alignItems: 'center'}}>
-              <p className='m-0'><strong>Size: </strong></p>
-              <div className="size-blocks">
+        <p className='m-0'><strong>Size: </strong></p>
+        <div className="size-blocks">
                 {product.size.map((s, index) => (
                   <button
                     key={index}
-                    onClick={() => handleSizeClick(s)}
+                    onClick={handleSizeClick}
                     className={`size-block ${selectedSize === s ? 'selected' : ''}`}
                   >
                     {s}
                   </button>
                 ))}
-              </div>
-          </div>
+        </div>
       </div>
     </div>
   );

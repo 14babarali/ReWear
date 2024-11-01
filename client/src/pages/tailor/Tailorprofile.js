@@ -261,7 +261,11 @@ const TailorProfilePage = () => {
                 <div className="seller-profile-image mr-6">
                   <img 
                     cla
-                    src={imageUrl} 
+                    src={imageUrl}
+                    onError={(e) => {
+                      e.target.onerror = null; // Prevent looping
+                      e.target.src = 'http://localhost:3001/uploads/no-image.jfif'; // Fallback image
+                    }}
                     alt="Profile" />
                 </div>
                 <div className="profile-details-info">

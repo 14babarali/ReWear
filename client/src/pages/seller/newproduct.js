@@ -36,9 +36,9 @@ const AddProduct = () => {
         name: editproduct?.name || '',
         type: editproduct?.type || '',
         material: editproduct?.material || '',
-        category: editproduct?.category.name || '',
-        subcategory: editproduct?.subcategory.name || '',
-        subChildCategory: editproduct?.subChildCategory.name || '',
+        category: editproduct?.category?.name || '',
+        subcategory: editproduct?.subcategory?.name || '',
+        subChildCategory: editproduct?.subChildCategory?.name || '',
         size: Array.isArray(editproduct?.size) ? editproduct.size : (editproduct?.size ? [editproduct.size] : []),
         description: editproduct?.description || '',
         price: editproduct?.price || '',
@@ -316,8 +316,8 @@ const AddProduct = () => {
         }
     };
 
-    // {console.log(selectedParentName, selectedChildName)}
-    // console.log('Available Sizes:', sizeOptions[selectedParentName]?.[selectedChildName]);
+    {console.log(selectedParentName, selectedChildName)}
+    console.log('Available Sizes:', sizeOptions[selectedParentName]?.[selectedChildName]);
     return (
         <div className=''>
             <Button className='bg-transparent text-black tracking-wider' style={{ textDecoration: 'underline' }} onClick={() => { window.history.back() }}>{'<Back'}</Button>

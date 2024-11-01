@@ -39,7 +39,7 @@ const TailorLayout = () => {
       <TailorNav toggleSidebar={toggleSidebar} />
         <div  className="flex flex-1">
           <TailorSidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
-          <div  className={`flex-1 ${isOpen ? 'ml-64' : 'ml-0'} transition-all duration-300`}>
+          <div  className={`flex-1 ${isOpen ? 'ml-64' : 'ml-0'} transition-all duration-300`} style={{justifyContent: 'center'}}>
             <Routes>
               <Route path="/" element={<TailorHome />} />
               <Route path="/catalogue" element={<Catalogue />} />

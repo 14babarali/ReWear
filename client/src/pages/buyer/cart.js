@@ -10,16 +10,6 @@ const Cart = () => {
   const [selectedItems, setSelectedItems] = useState({});
   const navigate = useNavigate();
 
-  // State to track the selected size for each product
-  const [selectedSizes, setSelectedSizes] = useState({});
-    
-  const handleSizeClick = (productId, size) => {
-    setSelectedSizes(prevSizes => ({
-      ...prevSizes,
-      [productId]: size, // Set the selected size for the specific product
-    }));
-  };
-
   useEffect(() => {
     // Function to fetch cart items from backend
     const fetchCartItems = async () => {
@@ -196,12 +186,7 @@ const Cart = () => {
                   checked={!!selectedItems[item.id]}
                   onChange={() => handleCheckboxChange(item.id)}
                 />
-              <HorizontalCard 
-                product={item} 
-                onQuantityChange={handleQuantityChange} 
-                onDelete={handleDelete}  
-                handleSizeClick={(size) => handleSizeClick(item.id, size)} 
-                selectedSize={selectedSizes[item.id]}/>
+              <HorizontalCard product={item} onQuantityChange={handleQuantityChange} onDelete={handleDelete} />
             </div>
             ))}
           </ul>
