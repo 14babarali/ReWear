@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Table, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAdd } from '@fortawesome/free-solid-svg-icons';
+import { faAdd, faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 const AdminServices = () => {
   const [services, setServices] = useState([]);
@@ -29,7 +29,7 @@ const AdminServices = () => {
   };
 
   const handleEdit = (service) => {
-    navigate('/admin/Services/add', {
+    navigate('/admin/Services/modify', {
       state: { service }, // Send the entire service object
     });
   };
@@ -60,7 +60,7 @@ const AdminServices = () => {
 
 
       <div className='flex justify-start'>
-      <Button variant="primary mb-3" onClick={() => navigate('/admin/Services/add')}>
+      <Button variant="primary mb-3" onClick={()=>navigate('/admin/Services/modify')}>
         <FontAwesomeIcon icon={faAdd}/> Add Service
       </Button>
       </div>
@@ -80,12 +80,12 @@ const AdminServices = () => {
               <td>{index + 1}</td>
               <td>{service.name}</td>
               <td>{service.material.map(mat => mat.name).join(', ')}</td>
-              <td>
+              <td className='text-center'>
                 <Button variant="warning" onClick={() => handleEdit(service)}>
-                  Edit
+                  <FontAwesomeIcon icon={faPen}/> Edit
                 </Button>
                 <Button variant="danger" onClick={() => handleDelete(service)} className="ml-2">
-                  Delete
+                  <FontAwesomeIcon icon={faTrashAlt}/> Delete
                 </Button>
               </td>
             </tr>

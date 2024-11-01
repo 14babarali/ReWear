@@ -4,22 +4,6 @@ const User = require('../models/User');
 const authMiddleware = require('../middleware/authMiddleware');
 const Service = require('../models/Service'); // Adjust the path as necessary
 
-// Middleware for admin check
-const checkAdmin = async (req, res, next) => {
-  const userId = req.user.id;
-  const user = await User.findById(userId);
-  
-  if (!user) {
-    return res.status(404).json({ message: 'User not found' });
-  }
-
-  if (user.role !== 'Admin') {
-    return res.status(403).json({ message: 'Restricted Route, Only for Admins' });
-  }
-
-  next();
-};
-
 // Create a new service with material types
 router.post('/add',authMiddleware.verifyToken, async (req, res) => {
   const { name, material } = req.body; // Changed from materialTypes to material
@@ -85,7 +69,7 @@ router.get('/single/:id',authMiddleware.verifyToken, async (req, res) => {
 });
 
 // Update a service by ID
-router.put('/update/:id',authMiddleware.verifyToken, checkAdmin, async (req, res) => {
+router.put('/update/:id',authMiddleware.verifyToken, async (req, res) => {
   const { id } = req.params;
   const { name, material } = req.body;
 

@@ -174,15 +174,15 @@ const AddService = () => {
             ))}
             </ul>
         </div>
-        <div className="flex justify-between mt-4">
+        <div className="flex justify-center mt-4">
             <button type="submit" className="bg-green-500 text-white rounded px-4 py-2">
-            {service ? 'Update Service' : 'Add Service'}
+                {service ? 'Update Service' : 'Add Service'}
             </button>
             <button
-            className='bg-gray-500 text-white rounded px-4 py-2'
-            onClick={() => navigate('/admin/Services')}
-            >
-            Cancel
+                className='bg-gray-500 text-white rounded px-4 py-2 ml-4'
+                onClick={() => navigate(-1)}
+                >
+                Cancel
             </button>
         </div>
         </form>

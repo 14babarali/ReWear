@@ -13,7 +13,7 @@ import AdminProfilePage from "../pages/admin/AdminProfilePage.js";
 import UserDetails from "../pages/admin/UserDetails.js";
 import Navbar from "../pages/admin/AdminNav.js";
 import ERR404 from "../components/error404";
-import Catalogue from "../pages/admin/catalogue.js";
+import Categories from "../pages/admin/AdminCategories.js";
 
 const AdminLayout = () => {
   const navigate = useNavigate();
@@ -57,14 +57,14 @@ const AdminLayout = () => {
             <Route path="/Dashboard" element={<AdminDashboard />} />
             <Route path="/Order" element={<AdminOrder />} />
             <Route path="/Services" element={<AdminServices />} />
-            <Route path="/Services/add" element={<AddService />} />
+            <Route path="/Services/modify" element={<AddService />} />
             <Route path="/Product" element={<AdminProduct />} />
             <Route path="/Message" element={<AdminMessage />} />
             <Route path="/Users" element={<AdminUsers />} />
             <Route path="/Profile" element={<AdminProfilePage />} />
             <Route path="/Details" element={<UserDetails />} />
             <Route path="*" element={<ERR404 />} />
-            <Route path="/catalogue" element={<Catalogue />} />
+            <Route path="/categories" element={<Categories />} />
           </Routes>
         </div>
       </div>

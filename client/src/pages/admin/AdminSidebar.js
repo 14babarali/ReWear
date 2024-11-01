@@ -23,6 +23,10 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
           <span className="material-icons-outlined">dashboard</span>
           <span className="ml-3 text-base">Dashboard</span>
         </Link>
+        <Link to="/admin/categories" className="sidebar-link">
+          <span className="material-icons-outlined">view_compact_alt</span>
+          <span className="ml-3 text-base">Categories</span>
+        </Link>
         <Link to="/admin/Order" className="sidebar-link">
           <span className="material-icons-outlined">shopping_cart</span>
           <span className="ml-3 text-base">Orders</span>
@@ -32,7 +36,9 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
           <span className="ml-3 text-base">Products</span>
         </Link>
         <Link to="/admin/Services" className="sidebar-link">
-          <span className="material-icons-outlined">work</span>
+        <span class="material-symbols-outlined">
+          linked_services
+        </span>
           <span className="ml-3 text-base">Services</span>
         </Link>
         <Link to="/admin/Report" className="sidebar-link" onClick={generateReport}>
@@ -46,10 +52,6 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
         <Link to="/admin/users" className="sidebar-link">
           <span className="material-icons-outlined">people</span>
           <span className="ml-3 text-base">Users</span>
-        </Link>
-        <Link to="/admin/catalogue" className="sidebar-link">
-          <span className="material-icons-outlined">people</span>
-          <span className="ml-3 text-base">catalogue</span>
         </Link>
       </nav>
       </div>

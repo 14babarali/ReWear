@@ -130,98 +130,6 @@ const Catalogue = () => {
         fetchCategories();
     }, []);
     
-
-    // useEffect(() => {
-    //     const fetchCategories = async () => {
-    //         const data = await getCategories(token);
-    //         setCategories(data);
-    //         if (data.length === 0) {
-    //             setNoCategoriesMessage('No categories found. Please add a new category.');
-    //         } else {
-    //             setNoCategoriesMessage('');
-    //         }
-    //     };
-
-    //     fetchCategories();
-    // }, []);
-
-
-    const [productList, setProductList] = useState([]);
-
-    // Fetch products from backend when component mounts
-    useEffect(() => {
-        fetchProducts();
-    }, []);
-
-    const fetchProducts = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:3001/api/fetchproducts', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            if (response.status === 200) {
-                setProductList(response.data);
-            } else {
-                console.error('Failed to fetch products');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
-
-     // Function to filter products based on the selected category (parent/child/subchild)
-     const filteredProducts = productList.filter((product) => {
-        if (selectedCategory.category) {
-            if (selectedCategory.category._id === product.subChildCategory._id) {
-                return true;
-            }
-            if (selectedCategory.category._id === product.subcategory._id) {
-                return true;
-            }
-            if (selectedCategory.category._id === product.category._id) {
-                return true;
-            }
-        }
-        return false;
-    });
-
-
-    // Function to show confirmation modal
-    // const showDeleteConfirmation = (product) => {
-    //     const confirmDelete = window.confirm(`Are you sure you want to delete "${product.name}" ?`);
-    //     if(confirmDelete){
-    //         handleDelete(product._id);
-    //     }
-
-    // };
-    
-    const handleDeleteProduct = async () => {
-        console.log("Deleting product:", productToDelete); // Debugging log
-        if (productToDelete) {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await axios.delete(`http://localhost:3001/api/products/${productToDelete._id}`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-    
-                if (response.status === 200) {
-                    setProductList((prevList) => prevList.filter(product => product._id !== productToDelete._id));
-                    toast.success('Product deleted successfully!');
-                } else {
-                    toast.error('Failed to delete product');
-                }
-            } catch (error) {
-                toast.error('An error occurred while deleting the product.');
-            } finally {
-                setShowConfirmModal(false); // Close the modal
-                setProductToDelete(null); // Clear the selected product
-            }
-        }
-    };
-    
-
     const handleAddCategory = async (categoryData) => {
         try {
           const categoryToCreate = {
@@ -299,116 +207,10 @@ const Catalogue = () => {
             grandParent: grandParentCategory || null
         });
     };
-    
-    const handleAddProductRedirect = () => {
-        if (selectedCategory && selectedCategory.category) {
-            navigate('/seller/product/add', { state: { selectedCategory } });
-        } else {
-            // If no category is selected, still navigate but without category info
-            navigate('/seller/product/add');
-        }
-    };
-    
-    // Confirmation modal state
-    const [showConfirmModal, setShowConfirmModal] = useState(false);
-    const [productToDelete, setProductToDelete] = useState(null);
-
-    // Function to show confirmation modal
-    const showDeleteConfirmation = (product) => {
-        console.log("Opening delete confirmation for:", product);
-        setProductToDelete(product);
-        setShowConfirmModal(true);
-    };
-
-    // Function to hide confirmation modal
-    const hideDeleteConfirmation = () => {
-        setProductToDelete(null);
-        setShowConfirmModal(false);
-    };
-
-    // Add hover effect on the card
-    const handleMouseEnter = (e) => {
-        e.currentTarget.style.transform = styles.sellerProductCardHover.transform;
-    };
-
-    const handleMouseLeave = (e) => {
-        e.currentTarget.style.transform = 'none';
-    };
-
-    // ProductCard component
-    const ProductCard = ({ product }) => (
-        <div
-            className="seller-product-card"
-            style={styles.sellerProductCard}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-        >
-            <div className="seller-product-card-image" style={styles.sellerProductCardImage}>
-                {product.images && product.images.length > 0 && (
-                    <img
-                        src={`http://localhost:3001/uploads/${product.images[0]}`}
-                        alt={product.name}
-                        className="seller-product-image"
-                        style={styles.sellerProductImage}
-                    />
-                )}
-            </div>
-            <div className="seller-product-card-details" style={styles.sellerProductCardDetails}>
-                <div style={styles.titleContainer}>
-                    <h5 style={styles.productTitle} title={product.name}>
-                        {product.name.length > 20 ? `${product.name.substring(0, 20)}...` : product.name}
-                    </h5>
-                    <div className="seller-product-card-actions" style={styles.sellerProductCardActions}>
-                        <Button variant="warning" onClick={() => navigate('/seller/product/add', { state: { product } })} style={styles.editButton}>
-                            <FontAwesomeIcon icon={faPen} />
-                        </Button>
-                        <Button variant="danger" onClick={() => showDeleteConfirmation(product)} style={styles.deleteBtn}>
-                            <FontAwesomeIcon icon={faTrash} />
-                        </Button>
-                    </div>
-                </div>
-                <p>
-                    Type: {product.type} {product.type === 'Used' && `(${product.condition}/10)`}
-                </p>
-                <p>Size: {product.size}</p>
-                <p>QTY: {product.qty}</p>
-                <p>Price: Rs {product.price}</p>
-            </div>
-        </div>
-    );
-
     return (
         <>
-            <Button className='bg-transparent text-black tracking-wider' style={{textDecoration: 'underline'}} onClick={() => {window.history.back()}}>{'<Back'}</Button>
+        <Button className='bg-transparent text-black tracking-wider' style={{textDecoration: 'underline'}} onClick={() => {window.history.back()}}>{'<Back'}</Button>
         <div style={styles.container}>
-            {/* Modal for Delete Confirmation */}
-            <Modal
-                show={showConfirmModal}
-                onHide={() => setShowConfirmModal(false)}
-                style={{ zIndex: 1050 }} // Ensure modal is above other elements
-                backdropStyle={{ zIndex: 1040 }} // Ensure backdrop is behind modal
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title>Confirm Delete</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                {productToDelete && (
-                <p style={{ color: 'black' }}>
-                    Are you sure you want to delete the product "{productToDelete.name}"?
-                </p>
-            )}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>
-                        Cancel
-                    </Button>
-                    <Button variant="danger" onClick={handleDeleteProduct}>
-                        Delete
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-
-
            <div style={styles.sidebar}>
                 <div style={styles.headerContainer}>
                     <h2 style={styles.header}>Category</h2>
@@ -517,61 +319,44 @@ const Catalogue = () => {
                 </div>
             </div>
 
-                {/* Content Area */}
-                <div style={styles.contentArea}>
-                    <div className='text-center' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <h2>Products</h2>
-                        <button onClick={() => handleAddProductRedirect()} style={styles.addProductButton}>
-                            <FontAwesomeIcon icon={faPlusCircle} /> New Product
-                        </button>
-                    </div>
-                    
-                    {selectedCategory.category ? (
-                        <>
-                            {/* <h3>{selectedCategory.category.name}-{selectedCategory.parent.name}</h3> */}
-                            <p>
-                                {selectedCategory.grandParent ? `${selectedCategory.grandParent.name} / ` : ''}
-                                {selectedCategory.parent ? `${selectedCategory.parent.name} / ` : ''}
-                                {selectedCategory.category.name}
-                                <a style={{cursor:'pointer', color:'red', marginLeft:'10px'}} onClick={()=>{setSelectedCategory('')}}>All categories</a>
-                            </p>
-
-                            {/* Display Products */}
-                            <div className="seller-product-list">
-                                {filteredProducts.length === 0 ? (
-                                    // Check if there are products in the product list    
-                                    <div className="d-flex flex-col justify-center">
-                                        <img src={NoProduct} alt="No products" style={{ maxWidth: '200px', marginBottom: '10px' }} />
-                                        <span>No Products Found in your selected Category</span>
-                                    </div>                            
-                                ) : (
-                                    <div className="seller-product-grid" style={styles.sellerProductGrid}>
-                                        {filteredProducts.map((product) => (
-                                            <ProductCard key={product.id} product={product} />
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        </>
-                    ) : (
-                        <div className="seller-product-grid" style={styles.sellerProductGrid}>
-                            {productList.map((product) => (
-                                <ProductCard key={product.id} product={product} />
-                            ))}
-                        </div>
-                    )}
-                    
+            {/* Content Area */}
+            <div style={styles.contentArea}>
+            <div className="text-center" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h2>Categorical View</h2>
             </div>
-        {/* Modal Component */}
-        {/* <Model
-            isOpen={modalOpen}
-            onClose={() => setModalOpen(false)}
-            onSubmit={handleAddCategory}
-            category={newCategory}
-            setCategory={setNewCategory}
-            parentCategories={categories.filter(cat => !cat.parent)}
-            categories={categories}
-        /> */}
+
+            {selectedCategory.category ? (
+                <>
+                <p>
+                    {/* Build the hierarchical path */}
+                    {selectedCategory.grandParent && (
+                    <>
+                        {selectedCategory.grandParent.name} /{' '}
+                    </>
+                    )}
+                    {selectedCategory.parent && (
+                    <>
+                        {selectedCategory.parent.name} /{' '}
+                    </>
+                    )}
+                    {selectedCategory.category.name}
+                    
+                    {/* Reset link to clear the selected category */}
+                    <a
+                    style={{ cursor: 'pointer', color: 'red', marginLeft: '10px' }}
+                    onClick={() => setSelectedCategory('')}
+                    >
+                    Reset
+                    </a>
+                </p>
+
+                {/* Products or other category-specific content can go here */}
+                </>
+            ) : (
+                <p>No Category Selected</p>
+            )}
+            </div>
+
         </div>
         </>
     );    
@@ -665,7 +450,7 @@ const styles = {
     childHeaderSelected: {
         borderLeft: '2px solid #333',  // Different border color for selection
     },
-    subChildCategory: {
+    subsubChildCategories: {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -701,77 +486,6 @@ const styles = {
     },
     subChildHeaderSelected: {
         borderLeft: '2px solid green',
-    },
-
-    sellerProductGrid: {
-        display: 'flex',
-        flexWrap: 'wrap', // Allow cards to wrap onto the next line
-        justifyContent: 'left', // Space out the cards
-        gap: '20px', // Space between cards
-    },
-    sellerProductCard: {
-        flex: '0 1 calc(30% - 10px)', // More compact width calculation
-        maxWidth: 'calc(30% - 10px)',
-        marginBottom: '10px',
-        borderRadius: '5px',
-        boxShadow: '0 1px 5px rgba(0, 0, 0, 0.15)', // Slightly deeper shadow for card definition
-        transition: 'transform 0.2s, box-shadow 0.2s',
-        backgroundColor: '#fff',
-        overflow: 'hidden',
-        padding: '5px', // Adjusted padding for content breathing space
-        height: '300px',
-    },
-    sellerProductCardImage: {
-        height: '130px', // Reduced image height for a compact look
-        overflow: 'hidden',
-        borderRadius: '6px',
-        marginBottom: '10px', // Spacing below image
-    },
-    sellerProductImage: {
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        transition: 'transform 0.2s ease-in-out', // Smooth zoom on hover
-    },
-    titleContainer: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '4px',
-    },
-    productTitle: {
-        fontSize: '16px',
-        fontWeight: 'bold',
-        color: '#333',
-        overflow: 'hidden', // Prevents overflow text
-        whiteSpace: 'nowrap', // Keeps title in one line
-        textOverflow: 'ellipsis', // Adds ellipsis for long titles
-    },
-    sellerProductCardDetails: {
-        padding: '5px',
-        display: 'flex',
-        flexDirection: 'column',
-        fontSize: '14px',
-        color: '#555',
-        lineHeight: '0.5',
-    },
-    sellerProductCardActions: {
-        display: 'flex',
-        gap: '5px', // Adds spacing between buttons
-    },
-    editButton: {
-        fontSize: '12px',
-        padding: '4px 8px',
-        borderRadius: '4px',
-    },
-    deleteBtn: {
-        fontSize: '12px',
-        padding: '4px 8px',
-        borderRadius: '4px',
-    },
-    sellerProductCardHover: {
-        transform: 'scale(1.02)',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
     },
 
     modalOverlay: {
