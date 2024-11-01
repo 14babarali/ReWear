@@ -23,27 +23,33 @@ const checkAdmin = async (req, res, next) => {
 // Create a new service with material types
 router.post('/add',authMiddleware.verifyToken, async (req, res) => {
   const { name, material } = req.body; // Changed from materialTypes to material
-  console.log(name,material);
   
+  const userId = req.user.id;
   try {
-    // Validate the request body
-    if (!name || typeof name !== 'string' || !name.trim()) {
-      return res.status(400).json({
-        message: 'Validation Error: Name is required and must be a non-empty string.',
-      });
+    const user = await User.findById(userId);
+    if(user.role === 'Admin'){
+      // Validate the request body
+      if (!name || typeof name !== 'string' || !name.trim()) {
+        return res.status(400).json({
+          message: 'Validation Error: Name is required and must be a non-empty string.',
+        });
+      }
+
+      if (!Array.isArray(material) || material.length === 0) { 
+        return res.status(400).json({
+          message: 'Validation Error: material must be a non-empty array.',
+        });
+      }
+
+      // Create and save the service
+      const service = new Service({ name, material });
+      await service.save();
+
+      return res.status(201).json({ message: 'New Service, Saved Successfully', service });
     }
-
-    if (!Array.isArray(material) || material.length === 0) { 
-      return res.status(400).json({
-        message: 'Validation Error: material must be a non-empty array.',
-      });
+    else{
+      return res.status(403).json({message: 'Restricted Route, No Privileges'});
     }
-
-    // Create and save the service
-    const service = new Service({ name, material });
-    await service.save();
-
-    return res.status(201).json({ message: 'New Service, Saved Successfully', service });
   } catch (error) {
     console.error('Error adding service:', error);
     return res.status(500).json({ message: 'Error adding service', error });
@@ -83,7 +89,10 @@ router.put('/update/:id',authMiddleware.verifyToken, checkAdmin, async (req, res
   const { id } = req.params;
   const { name, material } = req.body;
 
+  const userId = req.user.id;
   try {
+    const user = await User.findById(userId);
+    if(user.role === 'Admin'){
     // Validate the request body
     if (!name || typeof name !== 'string' || !name.trim()) {
       return res.status(400).json({
@@ -103,6 +112,10 @@ router.put('/update/:id',authMiddleware.verifyToken, checkAdmin, async (req, res
     }
 
     res.json({ message: 'Service updated successfully', service });
+    }
+    else{
+      return res.status(403).json({message: 'Restricted Route, No Privileges'});
+    }
   } catch (error) {
     console.error('Error updating service:', error);
     return res.status(500).json({ message: 'Error updating service', error });
