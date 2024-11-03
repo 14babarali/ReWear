@@ -2,8 +2,8 @@ const Gig = require('../models/Gig');
 
 // Create a Collection
 exports.createCollection = async (req, res) => {
-  const { id } = req.params; // Gig ID from request params
-  const { title, image, items } = req.body; // Extract collection data from request body
+  
+  const {  title, image } = req.body; // Extract collection data from request body
 
   try {
     // Find the gig to which the collection will be added

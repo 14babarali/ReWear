@@ -1,9 +1,9 @@
 const Gig = require("../models/Gig");
 const User = require("../models/User");
 const path = require("path");
+const fs = require('fs');
 
 // Create a Gig (only for verified Tailor users with uploaded CNIC)
-
 const createGig = async (req, res) => {
 
   const { title, description, services, experience } = req.body;
@@ -117,7 +117,6 @@ const updateGig = async (req, res) => {
   const { id } = req.params;
   const {
     title,
-    description,
     collections, // Array of collections
     plans, // Array of pricing plans
   } = req.body;
@@ -132,11 +131,12 @@ const updateGig = async (req, res) => {
       return res.status(404).json({ error: "Gig not found" });
     }
 
+    const owner = await Gig.findOne(userId);
     // Check if the authenticated user is the owner of the gig
-    if (gig.user.toString() !== userId) {
+    if (!owner) {
       return res
         .status(403)
-        .json({ error: "You can only update your own gigs" });
+        .json({ error: "No Access to this Gig" });
     }
 
     // Update gig details
@@ -188,29 +188,39 @@ const deleteGig = async (req, res) => {
   }
 };
 
-
-
-// Controller to get a single gig by ID and include user details
-
 // Controller for adding a new collection to a specific gig
 const addCollection = async (req, res) => {
- 
-  // Get the gig ID from the URL
-  const { gigId =req.params.id, title, image, items } = req.body; // Accept gigId as a part of the request
+  const {title } = req.body; 
+  const gigId = req.params.gigId;
+  const imagePaths = req.files ? req.files.map((file) => file.filename) : [];
 
-  if (!gigId || !title || !image) {
-    return res.status(400).json({ error: "Gig ID, title, and image are required." });
+  // Logging the incoming data
+  console.log('Received gigId:', gigId);
+  console.log('Received title:', title);
+  console.log('Received images:', images);
+
+  // Check for required fields
+  if(imagePaths.length === 0){
+    return res.status(400).json({ error: "Image required." });
+  }
+  if (!title) {
+    return res.status(400).json({ error: "Title required." });
+  }
+
+  if (!gigId) {
+    return res.status(400).json({ error: "Gig ID required." });
   }
 
   try {
+    
+
     // Create a new collection object
     const newCollection = {
       title,
-      image,
-      items: items || [], // Default to an empty array if items are not provided
+      image: imagePaths,
+      items: [], // Default to an empty array if items are not provided
     };
- 
-    console.log(newCollection); 
+
     // Find the gig by ID and push the new collection into its collections array
     const updatedGig = await Gig.findByIdAndUpdate(
       gigId,
@@ -218,16 +228,28 @@ const addCollection = async (req, res) => {
       { new: true } // Return the updated document
     );
 
+    // Logging the result of the update attempt
+    console.log('Updated Gig:', updatedGig);
+
     if (!updatedGig) {
+      // Gig not found, remove uploaded image
+      // fs.unlinkSync(imagePaths);
       return res.status(404).json({ error: "Gig not found." });
     }
 
-    res.status(201).json(updatedGig); // Return the updated gig with the new collection
+    res.status(201).json(updatedGig); // Return the updated gig
   } catch (error) {
     console.error("Error adding collection:", error);
+    // Remove uploaded image on error
+    if (images && images.length > 0) {
+      fs.unlink(imagePaths, (err) => {
+        if (err) console.error("Failed to delete image:", err);
+      });
+    }
     res.status(500).json({ error: "Failed to add collection." });
   }
 };
+
 
 // Optional: Controller for fetching all collections (if needed)
 const getCollections = async (req, res) => {

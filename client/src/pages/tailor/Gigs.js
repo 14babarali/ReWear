@@ -17,6 +17,7 @@ const Gigs = () => {
   const [newCollectionImage, setNewCollectionImage] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedCollection, setSelectedCollection] = useState(null);
+  // const [collectionImage, setCollectionImage] = useState();
   const [newItemFile, setNewItemFile] = useState([]);
   const [itemType, setItemType] = useState('image');
   const [activeContentTab, setActiveContentTab] = useState('images'); 
@@ -108,14 +109,23 @@ const addCollection = async () => {
     reader.onloadend = async () => {
       try {
         // Prepare data for backend request
-        const newCollection = {
-          title: newCollectionTitle,
-          image: reader.result, // Base64 encoded image data
-          items: [] // Assuming empty items array for a new collection
-        };
+        // const newCollection = {
+        //   title: newCollectionTitle,
+        //   image: newCollectionImage, // Base64 encoded image data
+        // };
 
+         // Prepare FormData to include images
+         const formData = new FormData();
+         formData.append('title', newCollectionTitle);
+         formData.append('image', newCollectionImage);
+        console.log('Form Data: ',formData);
         // Send POST request to backend
-        const response = await axios.post('http://localhost:3001/gigs/collections', newCollection);
+        const response = await axios.post(`http://localhost:3001/gigs/collections/add/${gigs[0]._id}`, formData,{
+            headers:{
+              "Authorization": `Bearer${token}`,
+              'Content-Type': 'multipart/form-data',
+            }
+          });
         
         // Update local collections state with the new collection from the response
         setCollections([...collections, response.data]);

@@ -44,9 +44,8 @@ router.put('/:id', verifyToken, updateGig); // Accept an array of media files
 // Delete a Gig (only for verified users)
 router.delete('/:id', verifyToken, deleteGig);
 
-
 // Collection routes
-router.post('/gigs/:id/collections', collection.createCollection);
+router.post('/gigs/collections/add/:id', upload.array('image') , addCollection);
 router.put('/gigs/:gigId/collections/:collectionId', collection.updateCollection);
 router.delete('/gigs/:gigId/collections/:collectionId', collection.deleteCollection);
 
