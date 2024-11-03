@@ -31,10 +31,9 @@ const GigSchema = new mongoose.Schema({
   title: { type: String, required: true, maxlength: 60 },
   description: { type: String, required: true },
   services: [
-    { 
-      type: String, 
-      required: true 
-    } 
+    {
+      name: { type: String, required: true }
+    }
   ],
   
   experience: { type: Number, min:2, max:100, required: true },

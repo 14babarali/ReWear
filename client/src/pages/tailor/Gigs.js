@@ -6,7 +6,6 @@ import './Gigs.css';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAdd, faEdit } from '@fortawesome/free-solid-svg-icons';
-import { Button } from 'react-bootstrap';
 
 const Gigs = () => {
   const [gigs, setGigs] = useState([]);
@@ -24,9 +23,10 @@ const Gigs = () => {
   const [showAddContent, setShowAddContent] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState(null);
   const url = 'http://localhost:3001/uploads/';
-  const backendUrl = 'http://localhost:3001';
+  const backendUrl = 'http://localhost:3001/';
   const openMediaModal = (item) => setSelectedMedia(item);
   const closeMediaModal = () => setSelectedMedia(null);
+  const [showServiceModal, setShowServiceModal] = useState(false);
 
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem('user')));
@@ -235,6 +235,39 @@ const renderCollectionContent = (collection) => (
   </div>
 );
 
+const ServiceModal = ({ onClose, onSave }) => {
+  const [serviceName, setServiceName] = useState('');
+  const [serviceDescription, setServiceDescription] = useState('');
+
+  const handleSave = () => {
+    onSave({ name: serviceName, description: serviceDescription });
+    onClose();
+  };
+
+  return (
+    <div className="modal">
+      <div className="modal-content">
+        <h2>New Service</h2>
+        <input 
+          type="text" 
+          value={serviceName} 
+          onChange={(e) => setServiceName(e.target.value)} 
+          placeholder="Service Name" 
+          className="w-full p-2 mb-2 border rounded"
+        />
+        <div className='d-flex'>
+        <button onClick={handleSave} className="bg-blue-500 text-white px-4 py-2 rounded">
+          Add
+        </button>
+        <button onClick={onClose} className="bg-red-500 text-white px-4 py-2 rounded">
+          Cancel
+        </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const sliderSettings = {
   dots: true,
   infinite: false,
@@ -245,35 +278,45 @@ const sliderSettings = {
 
   return (
     <div className="flex flex-col items-start p-4 max-w-screen-lg mx-auto bg-white rounded">
+  
         {gigs.map((gig, index) => (
-  <section key={index} className="flex bg-gray-100 rounded-lg shadow-md p-4 mb-3 w-full" style={{ alignItems: 'center' }}>
-    <img 
-      src={gig.gigImage ? (url + gig.gigImage) : "https://via.placeholder.com/150"}
-      alt="Gig Image" 
-      className="rounded-full w-32 h-32 mr-4"
-    />
-    <div className="flex-1">
-      <h1 className="text-2xl font-bold mb-1">{gig.title || 'Untitled Gig'}</h1>
-      <p><strong>Bio:</strong> {gig.description || 'No Bio available'}</p>
-    </div>
-  </section>
-))}
+          <section key={index} className="flex bg-gray-100 rounded-lg shadow-md p-4 mb-3 w-full" style={{ alignItems: 'center' }}>
+            <img 
+              src={gig.gigImage ? (url + gig.gigImage) : "https://via.placeholder.com/150"}
+              alt="Gig Image" 
+              className="rounded-full w-32 h-32 mr-4"
+            />
+            <div className="flex-1">
+              <h1 className="text-2xl font-bold mb-1">{gig.title || 'Untitled Gig'}</h1>
+              <p><strong>Bio:</strong> {gig.description || 'No Bio available'}</p>
+            </div>
+          </section>
+        ))}
 
 
       <div className="flex w-full bg-white ">
         <aside className="bg-gray-100 p-3 place-items-center shadow-md rounded-lg w-2/5 mr-4">
           <div className='d-flex gap-2' style={{alignItems:'center'}} >
           <h2 className="text-lg w-full font-bold mb-1">Services Offering</h2>
-          <span className='cursor-pointer' onClick={()=>{alert('edit service button clicked')}}>
+          <span className='cursor-pointer' onClick={() => setShowServiceModal(true)}>
             <FontAwesomeIcon icon={faEdit}/>
           </span>
           </div>
           <ul className="space-y-2 p-0">
-          {services.map((service, index) => (
-            <li key={index} className="bg-white p-2 rounded shadow">{service}</li>
-          ))}
+            {gigs.length === 1 ? (
+              gigs[0].services && gigs[0].services.length > 0 ? (
+                gigs[0].services.map((service, index) => (
+                  <li key={index} className="bg-white p-2 rounded shadow hover:text-blue-300">
+                    {service.name}
+                  </li>
+                ))
+              ) : (
+                <li className="text-gray-500 italic">No services Added yet</li>
+              )
+            ) : (
+              <li className="text-gray-500 italic">Gig data is unavailable.</li>
+            )}
           </ul>
-
           <h2 className="text-lg text-center w-full font-bold mt-4 mb-2">Plans</h2>
           <ul className="space-y-2 p-0">
               {Object.entries(plans).map(([planName, planDetails]) => (
@@ -407,6 +450,17 @@ const sliderSettings = {
             <button onClick={closeMediaModal} className="bg-red-500 text-white px-4 py-2 rounded">Close</button>
           </div>
         </div>
+      )}
+
+      {/* MOdal for adding services*/}
+      {showServiceModal && (
+        <ServiceModal 
+          onClose={() => setShowServiceModal(false)} 
+          onSave={(newService) => {
+            setServices([...services, newService]); // Add the new service to services list
+            // Optionally, send new service to the backend here
+          }} 
+        />
       )}
     </div>
   );
