@@ -1,23 +1,33 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import CheckoutModal from './CheckoutModal';
-// import { toast } from 'react-toastify';
 import './stylesheets/Payment.css';
 import Mastercard from './stylesheets/MasterCard.jpg';
 import Visa from './stylesheets/VISA.png';
 import UnionPay from './stylesheets/UnionPay.png';
 import PayPak from './stylesheets/PayPak.png';
 
-const stripePromise = loadStripe('pk_test_51Q9WsgRxZvryBcMfYznrpqU3TBLKi5kK424swAZQCzQRUqiusJKAqHZ0HVZ8eBF0kOs2E3OIzTsCMx9ycwjiGWJn00T29kelZh'); // Add your Stripe publishable key
+let stripePromise;
+
+const initStripe = async () => {
+  try {
+    stripePromise = await loadStripe('pk_test_51Q9WsgRxZvryBcMfYznrpqU3TBLKi5kK424swAZQCzQRUqiusJKAqHZ0HVZ8eBF0kOs2E3OIzTsCMx9ycwjiGWJn00T29kelZh');
+  } catch (error) {
+    console.error("Error loading Stripe:", error);
+    alert("Failed to initialize payment system. Please refresh the page or try again later.");
+  }
+};
+
+initStripe();
 
 const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
   const location = useLocation();
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
   const { clientSecret, orderData } = location.state || {};
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -70,9 +80,8 @@ const CheckoutForm = () => {
     setLoading(false);
   };
 
-  // Handle the "Go Back" button click
   const handleGoBack = () => {
-    navigate('/'); // Navigates back to the homepage
+    navigate('/');
   };
 
   return (
@@ -94,7 +103,6 @@ const CheckoutForm = () => {
         <button type="submit" disabled={!stripe || loading} className="pay-now-btn">
           {loading ? 'Processing...' : 'Pay Now'}
         </button>
-        {/* "Go Back" Button */}
         <button type="button" className="go-back-btn-super-complex-xyzab" onClick={handleGoBack}>
           Go Back
         </button>
