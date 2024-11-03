@@ -8,7 +8,8 @@ const {
   deleteGig,
   getUserGigs,
   addCollection, 
-  getCollections
+  getCollections,
+  addServiceToGig,
 } = require('../controllers/gigController');
 
 const collection = require('../controllers/collection');
@@ -28,6 +29,7 @@ router.get('/myGig', verifyToken, getUserGigs);
 
 router.post('/collections', addCollection);
 
+router.post('/:gigId/services', addServiceToGig);
 // Optional: Route to fetch all collections
 router.get('/collections', getCollections);
 // Get all Gigs

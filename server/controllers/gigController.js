@@ -241,6 +241,30 @@ const getCollections = async (req, res) => {
 };
 
 
+const addServiceToGig = async (req, res) => {
+  const { gigId } = req.params; // Get gigId from the request parameters
+  const { name } = req.body; // Get service name from request body
+
+  try {
+    // Find the gig by ID and update the services array
+    const gig = await Gig.findByIdAndUpdate(
+      gigId,
+      { $push: { services: { name } } }, // Push new service to services array
+      { new: true, useFindAndModify: false } // Return the updated document
+    );
+
+    // Check if the gig was found
+    if (!gig) {
+      return res.status(404).json({ message: 'Gig not found' });
+    }
+
+    return res.status(200).json(gig); // Respond with the updated gig
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Error adding service', error: error.message });
+  }
+};
+
 module.exports = {
   createGig,
   getAllGigs,
@@ -249,6 +273,7 @@ module.exports = {
   deleteGig,
   getUserGigs,
   addCollection,
-   getCollections
+   getCollections,
+   addServiceToGig,
 
 };

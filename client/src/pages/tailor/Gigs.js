@@ -235,35 +235,52 @@ const renderCollectionContent = (collection) => (
   </div>
 );
 
-const ServiceModal = ({ onClose, onSave }) => {
+const ServiceModal = ({ onClose, onSave, gigId }) => {
   const [serviceName, setServiceName] = useState('');
 
-  const handleSave = () => {
-    onSave({ name: serviceName});
-    onClose();
+  const handleSave = async () => {
+    if (!serviceName.trim()) {
+      alert("Service name cannot be empty");
+      return;
+    }
+
+    const newService = { name: serviceName };
+
+    try {
+      console.log(gigs[0]._id)
+      // Make a POST request to the backend to add the service
+      const response = await axios.post(`http://localhost:3001/gigs/${gigs[0]._id}/services`, newService);
+      onSave(response.data); // Pass the updated gig data back to the parent
+      onClose();
+    } catch (error) {
+      console.error("Error adding service:", error);
+      alert("There was an error adding the service.");
+    }
   };
 
   return (
+    
     <div className="modal">
-      <div className="modal-content">
-        <h2>New Service</h2>
-        <input 
-          type="text" 
-          value={serviceName} 
-          onChange={(e) => setServiceName(e.target.value)} 
-          placeholder="Service Name" 
-          className="w-full p-2 mb-2 border rounded"
-        />
-        <div className='d-flex'>
+    <div className="modal-content">
+      <h2>New Service</h2>
+      <input 
+        type="text" 
+        value={serviceName} 
+        onChange={(e) => setServiceName(e.target.value)} 
+        placeholder="Service Name" 
+        className="w-full p-2 mb-2 border rounded"
+      />
+      <div className='d-flex'>
         <button onClick={handleSave} className="bg-blue-500 text-white px-4 py-2 rounded">
           Add
         </button>
         <button onClick={onClose} className="bg-red-500 text-white px-4 py-2 rounded">
           Cancel
         </button>
-        </div>
       </div>
     </div>
+  </div>
+
   );
 };
 
@@ -278,190 +295,194 @@ const sliderSettings = {
   return (
     <div className="flex flex-col items-start p-4 max-w-screen-lg mx-auto bg-white rounded">
   
-        {gigs.map((gig, index) => (
-          <section key={index} className="flex bg-gray-100 rounded-lg shadow-md p-4 mb-3 w-full" style={{ alignItems: 'center' }}>
-            <img 
-              src={gig.gigImage ? (url + gig.gigImage) : "https://via.placeholder.com/150"}
-              alt="Gig Image" 
-              className="rounded-full w-32 h-32 mr-4"
-            />
-            <div className="flex-1">
-              <h1 className="text-2xl font-bold mb-1">{gig.title || 'Untitled Gig'}</h1>
-              <p><strong>Bio:</strong> {gig.description || 'No Bio available'}</p>
-            </div>
-          </section>
-        ))}
-
-
-      <div className="flex w-full bg-white ">
-        <aside className="bg-gray-100 p-3 place-items-center shadow-md rounded-lg w-2/5 mr-4">
-          <div className='d-flex gap-2' style={{alignItems:'center'}} >
+    {/* Check if there are any gigs */}
+    {gigs.length > 0 ? (
+      gigs.map((gig, index) => (
+        <section key={index} className="flex bg-gray-100 rounded-lg shadow-md p-4 mb-3 w-full" style={{ alignItems: 'center' }}>
+          <img 
+            src={gig.gigImage ? (url + gig.gigImage) : "https://via.placeholder.com/150"}
+            alt="Gig Image" 
+            className="rounded-full w-32 h-32 mr-4"
+          />
+          <div className="flex-1">
+            <h1 className="text-2xl font-bold mb-1">{gig.title || 'Untitled Gig'}</h1>
+            <p><strong>Bio:</strong> {gig.description || 'No Bio available'}</p>
+          </div>
+        </section>
+      ))
+    ) : (
+      <p className="text-gray-500 italic">There are no gigs available. Please add some gigs.</p> // Display this message if there are no gigs
+    )}
+  
+    <div className="flex w-full bg-white ">
+      <aside className="bg-gray-100 p-3 place-items-center shadow-md rounded-lg w-2/5 mr-4">
+        <div className='d-flex gap-2' style={{ alignItems: 'center' }}>
           <h2 className="text-lg w-full font-bold mb-1">Services Offering</h2>
           <span className='cursor-pointer' onClick={() => setShowServiceModal(true)}>
-            <FontAwesomeIcon icon={faEdit}/>
+            <FontAwesomeIcon icon={faEdit} />
           </span>
-          </div>
-          <ul className="space-y-2 p-0">
-            {gigs.length === 1 ? (
-              gigs[0].services && gigs[0].services.length > 0 ? (
-                gigs[0].services.map((service, index) => (
-                  <li key={index} className="bg-white p-2 rounded shadow hover:text-blue-300">
-                    {service.name}
-                  </li>
-                ))
-              ) : (
-                <li className="text-gray-500 italic">No services Added yet</li>
-              )
+        </div>
+        <ul className="space-y-2 p-0">
+          {gigs.length === 1 ? (
+            gigs[0].services && gigs[0].services.length > 0 ? (
+              gigs[0].services.map((service, index) => (
+                <li key={index} className="bg-white p-2 rounded shadow hover:text-blue-300">
+                  {service.name}
+                </li>
+              ))
             ) : (
-              <li className="text-gray-500 italic">Gig data is unavailable.</li>
-            )}
-          </ul>
-          <h2 className="text-lg text-center w-full font-bold mt-4 mb-2">Plans</h2>
-          <ul className="space-y-2 p-0">
-              {Object.entries(plans).map(([planName, planDetails]) => (
-                  <li key={planName} className={`p-2 rounded shadow ${planDetails.active ? 'bg-green-100' : 'bg-gray-200'}`}>
-                      <label className="flex items-center space-x-2">
-                          <input
-                              type="checkbox"
-                              checked={planDetails.active}
-                              onChange={() => handlePlanToggle(planName)}
-                          />
-                          <span className="font-semibold cursor-pointer" >
-                              {planName.charAt(0).toUpperCase() + planName.slice(1)} Plan
-                          </span>
-                      </label>
-                      {planDetails.active && (
-                          <span onClick={() => handlePlanClick(planName)} className="text-sm cursor-pointer">Click to edit plan details</span>
-                      )}
-                  </li>
-              ))}
-          </ul>
-
+              <li className="text-gray-500 italic">No services added yet</li>
+            )
+          ) : (
+            <li className="text-gray-500 italic">Gig data is unavailable.</li>
+          )}
+        </ul>
+        <h2 className="text-lg text-center w-full font-bold mt-4 mb-2">Plans</h2>
+        <ul className="space-y-2 p-0">
+          {Object.entries(plans).map(([planName, planDetails]) => (
+            <li key={planName} className={`p-2 rounded shadow ${planDetails.active ? 'bg-green-100' : 'bg-gray-200'}`}>
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={planDetails.active}
+                  onChange={() => handlePlanToggle(planName)}
+                />
+                <span className="font-semibold cursor-pointer">
+                  {planName.charAt(0).toUpperCase() + planName.slice(1)} Plan
+                </span>
+              </label>
+              {planDetails.active && (
+                <span onClick={() => handlePlanClick(planName)} className="text-sm cursor-pointer">Click to edit plan details</span>
+              )}
+            </li>
+          ))}
+        </ul>
+  
         {/* Editable Form for Selected Plan */}
         {selectedPlan && (
-            <div className="bg-white p-4 rounded shadow mt-4">
-                <h3 className="font-bold text-lg mb-2">Edit {selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)} Plan</h3>
-                <label className="block mb-2">
-                    <span>Price:</span>
-                    <input
-                        type="number"
-                        name="price"
-                        value={plans[selectedPlan].price}
-                        onChange={handleInputChange}
-                        className="w-full p-2 border rounded"
-                        placeholder="Enter price"
-                    />
-                </label>
-                <label className="block mb-2">
-                    <span>Delivery Time (days):</span>
-                    <input
-                        type="number"
-                        name="deliveryTime"
-                        value={plans[selectedPlan].deliveryTime}
-                        onChange={handleInputChange}
-                        className="w-full p-2 border rounded"
-                        placeholder="Enter delivery time"
-                    />
-                </label>
-                <button onClick={handleSave} className="bg-blue-500 text-white px-4 py-2 rounded">
-                    Save
-                </button>
-            </div>
+          <div className="bg-white p-4 rounded shadow mt-4">
+            <h3 className="font-bold text-lg mb-2">Edit {selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)} Plan</h3>
+            <label className="block mb-2">
+              <span>Price:</span>
+              <input
+                type="number"
+                name="price"
+                value={plans[selectedPlan].price}
+                onChange={handleInputChange}
+                className="w-full p-2 border rounded"
+                placeholder="Enter price"
+              />
+            </label>
+            <label className="block mb-2">
+              <span>Delivery Time (days):</span>
+              <input
+                type="number"
+                name="deliveryTime"
+                value={plans[selectedPlan].deliveryTime}
+                onChange={handleInputChange}
+                className="w-full p-2 border rounded"
+                placeholder="Enter delivery time"
+              />
+            </label>
+            <button onClick={handleSave} className="bg-blue-500 text-white px-4 py-2 rounded">
+              Save
+            </button>
+          </div>
         )}
-
-        </aside>
-
-        <main className="flex flex-col bg-gray-100 p-4 rounded-lg shadow-md w-full">
-          {activeTab === 'collections' && (
-            <section className="w-full">
-              <div className="flex overflow-x-auto overflow-y-auto mb-2">
-                <div className='d-flex flex-col'>
-                  {renderAddCollectionButton()}
-                  <p className="text-center text-sm m-0 mt-1">Add Collection</p>
-                </div>
-                {collections.length !== 0 && collections.map((collection, index) => renderCollection(collection, index))}
+      </aside>
+  
+      {/* Main content area */}
+      <main className="flex flex-col bg-gray-100 p-4 rounded-lg shadow-md w-full">
+        {activeTab === 'collections' && (
+          <section className="w-full">
+            <div className="flex overflow-x-auto overflow-y-auto mb-2">
+              <div className='d-flex flex-col'>
+                {renderAddCollectionButton()}
+                <p className="text-center text-sm m-0 mt-1">Add Collection</p>
               </div>
-
-              {selectedCollection !== null && (
-                <div className="mb-4 mt-6">
-                  <h3 className="text-xl font-semibold text-center">{collections[selectedCollection].title}</h3>
-                  <button 
-                    onClick={() => setShowAddContent(!showAddContent)}
-                    className="bg-green-500 text-white px-4 py-2 rounded"
-                  >
-                    <FontAwesomeIcon icon={faAdd} /> New Content
-                  </button>
-                </div>
-              )}
-
-              {selectedCollection !== null && showAddContent && (
-                <div className="flex my-4 p-1 border-1 rounded gap-2 justify-between">
-                  <input type="file" multiple onChange={(e) => setNewItemFile(e.target.files)} className="my-2" />
-                  <select value={itemType} onChange={(e) => setItemType(e.target.value)} className="my-2 bg-gray-100 border-1 rounded">
-                    <option value="image">Image</option>
-                    <option value="video">Video</option>
-                  </select>
-                  <button onClick={addItemToCollection} className="bg-blue-500 text-white px-4 py-2 rounded">
-                    Add Item
-                  </button>
-                </div>
-              )}
-
+              {collections.length !== 0 && collections.map((collection, index) => renderCollection(collection, index))}
+            </div>
+  
+            {selectedCollection !== null && (
+              <div className="mb-4 mt-6">
+                <h3 className="text-xl font-semibold text-center">{collections[selectedCollection].title}</h3>
+                <button 
+                  onClick={() => setShowAddContent(!showAddContent)}
+                  className="bg-green-500 text-white px-4 py-2 rounded"
+                >
+                  <FontAwesomeIcon icon={faAdd} /> New Content
+                </button>
+              </div>
+            )}
+  
+            {selectedCollection !== null && showAddContent && (
+              <div className="flex my-4 p-1 border-1 rounded gap-2 justify-between">
+                <input type="file" multiple onChange={(e) => setNewItemFile(e.target.files)} className="my-2" />
+                <select value={itemType} onChange={(e) => setItemType(e.target.value)} className="my-2 bg-gray-100 border-1 rounded">
+                  <option value="image">Image</option>
+                  <option value="video">Video</option>
+                </select>
+                <button onClick={addItemToCollection} className="bg-blue-500 text-white px-4 py-2 rounded">
+                  Add Item
+                </button>
+              </div>
+            )}
+  
             {/* Render Content for Selected Collection */}
             {selectedCollection !== null && renderCollectionContent(collections[selectedCollection])}
-
-            </section>
-          )}
-        </main>
-
-      </div>
-
-      {/* Modal for adding new collection */}
-      {showModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <h2>Add New Collection</h2>
-            <input 
-              type="text" 
-              value={newCollectionTitle} 
-              onChange={(e) => setNewCollectionTitle(e.target.value)} 
-              placeholder="Collection Title" 
-            />
-            <input 
-              type="file" 
-              onChange={(e) => setNewCollectionImage(e.target.files[0])} 
-            />
-            <button onClick={addCollection} className="bg-green-500 text-white px-4 py-2 rounded">Save</button>
-            <button onClick={() => setShowModal(false)} className="bg-red-500 text-white px-4 py-2 rounded">Cancel</button>
-          </div>
-        </div>
-      )}
-
-      {/* Modal for media preview */}
-      {selectedMedia && (
-        <div className="modal">
-          <div className="modal-content">
-            {selectedMedia.type === 'image' ? (
-              <img src={selectedMedia.url} alt="Selected" />
-            ) : (
-              <video controls src={selectedMedia.url} />
-            )}
-            <button onClick={closeMediaModal} className="bg-red-500 text-white px-4 py-2 rounded">Close</button>
-          </div>
-        </div>
-      )}
-
-      {/* MOdal for adding services*/}
-      {showServiceModal && (
-        <ServiceModal 
-          onClose={() => setShowServiceModal(false)} 
-          onSave={(newService) => {
-            setServices([...services, newService]); // Add the new service to services list
-            // Optionally, send new service to the backend here
-          }} 
-        />
-      )}
+          </section>
+        )}
+      </main>
     </div>
+  
+    {/* Modal for adding new collection */}
+    {showModal && (
+      <div className="modal">
+        <div className="modal-content">
+          <h2>Add New Collection</h2>
+          <input 
+            type="text" 
+            value={newCollectionTitle} 
+            onChange={(e) => setNewCollectionTitle(e.target.value)} 
+            placeholder="Collection Title" 
+          />
+          <input 
+            type="file" 
+            onChange={(e) => setNewCollectionImage(e.target.files[0])} 
+          />
+          <button onClick={addCollection} className="bg-green-500 text-white px-4 py-2 rounded">Save</button>
+          <button onClick={() => setShowModal(false)} className="bg-red-500 text-white px-4 py-2 rounded">Cancel</button>
+        </div>
+      </div>
+    )}
+  
+    {/* Modal for media preview */}
+    {selectedMedia && (
+      <div className="modal">
+        <div className="modal-content">
+          {selectedMedia.type === 'image' ? (
+            <img src={selectedMedia.url} alt="Selected" />
+          ) : (
+            <video controls src={selectedMedia.url} />
+          )}
+          <button onClick={closeMediaModal} className="bg-red-500 text-white px-4 py-2 rounded">Close</button>
+        </div>
+      </div>
+    )}
+  
+    {/* Modal for adding services */}
+    {showServiceModal && (
+      <ServiceModal 
+        onClose={() => setShowServiceModal(false)} 
+        onSave={(newService) => {
+          setServices([...services, newService]); // Add the new service to services list
+          // Optionally, send new service to the backend here
+        }} 
+      />
+    )}
+  </div>
+  
+
   );
 };
 
