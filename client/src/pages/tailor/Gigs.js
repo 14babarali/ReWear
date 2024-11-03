@@ -237,10 +237,9 @@ const renderCollectionContent = (collection) => (
 
 const ServiceModal = ({ onClose, onSave }) => {
   const [serviceName, setServiceName] = useState('');
-  const [serviceDescription, setServiceDescription] = useState('');
 
   const handleSave = () => {
-    onSave({ name: serviceName, description: serviceDescription });
+    onSave({ name: serviceName});
     onClose();
   };
 
