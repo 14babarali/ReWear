@@ -9,6 +9,7 @@ import { faAdd, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Button } from 'react-bootstrap';
 
 const Gigs = () => {
+  const [gigs, setGigs] = useState([]);
   const [user, setUser] = useState();
   const token = localStorage.getItem('token');
   const [activeTab, setActiveTab] = useState('collections');
@@ -40,238 +41,224 @@ const Gigs = () => {
 
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem('user')));
-    fetchCollections(); // Fetch collections on mount
-    fetchServices(); // Fetch services on mount
-    fetchPlans(); // Fetch plans on mount
+    fetchGig();
   }, [token]);
 
-  // Function to fetch collections
-  const fetchCollections = async () => {
+  const fetchGig = async () => {
     try {
-      const response = await axios.get({backendUrl}+'/gig/collection/fetch', {
-        headers: { Authorization: `Bearer ${token}` } // Include token if necessary
-      });
-      setCollections(response.data);
-    } catch (error) {
-      console.error('Error fetching collections:', error);
-    }
-  };
-
-  // Function to fetch services
-  const fetchServices = async () => {
-    try {
-      const response = await axios.get({backendUrl}+'/services/all', {
+      const response = await axios.get('http://localhost:3001/gigs/myGig', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setServices(response.data);
+      setGigs(response.data);
     } catch (error) {
-      console.error('Error fetching services:', error);
+      console.error('Error fetching gig:', error);
     }
-  };
+  }
 
-  // Function to fetch plans
-  const fetchPlans = async () => {
-    try {
-      const response = await axios.get({backendUrl}+'/gig/plans', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setPlans(response.data);
-    } catch (error) {
-      console.error('Error fetching plans:', error);
+
+// Toggle the plan’s active status and clear selectedPlan if deactivated
+const handlePlanToggle = (planName) => {
+    setPlans(prevPlans => {
+        const updatedPlans = {
+            ...prevPlans,
+            [planName]: { ...prevPlans[planName], active: !prevPlans[planName].active }
+        };
+        
+        // Clear selectedPlan if the toggled plan is being deactivated
+        if (!updatedPlans[planName].active && selectedPlan === planName) {
+            setSelectedPlan(null);
+        }
+
+        return updatedPlans;
+    });
+};
+
+// Set selected plan only if it’s active
+const handlePlanClick = (planName) => {
+    if (plans[planName].active) {
+        setSelectedPlan(planName);
     }
-  };
+};
 
+// Handle input changes for price and deliveryTime fields
+const handleInputChange = (e) => {
+    const { name, value } = e.target;
 
-  // Toggle the plan’s active status and clear selectedPlan if deactivated
-  const handlePlanToggle = (planName) => {
-      setPlans(prevPlans => {
-          const updatedPlans = {
-              ...prevPlans,
-              [planName]: { ...prevPlans[planName], active: !prevPlans[planName].active }
-          };
-          
-          // Clear selectedPlan if the toggled plan is being deactivated
-          if (!updatedPlans[planName].active && selectedPlan === planName) {
-              setSelectedPlan(null);
-          }
+    // Ensure selectedPlan is set before updating
+    if (selectedPlan) {
+        setPlans(prevPlans => ({
+            ...prevPlans,
+            [selectedPlan]: { ...prevPlans[selectedPlan], [name]: value }
+        }));
+    }
+};
 
-          return updatedPlans;
-      });
-  };
-
-  // Set selected plan only if it’s active
-  const handlePlanClick = (planName) => {
-      if (plans[planName].active) {
-          setSelectedPlan(planName);
-      }
-  };
-
-  // Handle input changes for price and deliveryTime fields
-  const handleInputChange = (e) => {
-      const { name, value } = e.target;
-
-      // Ensure selectedPlan is set before updating
-      if (selectedPlan) {
-          setPlans(prevPlans => ({
-              ...prevPlans,
-              [selectedPlan]: { ...prevPlans[selectedPlan], [name]: value }
-          }));
-      }
-  };
-
-  // Handle save operation
-  const handleSave = () => {
-      // Optionally perform validation or other actions
-      setSelectedPlan(null); // Close edit form or modal after saving
-  };
+// Handle save operation
+const handleSave = () => {
+    // Optionally perform validation or other actions
+    setSelectedPlan(null); // Close edit form or modal after saving
+};
 
   
 
-  const addCollection = () => {
-    if (newCollectionTitle && newCollectionImage) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setCollections([...collections, { title: newCollectionTitle, image: reader.result, items: [] }]);
+const addCollection = async () => {
+  if (newCollectionTitle && newCollectionImage) {
+    const reader = new FileReader();
+    
+    reader.onloadend = async () => {
+      try {
+        // Prepare data for backend request
+        const newCollection = {
+          title: newCollectionTitle,
+          image: reader.result, // Base64 encoded image data
+          items: [] // Assuming empty items array for a new collection
+        };
+
+        // Send POST request to backend
+        const response = await axios.post('http://localhost:3001/gigs/collections', newCollection);
+        
+        // Update local collections state with the new collection from the response
+        setCollections([...collections, response.data]);
+        
+        // Reset form and close modal
         setNewCollectionTitle('');
         setNewCollectionImage(null);
         setShowModal(false);
-      };
-      reader.readAsDataURL(newCollectionImage);
-    }
-  };
+      } catch (error) {
+        console.error("Error creating collection:", error);
+        // Optionally, display an error message to the user
+      }
+    };
 
-  const handleCollectionSelect = (index) => setSelectedCollection(index);
+    reader.readAsDataURL(newCollectionImage);
+  }
+};
 
-  const addItemToCollection = () => {
-    if (selectedCollection !== null && newItemFile.length > 0) {
-      const updatedCollections = [...collections];
-      const collection = updatedCollections[selectedCollection];
-  
-      const readFiles = Array.from(newItemFile).map((file) => {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            resolve({ type: itemType, url: reader.result });
-          };
-          reader.readAsDataURL(file);
-        });
+const handleCollectionSelect = (index) => setSelectedCollection(index);
+
+const addItemToCollection = () => {
+  if (selectedCollection !== null && newItemFile.length > 0) {
+    const updatedCollections = [...collections];
+    const collection = updatedCollections[selectedCollection];
+
+    const readFiles = Array.from(newItemFile).map((file) => {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          resolve({ type: itemType, url: reader.result });
+        };
+        reader.readAsDataURL(file);
       });
-  
-      Promise.all(readFiles).then((itemsToAdd) => {
-        collection.items = [...collection.items, ...itemsToAdd];
-        setCollections(updatedCollections);
-        setNewItemFile([]); 
-        setShowAddContent(false);
-      });
-    }
-  };
-  
+    });
 
-  const renderCollection = (collection, index) => (
-    <div className='d-flex flex-col'>
-      <div 
-        key={index} 
-        className="bg-white shadow-md mx-2 rounded-full w-20 h-20 flex flex-col items-center justify-center mx-2 cursor-pointer overflow-hidden" 
-        onClick={() => handleCollectionSelect(index)}
-      >
-        <img 
-          src={collection.image} 
-          alt={collection.title} 
-          className="w-full h-full object-cover" 
-          style={{ borderRadius: '50%' }} 
-        />
-      </div>
-      <h3 className="text-center text-sm m-0 mt-1">{collection.title}</h3>
-    </div>
-  );
+    Promise.all(readFiles).then((itemsToAdd) => {
+      collection.items = [...collection.items, ...itemsToAdd];
+      setCollections(updatedCollections);
+      setNewItemFile([]); 
+      setShowAddContent(false);
+    });
+  }
+};
 
-  const renderAddCollectionButton = () => (
+
+const renderCollection = (collection, index) => (
+  <div className='d-flex flex-col'>
     <div 
-      className="bg-gray-800 rounded-full w-20 h-20 flex items-center justify-center mx-2 cursor-pointer" 
-      onClick={() => setShowModal(true)}
+      key={index} 
+      className="bg-white shadow-md mx-2 rounded-full w-20 h-20 flex flex-col items-center justify-center mx-2 cursor-pointer overflow-hidden" 
+      onClick={() => handleCollectionSelect(index)}
     >
-      <span className="text-white text-2xl">+</span>
+      <img 
+        src={collection.image} 
+        alt={collection.title} 
+        className="w-full h-full object-cover" 
+        style={{ borderRadius: '50%' }} 
+      />
     </div>
-  );
+    <h3 className="text-center text-sm m-0 mt-1">{collection.title}</h3>
+  </div>
+);
 
-  const renderCollectionContent = (collection) => (
-    <div className="mt-2">
-      <div className="flex mb-4">
-        <button 
-          className={`px-4 py-2 rounded ${activeContentTab === 'images' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`} 
-          onClick={() => setActiveContentTab('images')}
-        >
-          Images
-        </button>
-        <button 
-          className={`px-4 py-2 rounded ${activeContentTab === 'videos' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'} ml-2`} 
-          onClick={() => setActiveContentTab('videos')}
-        >
-          Videos
-        </button>
+const renderAddCollectionButton = () => (
+  <div 
+    className="bg-gray-800 rounded-full w-20 h-20 flex items-center justify-center mx-2 cursor-pointer" 
+    onClick={() => setShowModal(true)}
+  >
+    <span className="text-white text-2xl">+</span>
+  </div>
+);
+
+const renderCollectionContent = (collection) => (
+  <div className="mt-2">
+    <div className="flex mb-4">
+      <button 
+        className={`px-4 py-2 rounded ${activeContentTab === 'images' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`} 
+        onClick={() => setActiveContentTab('images')}
+      >
+        Images
+      </button>
+      <button 
+        className={`px-4 py-2 rounded ${activeContentTab === 'videos' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'} ml-2`} 
+        onClick={() => setActiveContentTab('videos')}
+      >
+        Videos
+      </button>
+    </div>
+
+    {activeContentTab === 'images' && (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {collection.items.filter(item => item.type === 'image').map((item, idx) => (
+          <div key={idx} className="rounded-lg overflow-hidden shadow">
+            <img 
+              src={item.url} 
+              alt={`Image ${idx}`} 
+              className="w-full h-56 object-cover"
+              onClick={() => openMediaModal(item)}
+            />
+          </div>
+        ))}
       </div>
+    )}
 
-      {activeContentTab === 'images' && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {collection.items.filter(item => item.type === 'image').map((item, idx) => (
-            <div key={idx} className="rounded-lg overflow-hidden shadow">
-              <img 
-                src={item.url} 
-                alt={`Image ${idx}`} 
-                className="w-full h-56 object-cover"
-                onClick={() => openMediaModal(item)}
-              />
-            </div>
-          ))}
-        </div>
-      )}
+    {activeContentTab === 'videos' && (
+      <Slider {...sliderSettings}>
+        {collection.items.filter(item => item.type === 'video').map((item, idx) => (
+          <div key={idx} className="slide">
+            <video controls className="w-full rounded-lg" onClick={() => openMediaModal(item)}>
+              <source src={item.url} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        ))}
+      </Slider>
+    )}
+  </div>
+);
 
-      {activeContentTab === 'videos' && (
-        <Slider {...sliderSettings}>
-          {collection.items.filter(item => item.type === 'video').map((item, idx) => (
-            <div key={idx} className="slide">
-              <video controls className="w-full rounded-lg" onClick={() => openMediaModal(item)}>
-                <source src={item.url} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            </div>
-          ))}
-        </Slider>
-      )}
-    </div>
-  );
-
-  const sliderSettings = {
-    dots: true,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
+const sliderSettings = {
+  dots: true,
+  infinite: false,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+};
 
   return (
     <div className="flex flex-col items-start p-4 max-w-screen-lg mx-auto bg-white rounded">
-      <section className="flex bg-gray-100 rounded-lg shadow-md p-4 mb-3 w-full" style={{alignItems:'center'}}>
-        <img 
-          src= { url + user?.profile.profilePicture ? url + user?.profile.profilePicture :"https://via.placeholder.com/150" }
-          alt="Profile" 
-          className="rounded-full w-32 h-32 mr-4"
-        />
-        <div className="flex-1">
-          <h1 className="text-2xl font-bold mb-1">{user?.profile.name}</h1>
-          <div className='d-flex gap-5'>
-          <p className='m-0'><strong>Location:</strong> {user?.profile.addresses.map((address, index) => (
-            <span key={index}>
-              {/* {address.street}, */}
-              {address.city} 
-              {/* {address.postalcode} */}
-            </span>
-          ))}</p>
-          {/* <Button>Contact info</Button> */}
-          </div>
-          <p><strong>Bio:</strong> Experienced tailor specializing in custom suits and bridal wear with over 10 years of expertise.</p>
-        </div>
-      </section>
+        {gigs.map((gig, index) => (
+  <section key={index} className="flex bg-gray-100 rounded-lg shadow-md p-4 mb-3 w-full" style={{ alignItems: 'center' }}>
+    <img 
+      src={gig.gigImage ? (url + gig.gigImage) : "https://via.placeholder.com/150"}
+      alt="Gig Image" 
+      className="rounded-full w-32 h-32 mr-4"
+    />
+    <div className="flex-1">
+      <h1 className="text-2xl font-bold mb-1">{gig.title || 'Untitled Gig'}</h1>
+      <p><strong>Bio:</strong> {gig.description || 'No Bio available'}</p>
+    </div>
+  </section>
+))}
+
 
       <div className="flex w-full bg-white ">
         <aside className="bg-gray-100 p-3 place-items-center shadow-md rounded-lg w-2/5 mr-4">

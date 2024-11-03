@@ -15,26 +15,32 @@ const CollectionSchema = new mongoose.Schema({
 
 // Plan schema to hold pricing plans for a gig
 const PlanSchema = new mongoose.Schema({
-  name: { type: String, required: true }, // Name of the plan (e.g., Basic, Premium)
+  name: {  type: String,
+  enum: ['Basic', 'Premium'],default: 'Basic'}, // Name of the plan (e.g., Basic, Premium)
   price: { type: Number, required: true }, // Price of the plan
   deliveryDays: { type: Number, required: true }, // Delivery days associated with the plan
-  description: { type: String, required: true }, // Description of what the plan includes
 });
 
 // Gig schema to hold all relevant gig information
 const GigSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  title: { type: String, required: true, maxlength: 100 },
+  user: { 
+    type: mongoose.Schema.Types.ObjectId,
+     ref: 'User',
+     required: true 
+    },
+  title: { type: String, required: true, maxlength: 60 },
   description: { type: String, required: true },
+  services: [
+    { 
+      type: String, 
+      required: true 
+    } 
+  ],
+  
+  experience: { type: Number, min:2, max:100, required: true },
   gigImage: { type: String, required: true },
   collections: [CollectionSchema], // Array of collections for media uploads
   plans: [PlanSchema], // Pricing plans for the gig
-  reviews: [{
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    comment: String,
-    rating: { type: Number, default: 0, min: 0, max: 5 },
-    createdAt: { type: Date, default: Date.now },
-  }],
   status: { type: String, enum: ['active', 'paused', 'deleted'], default: 'active' },
 }, { timestamps: true });
 

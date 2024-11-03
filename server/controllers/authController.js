@@ -200,10 +200,7 @@ exports.logout = async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.decode(token);
 
-    const blacklistedToken = new BlacklistedToken({
-      token,
-      expiresAt: new Date(decoded.exp * 1000), // JWT expiration time
-    });
+    const blacklistedToken = new BlacklistedToken({token});
 
     await blacklistedToken.save();
 

@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     type: String, required: true },
   role: { 
     type: String, 
-    enum: ['Buyer', 'Seller', 'Tailor'], 
+    enum: ['Buyer', 'Seller', 'Tailor', 'Admin'], 
     default: 'Buyer' 
   },
   profile: {

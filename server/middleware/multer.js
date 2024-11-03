@@ -1,10 +1,13 @@
 const multer = require('multer');
 const path = require('path');
-
+const fs = require('fs');
 // Configure storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, '../uploads/'); // Directory where files will be saved
+    const uploadPath = path.join(__dirname, '../uploads'); // Adjust path as needed
+    // Create the uploads directory if it doesn't exist
+    fs.mkdirSync(uploadPath, { recursive: true }); // Will not throw an error if the directory already exists
+    cb(null, uploadPath); // Use the created or existing directory
   },
   filename: function (req, file, cb) {
     cb(null, `${Date.now()}-${file.originalname}`); // Save file with original name and add a timestamp

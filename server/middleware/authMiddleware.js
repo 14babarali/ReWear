@@ -36,8 +36,9 @@ exports.verifyToken = async (req, res, next) => {
           expiresAt: new Date(decoded.exp * 1000), // JWT expiration time
         });
 
+
         await blacklistedToken.save();
-        console.log('Token has been blacklisted due to expiration'); // Add this line for debugging
+        console.log('Token has been blacklisted due to expiration',blacklistedToken); // Add this line for debugging
         return res.status(401).json({ message: 'Token has expired' });
 
       } catch (blacklistError) {

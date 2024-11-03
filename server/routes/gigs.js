@@ -6,7 +6,9 @@ const {
   getGigById,
   updateGig,
   deleteGig,
-  getUserGigs
+  getUserGigs,
+  addCollection, 
+  getCollections
 } = require('../controllers/gigController');
 
 const collection = require('../controllers/collection');
@@ -19,11 +21,15 @@ const router = express.Router();
 const upload = require('../middleware/multer');
 
 // Add New Gig
-router.post('/add', verifyToken, upload.array('mediaFiles', 10), createGig); // Accept an array of media files
+router.post('/add', verifyToken, upload.array('gigImage'), createGig); // Accept an array of media files
 
 // Get Gigs of the Authenticated User
-router.get('/my-gigs', verifyToken, getUserGigs);
+router.get('/myGig', verifyToken, getUserGigs);
 
+router.post('/collections', addCollection);
+
+// Optional: Route to fetch all collections
+router.get('/collections', getCollections);
 // Get all Gigs
 router.get('/all', verifyToken, getAllGigs);
 
@@ -31,7 +37,7 @@ router.get('/all', verifyToken, getAllGigs);
 router.get('/:id', verifyToken, getGigById);
 
 // Update a Gig (only for verified users)
-router.put('/:id', verifyToken, upload.array('mediaFiles', 10), updateGig); // Accept an array of media files
+router.put('/:id', verifyToken, updateGig); // Accept an array of media files
 
 // Delete a Gig (only for verified users)
 router.delete('/:id', verifyToken, deleteGig);
