@@ -5,6 +5,7 @@ import BuyerLayout from './layouts/BuyerLayout';
 import SellerLayout from './layouts/SellerLayout';
 import TailorLayout from './layouts/TailorLayout';
 import AdminLayout from './layouts/AdminLayout';
+import Cookie from './components/cookies';
 import Home from './routes';
 import Login from './routes/login';
 import Register from './routes/register';
@@ -73,8 +74,8 @@ function AppRoutes () {
 }, [isOnline]);
 
   return (
-      <Routes>
-        
+    <>
+    <Routes>
         {/* General Routes For all type of users */}
         <Route path="/" element={<><AppHeader/><Home /><Footer/></>} />
         <Route path="/login" element={<><AppHeader/><Login/><Footer/></>} />
@@ -92,8 +93,9 @@ function AppRoutes () {
         <Route path="/buyer/*" element={<BuyerLayout />} />
         <Route path="/seller/*" element={<SellerLayout />} />
         <Route path="/tailor/*" element={<TailorLayout />} />
-
       </Routes>
+      {localStorage.getItem('cookiesAccepted') === 'true' ?'': <Cookie />}
+    </>
   );
 }
 

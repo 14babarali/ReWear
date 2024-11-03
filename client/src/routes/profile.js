@@ -6,6 +6,7 @@ import axios from 'axios';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import './stylesheet/profile.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome, faEnvelope as faMail, faPhone, faTrashAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 const ProfilePage = () => {
@@ -190,13 +191,12 @@ const ProfilePage = () => {
       />
       {user && (
         <>
-          <div className="profile-card-header">
+          <div className="profile-card-header rounded">
             <h4>Profile</h4>
           </div>
-          <div className="profile-card-body">
             {/* User Info Section */}
             <section className="user-info-section">
-              <div className="user-info-row">
+              <div className="user-info-row align-middle">
                 <div className="user-info-image text-center">
                   <img 
                     src={imageUrl} 
@@ -205,28 +205,34 @@ const ProfilePage = () => {
                   />
                 </div>
                 <div className="user-info-details">
-                  <h4 className="user-name">
+                  
+                  <div className='user-info-item flex gap-2 items-center'>
+                  <FontAwesomeIcon icon={faUser}/>
+                  <p className="text-xl m-0 tracking-wider">
                     {user?.profile?.name || "No Name Provided"}
-                  </h4>
+                  </p>
+                  </div>
 
                   {/* Email */}
-                  <div className="user-info-item">
-                    <p><strong>Email:</strong> {user?.email || "No Email Provided"}</p>
+                  <div className="flex user-info-item items-center gap-2">
+                  <FontAwesomeIcon icon={faMail} />
+                    <p className="m-0 hover:underline">{user?.email || "No Email Provided"}</p> {/* Added margin-left for spacing */}
                   </div>
 
                   {/* Phone */}
-                  <div className="user-info-item">
-                    <p><strong>Phone:</strong> {user?.profile?.phone || "No Phone Provided"}</p>
+                  <div className="user-info-item flex items-center gap-2">
+                  <FontAwesomeIcon icon={faPhone} />
+                    <p className="m-0 hover:underline">{'+'+ user?.profile?.phone || "No Phone Provided"}</p>
                   </div>
 
                   {/* Address */}
                   <div className="user-info-item">
-                    <p><strong>Address:</strong></p>
                     <ul className="user-address-list">
                       {(user?.profile?.addresses || []).length > 0 ? (
                         user.profile.addresses.map((address, index) => (
-                          <li key={index}>
-                            {address.street}, {address.city}, {address.postalcode}
+                          <li key={index} className='flex gap-2'>
+                          <FontAwesomeIcon icon={faHome}/>
+                          <span>{address.street}, {address.city}, {address.postalcode}</span>
                           </li>
                         ))
                       ) : (
@@ -309,8 +315,8 @@ const ProfilePage = () => {
                         value={address.postalcode} 
                         onChange={(e) => handleAddressChange(index, e)} 
                       />
-                      <button type="button" className="btn btn-danger" onClick={() => handleRemoveAddress(index)}>
-                        Remove Address
+                      <button type="button" className="btn-danger" onClick={() => handleRemoveAddress(index)}>
+                        <FontAwesomeIcon icon={faTrashAlt}/>
                       </button>
                     </div>
                   ))}
@@ -385,7 +391,6 @@ const ProfilePage = () => {
                 </form>
               )}
             </section>
-          </div>
         </>
       )}
     </div>

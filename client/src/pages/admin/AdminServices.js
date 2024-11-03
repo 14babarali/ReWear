@@ -17,11 +17,11 @@ const AdminServices = () => {
   const fetchServices = async () => {
     const token = localStorage.getItem('token');
     try {
-        const response = await axios.get('http://localhost:3001/services/all', {
+      const response = await axios.get('http://localhost:3001/services/all', {
         headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the headers
+          Authorization: `Bearer ${token}`, // Include the token in the headers
         },
-        });
+      });
       setServices(response.data);
     } catch (error) {
       console.error('Error fetching services:', error);
@@ -40,29 +40,19 @@ const AdminServices = () => {
         await axios.delete(`http://localhost:3001/services/${service._id}`);
         fetchServices();
       } catch (error) {
-        if(error===''){
-            alert('Error deleting service:', error);
-        }
-        else{
-            alert('Connection to server lost, Try again after sometime');
-        }
-        
+        alert('Failed to delete service. Please try again.');
       }
     }
   };
 
-
   return (
     <div className="container mt-2">
-        <h1 className="mb-4">
-            ReWear Service Management
-        </h1>
+      <h1 className="mb-4">ReWear Service Management</h1>
 
-
-      <div className='flex justify-start'>
-      <Button variant="primary mb-3" onClick={()=>navigate('/admin/Services/modify')}>
-        <FontAwesomeIcon icon={faAdd}/> Add Service
-      </Button>
+      <div className="flex justify-start">
+        <Button variant="primary mb-3" onClick={() => navigate('/admin/Services/modify')}>
+          <FontAwesomeIcon icon={faAdd} /> Add Service
+        </Button>
       </div>
 
       <Table striped bordered hover>
@@ -70,22 +60,22 @@ const AdminServices = () => {
           <tr>
             <th>#</th>
             <th>Service Name</th>
-            <th>Materials</th>
+            <th>Description</th>
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody className='text-left'>
+        <tbody className="text-left">
           {services.map((service, index) => (
             <tr key={service._id}>
               <td>{index + 1}</td>
               <td>{service.name}</td>
-              <td>{service.material.map(mat => mat.name).join(', ')}</td>
-              <td className='text-center'>
+              <td>{service.description}</td>
+              <td className="text-center">
                 <Button variant="warning" onClick={() => handleEdit(service)}>
-                  <FontAwesomeIcon icon={faPen}/> Edit
+                  <FontAwesomeIcon icon={faPen} /> Edit
                 </Button>
                 <Button variant="danger" onClick={() => handleDelete(service)} className="ml-2">
-                  <FontAwesomeIcon icon={faTrashAlt}/> Delete
+                  <FontAwesomeIcon icon={faTrashAlt} /> Delete
                 </Button>
               </td>
             </tr>

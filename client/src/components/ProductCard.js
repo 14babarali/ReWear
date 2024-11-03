@@ -25,7 +25,7 @@ const ProductCard = ({ product }) => {
 
         if (!token) {
 
-          console.info('No token found');
+          console.info('User Not Logged In');
 
           return;
 
@@ -144,16 +144,15 @@ const ProductCard = ({ product }) => {
 };
 
   return (
-    <>
     <div className="card h-100 shadow-sm" style={{ borderRadius: '10px', overflow: 'hidden' }}>
       <div className="image-container" style={{ position: 'relative' }}>
       <div className="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-4">
-                <img
-                    src={product.images && product.images.length > 0 ? `http://localhost:3001/uploads/${product.images[0]}` : 'https://via.placeholder.com/300'}
-                    alt={product.name}
-                    className="card-img-top"
-                    style={{ height: '250px', objectFit: 'cover' }}
-                />
+          <img
+              src={product.images && product.images.length > 0 ? `http://localhost:3001/uploads/${product.images[0]}` : 'https://via.placeholder.com/300'}
+              alt={product.name}
+              className="card-img-top"
+              style={{ height: '250px', objectFit: 'cover' }}
+          />
         </div>
           <span className="badge badge-condition">
           {product.type ? product.type : 'None'}
@@ -167,7 +166,7 @@ const ProductCard = ({ product }) => {
       </div>
       <div className="card-body d-flex flex-column">
           <h6 className="product-card-title text-truncate p-1" title={product.name}>
-            <Link className="text" to={`/buyer/productpage/${product._id}`} state={{product}}>{product.name}</Link>
+            <Link className="text" to={`/buyer/productpage/${product._id}`} state={{product, isWishlisted} }>{product.name}</Link>
           </h6>
         <div className="d-flex justify-content-between align-items-center mb-1">
           <p className="card-text text-muted mb-0">PKR {product.price}</p>
@@ -191,7 +190,6 @@ const ProductCard = ({ product }) => {
 
       </div>
     </div>
-    </>
   );
 };
 

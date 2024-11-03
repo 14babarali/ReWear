@@ -257,7 +257,7 @@ exports.fetchall = async (req, res) => {
          // Check if user is logged in
          if (!req.user || !req.user.id) {
             // If user is not logged in, return all products
-            const products = await Product.find(filter);
+            const products = await Product.find(filter).populate('userId');
             res.json(products);
         } else {
             // If user is logged in, filter out products added by current user
@@ -265,7 +265,7 @@ exports.fetchall = async (req, res) => {
             const products = await Product.find({
                 ...filter,
                 userId: { $ne: userId }
-            });
+            }).populate('userId');
             res.json(products);
             console.log(products);
             

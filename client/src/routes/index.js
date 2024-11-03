@@ -34,7 +34,7 @@ function Home() {
         const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
         const response = await axios.get('http://localhost:3001/api/featured_products', config); 
         setProducts(response.data);
-        console.log(products);
+        // console.log(products);
       } catch (error) {
         if (error.response && error.response.status === 401) {
           // Clear any stored token (optional)
@@ -238,7 +238,7 @@ function Home() {
             </div>
           ) : (
             currentProducts.map(product => (
-              <div key={product.id}>
+              <div key={product._id}>
                 <ProductCard product={product} />
               </div>
             ))
@@ -248,7 +248,7 @@ function Home() {
           <nav className="mt-6">
             <ul className="flex justify-center space-x-2">
               {Array.from({ length: totalPages }, (_, index) => (
-                <li key={index}>
+                <li key={`page-${index}`}>
                   <button
                     className={`px-4 py-2 rounded-lg ${index + 1 === currentPage ? 'bg-dark text-white' : 'bg-light text-black border'}`}
                     onClick={() => handlePageClick(index + 1)}

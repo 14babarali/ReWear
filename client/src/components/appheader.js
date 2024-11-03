@@ -26,7 +26,8 @@ const AppHeader = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const token = localStorage.getItem('token');
+      try{
+        const token = localStorage.getItem('token');
       const data = await getBuyerCategories(token);
       const organizedCategories = organizeCategories(data); // Organize categories as needed
 
@@ -39,9 +40,26 @@ const AppHeader = () => {
       } else {
         setNoCategoriesMessage('');
       }
+      }
+      catch(error){
+        console.log('Error:',error);
+        if (!navigator.onLine) {
+          // Network is disconnected
+          setNoCategoriesMessage('Network connection lost. Please check your internet connection.');
+        } else if (error.status === 404) {
+            // Server returned a 404 error
+            setNoCategoriesMessage('Server Down or No categories added by Administration');
+        }else if (error.status === 500) {
+          // Server error
+          setNoCategoriesMessage('Server error. Please try again later.');
+        } else {
+            // Other errors
+            setNoCategoriesMessage('An unexpected error occurred. Please try again.');
+        }
+      }
     };
     fetchCategories();
-  }, []);
+  }, [navigate]);
 
   const organizeCategories = (flatCategories) => {
     const categoryMap = {};
@@ -160,40 +178,45 @@ const AppHeader = () => {
           </Link>
         </div>
 
-        <div className="category-container ">
-            {noCategoriesMessage && <p className='m-0'>{noCategoriesMessage}</p>}
+        <div className="category-container bg-white border-1 p-0">
+            {noCategoriesMessage && <p className='m-0 text-red-500'>{noCategoriesMessage}</p>}
             {categories.map((category) => (
-              <div key={category._id} className="category-group">
-                <button className="category-button" onClick={() => toggleCategory(category._id)}>
-                  {category.name}
-                </button>
-                {expanded[category._id] && (
-                  <div className="dropdown-menu">
-                    {category.children.map((child) => (
-                      <div key={child._id}>
-                        <button className="subcategory-button" onClick={() => toggleCategory(child._id)}>
-                          {child.name}
-                        </button>
-                        {expanded[child._id] && (
-                          <div className="subdropdown-menu">
-                            {child.children.map((subchild) => (
-                              <Link 
-                                key={subchild._id} 
-                                to={`/buyer/products/${subchild.slug}`}
-                                state={{ categoryId: subchild._id }}
-                                className="dropdown-item">
-                                  {subchild.name}
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+                <div key={category._id} className="category-group bg-white text-black">
+                    <button className="category-button bg-white text-black p-2 m-0" onClick={() => toggleCategory(category._id)}>
+                        <strong>{category.name}</strong>
+                    </button>
+                    {expanded[category._id] && (
+                        <div className="dropdown-menu bg-white p-1 border-1">
+                            {category.children.length === 0 ? (  // Check if there are no children
+                                <p className='mt-1 text-red-400  hover:text-gray-950 hover:cursor-pointer'>No items found under this category.</p>  // Display message if no children
+                            ) : (
+                                category.children.map((child) => (
+                                    <div className='bg-black bg-white border-1 rounded' key={child._id}>
+                                        <button className="subcategory-button text-black bg-white m-0" onClick={() => toggleCategory(child._id)}>
+                                            {child.name}
+                                        </button>
+                                        {expanded[child._id] && (
+                                            <div className="subdropdown-menu bg-white">
+                                                {child.children.map((subchild) => (
+                                                    <Link 
+                                                        key={subchild._id} 
+                                                        to={`/buyer/products/${subchild.slug}`}
+                                                        state={{ categoryId: subchild._id }}
+                                                        className="dropdown-item rounded">
+                                                            {subchild.name}
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    )}
+                </div>
             ))}
-          </div>
+        </div>
+
 
 
           {/* Desktop Links */}
@@ -239,16 +262,16 @@ const AppHeader = () => {
                     <div ref={dropdownRef}>
                     <ul className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg overflow-hidden">
                       <li>
-                        <Link className="block px-4 py-2 text-gray-700" to="/buyer/profile">Profile</Link>
+                        <Link className="block px-4 py-2 text-gray-700 no-underline hover:text-gray-950" to="/buyer/profile">Profile</Link>
                       </li>
                       <li>
-                        <Link className="block px-4 py-2 text-gray-700" to="/buyer/buyers_orders">Orders</Link>
+                        <Link className="block px-4 py-2 text-gray-700 no-underline hover:text-gray-950" to="/buyer/buyers_orders">Orders</Link>
                       </li>
                       {/* <li>
                         <hr className="border-t border-gray-300" />
                       </li> */}
                       <li>
-                        <button className="logout-btn block text-left px-4 py-2 text-gray-700 " onClick={handleLogout}>Logout</button>
+                        <button className="bg-white block px-4 py-2 text-gray-700 no-underline hover:text-gray-950" onClick={handleLogout}>Logout</button>
                       </li>
                     </ul>
                     </div>

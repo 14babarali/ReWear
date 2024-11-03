@@ -17,7 +17,7 @@ const upload = multer({
     storage: storage,
     limits: { fileSize: 1024 * 1024 * 5 }, // Limit file size to 5MB
     fileFilter: (req, file, cb) => {
-        const allowedFileTypes = /jpeg|jpg|png|gif|webp/; // Allow these file types
+        const allowedFileTypes =  /jpeg|jpg|png|gif|mp4|mkv|avi|mov/;; // Allow these file types
         const extname = allowedFileTypes.test(path.extname(file.originalname).toLowerCase());
         const mimetype = allowedFileTypes.test(file.mimetype);
         

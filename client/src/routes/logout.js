@@ -21,9 +21,11 @@ const LogoutPage = () => {
       } catch (error) {
         console.error('Error logging out:', error);
       } finally {
+        
         // Clear token and user data
         localStorage.removeItem('user');
         localStorage.removeItem('token');
+        localStorage.removeItem('cookiesAccepted');
 
         // Set timer for redirect
         const timer = setTimeout(() => {

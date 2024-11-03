@@ -15,13 +15,26 @@
   padding: 0.25rem 0.5rem;
 }
 
+
+
 .dropdown-menu {
-  background-color: #343a40; /* Dark background for the dropdown */
+  background-color: white;
+  color: #495057;
   border: none;
 }
 
+.dropdown-menu:hover {
+  background-color: #495057;
+  color: #fff;
+}
+
+.subcategory-button:hover{
+  background-color: #495057;
+  color: #fff;
+}
+
 .dropdown-item {
-  color: #fff; /* White text for normal state */
+  color: black; /* White text for normal state */
   padding: 0.5rem 1rem;
   transition: background-color 0.3s ease;
 }

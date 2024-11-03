@@ -1,27 +1,51 @@
 // routes/gigs.js
 const express = require('express');
-const { createGig , getAllGigs, getGigById, updateGig, deleteGig,getUserGigs} = require('../controllers/gigController');
-const { verifyToken } = require('../middleware/authMiddleware'); 
-const checkIfVerified = require('../middleware/verifyUser'); 
+const {
+  createGig,
+  getAllGigs,
+  getGigById,
+  updateGig,
+  deleteGig,
+  getUserGigs
+} = require('../controllers/gigController');
+
+const collection = require('../controllers/collection');
+
+const plan = require('../controllers/plan');
+
+const { verifyToken } = require('../middleware/authMiddleware');
+// const checkIfVerified = require('../middleware/verifyUser');
 const router = express.Router();
 const upload = require('../middleware/multer');
 
+// Add New Gig
+router.post('/add', verifyToken, upload.array('mediaFiles', 10), createGig); // Accept an array of media files
 
-//  Add New Gig
-router.post('/add', verifyToken,upload.single('gigImage'), createGig);
-
+// Get Gigs of the Authenticated User
 router.get('/my-gigs', verifyToken, getUserGigs);
 
 // Get all Gigs
-router.get('/all',verifyToken, getAllGigs);
+router.get('/all', verifyToken, getAllGigs);
 
 // Get a Gig by ID
-router.get('/:id',verifyToken,  getGigById);
+router.get('/:id', verifyToken, getGigById);
 
 // Update a Gig (only for verified users)
-router.put('/:id', verifyToken, checkIfVerified,upload.single('gigImage'), updateGig);
+router.put('/:id', verifyToken, upload.array('mediaFiles', 10), updateGig); // Accept an array of media files
 
 // Delete a Gig (only for verified users)
-router.delete('/:id', verifyToken, checkIfVerified, deleteGig);
+router.delete('/:id', verifyToken, deleteGig);
+
+
+// Collection routes
+router.post('/gigs/:id/collections', collection.createCollection);
+router.put('/gigs/:gigId/collections/:collectionId', collection.updateCollection);
+router.delete('/gigs/:gigId/collections/:collectionId', collection.deleteCollection);
+
+// Plan routes
+router.post('/gigs/:id/plans', plan.createPlan);
+router.put('/gigs/:gigId/plans/:planId', plan.updatePlan);
+router.delete('/gigs/:gigId/plans/:planId', plan.deletePlan);
+
 
 module.exports = router;
