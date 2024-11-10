@@ -43,7 +43,16 @@ router.get('/allTailor', getAllGigs);
 router.get('/:id', verifyToken, getGigById);
 
 // Update a Gig (only for verified users)
-router.put('/update/:id', verifyToken, updateGig);
+// router.put('/update/:id', verifyToken, updateGig);
+router.put('/update/:id', verifyToken, upload.single('gigImage'), async (req, res, next) => {
+  try {
+    console.log('Received PUT request to update gig:', req.params.id);
+    await updateGig(req, res); // Call the update function from the controller
+  } catch (error) {
+    console.error('Error in /gigs/update/:id route:', error.message);
+    res.status(500).json({ message: 'Error updating gig', error: error.message });
+  }
+});
 
 // Delete a Gig (only for verified users)
 router.delete('/:id', verifyToken, deleteGig);

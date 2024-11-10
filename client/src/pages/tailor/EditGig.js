@@ -10,15 +10,21 @@ const EditGigModal = ({ gig, onClose, fetchGig }) => {
   const backendUrl = "http://localhost:3001/";
   const token = localStorage.getItem('token');
 
+  // Debug initial values
+  console.log("Initial gig data:", gig);
+  console.log("Initial token:", token);
+
   const handleInputChange = (e, field) => {
     const value = field === 'gigImage' ? e.target.files[0] : e.target.value;
+    console.log(`Input change on field: ${field}, New value:`, value);
+    
     setUpdatedGig((prev) => ({ ...prev, [field]: value }));
     setErrors((prevErrors) => ({ ...prevErrors, [field]: '' })); // Clear error for this field
   };
 
   const validateInputs = () => {
     const newErrors = {};
-    alert(updatedGig._id);
+    console.log("Validating inputs:", updatedGig);
 
     // Validate title
     if (updatedGig.title && typeof updatedGig.title !== 'string') {
@@ -36,16 +42,20 @@ const EditGigModal = ({ gig, onClose, fetchGig }) => {
       newErrors.description = 'Description can be a maximum of 200 characters.';
     }
 
+    console.log("Validation errors:", newErrors);
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSaveGig = async () => {
+    console.log("Save button clicked, validating inputs...");
     if (!validateInputs()) {
-        alert('Validation Failed...');
+      console.log("Validation failed.");
+      alert('Validation Failed...');
       return; // Exit if validation fails
     }
 
+    console.log("Validation passed. Preparing form data...");
     setLoading(true);
     const formData = new FormData();
     formData.append("title", updatedGig.title);
@@ -54,26 +64,39 @@ const EditGigModal = ({ gig, onClose, fetchGig }) => {
     if (updatedGig.gigImage instanceof File) {
       formData.append("gigImage", updatedGig.gigImage);
     }
-    console.log(formData.entries());
+
+    // Log the form data values to ensure they're correct
+    for (let [key, value] of formData.entries()) {
+      console.log(`Form Data - ${key}:`, value);
+    }
+
     try {
-      const response= await axios.put(`${backendUrl}gigs/update/${updatedGig._id}`, formData, {
+      console.log("Sending PUT request to API...");
+      const response = await axios.put(`http://localhost:3001/gigs/update/${updatedGig._id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
+     
+
       });
-      if(response.status === 200 || response.status === 201){
+      console.log('Preparing to send PUT request with data:', formData);
+
+      console.log("API response:", response);
+      if (response.status === 200 || response.status === 201) {
         alert('Gig Updated');
-      fetchGig();
-      }
-      else{
-        alert(response.status);
+        console.log("Gig update successful. Fetching updated gigs...");
+        fetchGig();  // Refresh the gig data after update
+      } else {
+        console.log("Unexpected response status:", response.status);
+        alert(`Unexpected status code: ${response.status}`);
       }
     } catch (error) {
       console.error("Error updating gig:", error);
-      alert('Error Occured.....');
+      alert('Error Occurred during update.');
     } finally {
       setLoading(false);
+      console.log("Closing modal...");
       onClose();
     }
   };
