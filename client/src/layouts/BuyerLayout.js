@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Routes, Route, Navigate  } from 'react-router-dom';
 import AppHeader from '../components/appheader';
@@ -32,30 +32,39 @@ import ERR404 from '../components/error404';
 
 const BuyerLayout = () => {
   const navigate = useNavigate();
-  const [hasNavigated,setHasNavigated] = useState(false);
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
+  const [hasNavigated, setHasNavigated] = useState(false);
 
+  useEffect(() => {
+    
+    const user = JSON.parse(localStorage.getItem('user'));
     if (user && !hasNavigated) {
       if (user.role !== 'Buyer') {
-        setHasNavigated(true); // Set to true after navigating
+        setHasNavigated(true);
         navigate('/' + user.role.toLowerCase());
       }
     }
   }, [navigate, hasNavigated]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []); 
+
   return (
     <div>
-      <AppHeader/>
+      <AppHeader />
+      <div
+        className="h-fit"
+        style={{ justifyContent: 'center', margin: '5px', width: 'auto', height: '100%', overflow: 'scroll' }}
+      >
         <Routes>
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/product/:category" element={<CategoryLinks />} />
-          <Route path='/profile' element={<ProfilePage />} />
-          <Route path='/Seller' element={<UserDetails />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/Seller" element={<UserDetails />} />
           <Route path="/products/:category" element={<Products />} />
-          <Route path='/productpage/:productId' element={<ProductPage />} />
+          <Route path="/productpage/:productId" element={<ProductPage />} />
           <Route path="/buyers_orders" element={<OrdersPage />} />
           <Route path="/Info" element={<Productinfo />} />
           <Route path="/measurement" element={<Measurement />} />
@@ -68,17 +77,15 @@ const BuyerLayout = () => {
           <Route path="/GigHead" element={<GigHead />} />
           <Route path="/DeliverParcel" element={<DeliverParcel />} />
           <Route path="/card-payment" element={<Payment />} />
-          <Route path='/OTP/verify' element= {<OTP/>}/>
-
-          <Route path='/privacy-policy' element={<PrivacyPolicy />} />
-          <Route path='/AboutUs' element={<AboutUs />} />
+          <Route path="/OTP/verify" element={<OTP />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/AboutUs" element={<AboutUs />} />
           <Route path="/Faqs" element={<Faqs />} />
-
-        
-          <Route path='/' element={<Home />} />
-          <Route path="*" element={<ERR404 />} /> {/* Consider adding a 404 page */}
+          <Route path="/" element={<Home />} />
+          <Route path="*" element={<ERR404 />} />
         </Routes>
-      <Footer/>
+      </div>
+      <Footer />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import './AdminSidebar.css'; // Import the CSS file
+import { Link } from 'react-router-dom'; 
+import './AdminSidebar.css'; 
 import generateReport from './AdminReports';
 
 const AdminSidebar = ({ isOpen, toggleSidebar }) => {

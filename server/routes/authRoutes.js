@@ -17,7 +17,7 @@ router.post('/register', authController.register);
 router.post('/login', authController.login);
 
 // POST /api/logout
-router.post('/logout', authMiddleware.verifyToken, authController.logout);
+router.post('/logout', authController.logout);
 
 // Route to update user profile
 router.put('/editprofile', authMiddleware.verifyToken, upload.fields([
@@ -92,7 +92,7 @@ router.get ('/cartproduct/:id', authMiddleware.verifyToken, product.getcartprodu
 router.put ('/qtyupdated', authMiddleware.verifyToken, cart.qtyupdate);
 
 // update size for product in cart
-router.put('/changesize',authMiddleware.verifyToken, cart.updateCartItemSize);
+// router.put('/changesize',authMiddleware.verifyToken, cart.updateCartItemSize);
 
 // DELETE route to remove a product from the cart
 router.delete('/deletecartitem/:productId', authMiddleware.verifyToken, cart.deleteCartItem);
@@ -101,12 +101,15 @@ router.delete('/deletecartitem/:productId', authMiddleware.verifyToken, cart.del
 router.get('/cartproducts', authMiddleware.verifyToken, cart.getcartproducts);
 
 
+
 //order routes 
 
 router.post('/orderplace', authMiddleware.verifyToken, order.placeOrder);
 
 router.get('/orders', authMiddleware.verifyToken, order.getOrdersByUser);
 
+// Review Button Rendering for Buyer componet/ProductPage.js
+router.get('/review_order_status',authMiddleware.verifyToken, order.checkProductInOrders);
 
 // Seller's Routes for orders management
 

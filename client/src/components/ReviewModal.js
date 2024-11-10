@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
 import { StarIcon } from '@heroicons/react/24/solid';
 import axios from 'axios'; // Make sure to import axios for API requests
+import { useNavigate } from 'react-router-dom';
 
 export default function ReviewModal({ onClose, productId }) {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(true);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
@@ -132,7 +134,7 @@ export default function ReviewModal({ onClose, productId }) {
               </button>
               <button
                 type="button"
-                onClick={onClose}
+                onClick={onclose}
                 className="inline-flex w-full justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-100 sm:mt-0 sm:w-auto"
               >
                 Cancel

@@ -31,7 +31,7 @@ const AdminNav = ({ toggleSidebar }) => {
   };
 
   return (
-    <header className="header">
+    <header className="header d-flex flex-row w-max bg-black" style={{alignItems: 'center'}}>
       {/* Sidebar toggle button */}
       <button className="menu-toggle-button" onClick={toggleSidebar}>
         <span className="material-icons-outlined">menu</span>

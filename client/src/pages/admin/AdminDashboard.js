@@ -69,16 +69,16 @@ const AdminDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div className="bg-white shadow rounded-lg p-6">
               <h3 className="text-xl font-semibold">Total Sales</h3>
-              <p className="text-3xl font-bold text-blue-500">$450,000</p>
+              <p className="text-3xl font-bold text-blue-500">RS 450,000</p>
               <span className="text-sm text-green-500">+45% this week</span>
             </div>
             <div className="bg-white shadow rounded-lg p-6">
               <h3 className="text-xl font-semibold">Total Revenue</h3>
-              <p className="text-3xl font-bold text-green-500">$920,000</p>
+              <p className="text-3xl font-bold text-green-500">RS 920,000</p>
               <span className="text-sm text-green-500">+60% this week</span>
             </div>
             <div className="bg-white shadow rounded-lg p-6">
-              <h3 className="text-xl font-semibold">Today's Visitors</h3>
+              <h3 className="text-xl font-semibold">Total Orders</h3>
               <p className="text-3xl font-bold text-blue-500">2,560</p>
               <span className="text-sm text-green-500">+20% this week</span>
             </div>

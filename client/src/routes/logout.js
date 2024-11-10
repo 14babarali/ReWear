@@ -25,7 +25,7 @@ const LogoutPage = () => {
         // Clear token and user data
         localStorage.removeItem('user');
         localStorage.removeItem('token');
-        localStorage.removeItem('cookiesAccepted');
+        // localStorage.removeItem('cookiesAccepted');
 
         // Set timer for redirect
         const timer = setTimeout(() => {

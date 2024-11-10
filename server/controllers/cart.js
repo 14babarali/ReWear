@@ -39,8 +39,13 @@ exports.addToCart = async (req, res) => {
             }
         }
 
-        // Populate the 'item.productId' field to get the updated cart details
-        const updatedCart = await Cart.findById(cart._id).populate('item.productId');
+        // Populate the 'item.productId' field to get the full product details
+        const updatedCart = await Cart.findById(cart._id)
+                                      .populate('item.productId') // Populating the productId field
+                                      .populate({
+                                          path: 'item.productId',
+                                          select: 'name price description material images sizes condition type category subcategory' // Select fields you want to populate
+                                      });
         res.status(200).json({ cart: updatedCart });
     } catch (error) {
         console.error(error);
@@ -72,7 +77,7 @@ exports.getCart = async (req, res) => {
                 id: product.id,
                 name: product.name,
                 price: product.price,
-                size: product.size || '',  // size from product object
+                size: product.sizes || '',  // size from product object
                 qty: product.qty,
                 images: product.images || [],  // Ensure this is always an array
                 quantity: cartItem.quantity  // Quantity from the cartItem
@@ -115,7 +120,8 @@ exports.getcartproducts = async (req,res) => {
         // Map the selected items to include product details
         const result = selectedItems.map(item => ({
             product: item.productId,
-            quantity: item.quantity
+            quantity: item.quantity,
+            size: item.size
         }));
 
         res.json(result);
@@ -125,88 +131,53 @@ exports.getcartproducts = async (req,res) => {
     }
 };
 
-exports.qtyupdate = async (req,res) => {
-    const { productId, quantity } = req.body;
-    const userId = req.user.id; // Assuming req.user contains user info from authentication middleware
+exports.qtyupdate = async (req, res) => {
+    const { productId, quantity, size } = req.body;
+    const userId = req.user.id;
   
     try {
+      // Fetch the user's cart
       const cart = await Cart.findOne({ userId });
       if (!cart) {
         return res.status(404).json({ message: 'Cart not found.' });
       }
-
-      const product = await Product.findById(productId);
-    if (!product) {
-    return res.status(404).json({ message: 'Product not found.' });
-    }
-
-    if (quantity > product.qty || quantity < 1) {
-    return res.status(300).json({ message: 'Quantity exceeds available stock.' });
-    }
   
-      const itemIndex = cart.item.findIndex(item => item.productId.toString() === productId);
+      // Fetch the product details
+      const product = await Product.findById(productId);
+      if (!product) {
+        return res.status(404).json({ message: 'Product not found.' });
+      }
+  
+      // Check if the selected size exists in the product's sizes array
+      const sizeObj = product.sizes.find((item) => item.size === size);
+      if (!sizeObj) {
+        return res.status(404).json({ message: 'Selected size not found or removed by seller.' });
+      }
+  
+      // Validate quantity against the available stock for the selected size
+      if (quantity > sizeObj.qty || quantity < 1) {
+        return res.status(400).json({ message: 'Quantity exceeds available stock.' });
+      }
+  
+      // Find the item in the cart
+      const itemIndex = cart.item.findIndex((item) => item.productId.toString() === productId);
       if (itemIndex === -1) {
         return res.status(404).json({ message: 'Item not found in cart.' });
       }
   
-      // Update quantity
+      // Update quantity and size for the cart item
       cart.item[itemIndex].quantity = quantity;
+      cart.item[itemIndex].size = size;
+  
+      // Save the updated cart
       await cart.save();
   
       res.status(200).json({ message: 'Cart item updated successfully.' });
     } catch (error) {
       console.error('Error updating cart item:', error);
       res.status(500).json({ message: 'Internal Server Error.' });
-    }  
-};
-
-// Controller method to update size of an item in the cart
-exports.updateCartItemSize = async (req, res) => {
-    const { productId, newSize } = req.body;
-    const userId = req.user.id;
-    console.log(newSize);
-
-    try {
-        // Validate the inputs
-        if (!userId || !productId || !newSize) {
-            return res.status(400).json({ message: 'User ID, Product ID, and new Size are required.' });
-        }
-
-        // Find the user's cart
-        const cart = await Cart.findOne({ userId });
-
-        // Finding Product if available
-        const product = await Product.findById(productId);
-        if (!product) {
-        return res.status(404).json({ message: 'Product not found.' });
-        }
-
-        // Check if newSize exists in the product's size array
-        if (!product.size.includes(newSize)) {
-            return res.status(400).json({ message: 'Selected size is not available for this product.' });
-        }
-
-        if (!cart) {
-            return res.status(404).json({ message: 'Cart not found.' });
-        }
-
-        const itemIndex = cart.item.findIndex(item => item.productId.toString() === productId);
-        if (itemIndex === -1) {
-            return res.status(404).json({ message: 'Item not found in cart.' });
-        }
-
-        // Update quantity
-        cart.item[itemIndex].size = newSize;
-
-        // Save the updated cart
-        await cart.save();
-
-        return res.status(200).json({ message: 'Item size updated successfully.'});
-    } catch (error) {
-        console.error('Error updating cart item size:', error);
-        return res.status(500).json({ message: 'Internal server error.' });
     }
-};
+};  
 
 // Delete a product from the cart
 exports.deleteCartItem = async (req, res) => {

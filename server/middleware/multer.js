@@ -1,12 +1,12 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+
 // Configure storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const uploadPath = path.join(__dirname, '../uploads'); // Adjust path as needed
     // Create the uploads directory if it doesn't exist
-    fs.mkdirSync(uploadPath, { recursive: true }); // Will not throw an error if the directory already exists
     cb(null, uploadPath); // Use the created or existing directory
   },
   filename: function (req, file, cb) {
@@ -14,26 +14,34 @@ const storage = multer.diskStorage({
   }
 });
 
-// File filter to accept only certain types (e.g., images)
+// File filter to accept only certain types and apply size limits based on file type
 const fileFilter = (req, file, cb) => {
-  // Filter for allowed file types (images and videos)
-const allowedMimeTypes = [
-  'image/jpeg',
-  'image/png',
-  'image/jpg',
-  'image/webp',
-  'image/jfif',
-  'video/mp4',
-  'video/mkv',
-  'video/x-msvideo', // AVI
-  'video/quicktime', // MOV
-  'video/x-flv',     // FLV
-  'video/webm'       // WEBM
-];
+  const allowedMimeTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/jpg',
+    'image/webp',
+    'image/jfif',
+    'image/avif',
+    'video/mp4',
+    'video/mkv',
+    'video/x-msvideo', // AVI
+    'video/quicktime', // MOV
+    'video/x-flv',     // FLV
+    'video/webm'       // WEBM
+  ];
+
   if (allowedMimeTypes.includes(file.mimetype)) {
-    cb(null, true);
+    // Check file size based on file type
+    const fileSizeLimit = file.mimetype.startsWith('image/') ? 10 * 1024 * 1024 : 100 * 1024 * 1024; // 20MB for images, 100MB for videos
+    
+    if (file.size > fileSizeLimit) {
+      cb(new Error(`File is too large. Maximum size allowed for ${file.mimetype.startsWith('image/') ? 'images' : 'videos'} is ${fileSizeLimit / (1024 * 1024)} MB.`), false);
+    } else {
+      cb(null, true); // Accept file
+    }
   } else {
-    cb(new Error('Invalid file type, only JPEG and PNG is allowed!'), false);
+    cb(new Error('Invalid file type! Only specific images and videos are allowed.'), false);
   }
 };
 
@@ -41,19 +49,7 @@ const allowedMimeTypes = [
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
-  limits: {
-    fileSize: (req, file, cb) => {
-      // Set file size limits based on the file type
-      if (file.mimetype.startsWith('image/')) {
-        cb(null, 1024 * 1024 * 10); // Limit file size to 10MB for images
-      } else if (file.mimetype.startsWith('video/')) {
-        cb(null, 1024 * 1024 * 100); // Limit file size to 100MB for videos
-      } else {
-        cb(new Error('Invalid file type!'), false); // Reject other types
-      }
-    }
-  },
-  fileFilter: fileFilter
+  limits: { fileSize: 105 * 1024 * 1024 } // Set max possible limit; actual limit is managed in fileFilter
 });
 
 module.exports = upload;

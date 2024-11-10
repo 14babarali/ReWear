@@ -1,88 +1,48 @@
 import React, { useState } from "react";
-import ProfileBackground from "./GigHead.js";
-import GigDes from "./GigDes.js";
-import GigPackage from "./GigPackage.js";
-import { useNavigate } from "react-router-dom";
+import ProfileBackground from "./GigHead";
+import GigDes from "./GigDes";
+import GigPackage from "./GigPackage";
+import { useLocation } from "react-router-dom";
 
 const ShowCase = () => {
-  const navigate = useNavigate();
-  
+  const location = useLocation();
+  // const navigate = useNavigate();
+  const backendUrl = 'http://localhost:3001';
+  const gig = location.state?.gig;
+
+  if (!gig) {
+    return <p>Loading...</p>;
+  }
+
   const tailor = {
-    name: "Abdullah",
-    location: "i8, Islamabad",
-    languages: "Urdu | English",
-    ordersCompleted: 45,
-    rating: 4.8,
-    reviews: 20,
-    avatar: "https://via.placeholder.com/150",
-    background: "https://via.placeholder.com/400x200",
-    description:
-      "I am Muslim, a professional tailor. I specialize in stitching traditional and custom dresses with the finest finishing.",
-    tags: ["Traditional dresses", "Custom stitching", "Wedding outfits"],
-  };
-
-  const packages = {
-    basic: {
-      price: "2,000",
-      description: "I will stitch simple dresses like shalwar kameez or basic outfits within 7 days.",
-      features: [
-        "7-day delivery",
-        "Basic dress stitching",
-        "Simple design",
-        "Ironing and finishing",
-      ],
-    },
-    premium: {
-      price: "10,000",
-      description: "Premium tailoring for special occasions, weddings, or fully customized designs.",
-      features: [
-        "15-day delivery",
-        "Bespoke tailoring consultation",
-        "Wedding and formal dress stitching",
-        "High-quality materials and custom design",
-        "Final fitting and adjustments",
-      ],
-    },
-  };
-
-  const [selectedPackage, setSelectedPackage] = useState(null);
-
-  // Handle package selection and navigate to BuyerOrderPage
-  const handleSubmit = (pkg) => {
-    setSelectedPackage(pkg);
-    navigate("/buyerOrderPage", {
-      state: {
-        tailor,
-        package: pkg, // Pass the selected package (Basic or Premium)
-      },
-    });
+    name: gig.user.profile?.name || "Unknown Tailor",
+    image: gig.user.profile?.profilePicture || 'no-image.jpg',
+    location: `${gig.user.profile?.addresses[0]?.city || "Unknown city"}`,
+    languages: "Urdu | English", // Replace with dynamic data if available
+    phone:gig.user.profile.phone,
+    ordersCompleted: gig.user.ordersCompleted || 0,
+    rating: gig.user.rating || 4.5, // Assume average rating if missing
+    reviews: gig.user.reviews || 5, // Assume some reviews if missing
+    avatar: gig.user.profile?.profilePicture ? `${backendUrl}/uploads/${gig.user.profile.profilePicture}` : "https://via.placeholder.com/150",
+    background: gig.gigImage ? `${backendUrl}/uploads/${gig.gigImage}` : "https://via.placeholder.com/400x200",
+    description: gig.description,
+    collections: gig.collections,
+    tags: gig.services || [],
   };
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      {/* Profile Header */}
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-        <div
-          className="bg-cover h-48"
-          style={{
-            backgroundImage: `url('${tailor.background}')`,
-          }}
-        ></div>
-        <ProfileBackground tailor={tailor} />
+      <div className="bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 shadow-lg rounded-lg overflow-hidden">
+        <ProfileBackground tailor={tailor} gig={gig} />
       </div>
 
-      {/* Main Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         <div className="lg:col-span-2 bg-white p-6 shadow-lg rounded-lg">
-          <GigDes description={tailor.description} tags={tailor.tags} />
+          <GigDes description={tailor.description} collections={tailor.collections} user={gig?.user}/>
         </div>
 
-        {/* Packages */}
         <div className="bg-white p-6 shadow-lg rounded-lg">
-          <GigPackage
-            packages={packages}
-            onSelectPackage={handleSubmit} // Pass the selected package
-          />
+          <GigPackage services={tailor.tags} />
         </div>
       </div>
     </div>

@@ -71,7 +71,7 @@ exports.updateCollection = async (req, res) => {
 
 // Delete a Collection
 exports.deleteCollection = async (req, res) => {
-  const { gigId, collectionId } = req.params; // Gig ID and Collection ID from request params
+  const { id, collectionId } = req.params; // Gig ID and Collection ID from request params
 
   try {
     // Find the gig

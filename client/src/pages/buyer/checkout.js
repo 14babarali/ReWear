@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 // import axios from 'axios';
 import { toast, ToastContainer} from 'react-toastify';
 import ReactPhoneInput from 'react-phone-input-2';
@@ -16,11 +16,14 @@ const Checkout = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [paymentMethod, setPaymentMethod] = useState('COD');
+    const [paymentMethod, setPaymentMethod] = useState('');
     const [selectedItems, setSelectedItems] = useState([]);
     const [selectedAddress, setSelectedAddress] = useState('');
+    const [orderstatus, setOrderStatus] = useState(false);
 
     const navigate = useNavigate();
+    const location = useLocation();
+    const { product, selectedSize, quantity } = location.state || {};
 
     useEffect(() => {
         
@@ -30,19 +33,16 @@ const Checkout = () => {
 
     // Function to fetch product details by IDs
     const fetchProductDetails = async () => {
-
         const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user')); // Parsing JSON to get the object
+        const user = JSON.parse(localStorage.getItem('user')); // Parsing JSON to get the object
 
-    if (user) {
-        setIsLoggedIn(true);
-        setUser(user);
-    }
-
-    if (token) {
-        setIsLoggedIn(true);
-    }
-
+        if (user) {
+            setIsLoggedIn(true);
+            setUser(user);
+        }
+        if (token) {
+            setIsLoggedIn(true);
+        }
 
         try {
             const products = localStorage.getItem('selectedProducts');
@@ -58,94 +58,64 @@ const Checkout = () => {
     };
 
     const calculateSubtotal = () => {
-        const subtotal = selectedItems.reduce((subtotal, item) => {
-            // console.log('Item:', item); // Logging item to see its structure
+        if (product) {
+            return product.price * quantity; // Use product from state if available
+        }
+        
+        // Otherwise, calculate based on localStorage items
+        return selectedItems.reduce((subtotal, item) => {
             const itemPrice = item.product.price;
             const itemQuantity = item.quantity;
-            // console.log('Item Price:', itemPrice, 'Item Quantity:', itemQuantity);
             return subtotal + (itemPrice * itemQuantity);
         }, 0);
-        // console.log('Subtotal:', subtotal);
-        return subtotal;
     };
     
     const calculateTotal = () => {
-        const total = calculateSubtotal(); // Assuming no discount or additional charges
-        // console.log('Total:', total);
-        return total;
+        return calculateSubtotal(); // Adding a fixed delivery fee of 200
     };
-
-
-    // const handleOrderPlacement = async () => {
-    //     if (!isLoggedIn) {
-    //       toast.warning('Please log in to proceed with the payment.');
-    //       navigate('/login');
-    //       return;
-    //     }
-    //     if (!selectedAddress) {
-    //       toast.warning('Please select an address to proceed with the payment.');
-    //       return;
-    //     }
-    
-    //     try {
-    //       const orderData = {
-    //         userId: user._id,
-    //         items: selectedItems,
-    //         address: selectedAddress,
-    //         paymentMethod,
-    //         totalAmount: calculateTotal() + 150, // Adding delivery charge
-    //       };
-    
-    //       // POST request to place the order
-    //       await axios.post('http://localhost:3001/api/orders', orderData, {
-    //         headers: {
-    //           Authorization: `Bearer ${localStorage.getItem('token')}`,
-    //         },
-    //       });
-    
-    //       // Show confirmation message
-    //       toast.success('Your Order has been placed, please wait for confirmation.');
-    //       // Redirect or handle further actions if necessary
-    //       navigate('/order-confirmation'); // Adjust as needed
-    //     } catch (error) {
-    //       console.error('Error placing order:', error);
-    //       toast.error('Failed to place order. Please try again.');
-    //     }
-    //   };
 
     const handlePayment = async() => {
         if (!isLoggedIn) {
-            toast.warning('Please log in to proceed with the payment.');
+            toast.warning('Please log in to proceed with the payment.', {
+                autoClose: 1500,});
             navigate('/login');
             return;
         }
         if (!selectedAddress) {
-            toast.warning('Please select an address to proceed with the payment.');
+            toast.warning('Please select an address to proceed with the payment.', {
+                autoClose: 1500,});
+            return;
+        }
+        if(!paymentMethod){
+            toast.warning('Please select payment method.', {
+                autoClose: 1500,});
             return;
         }
 
         const products = selectedItems.map(item => ({
             product_id: item.product._id,
             quantity: item.quantity,
+            size: item.size,
+            price: item.price
         }));
     
         // Find the selected address from user profile addresses
-            const selectedAddressDetails = user.profile.addresses.find(address => address._id === selectedAddress);
+        const selectedAddressDetails = user.profile.addresses.find(address => address._id === selectedAddress);
 
-            const orderData = {
-                buyer_id: user._id,
-                products: products,
-                type: paymentMethod === 'card' ? 'Card' : 'COD',
-                address: {
-                    street: selectedAddressDetails.street,
-                    city: selectedAddressDetails.city,
-                    postalcode: selectedAddressDetails.postalcode,
-                },
-                phone: user.profile.phone, // include the phone number
-            };
+        const orderData = {
+            buyer_id: user._id,
+            products: products,
+            type: paymentMethod === 'card' ? 'Card' : 'COD',
+            address: {
+                street: selectedAddressDetails.street,
+                city: selectedAddressDetails.city,
+                postalcode: selectedAddressDetails.postalcode,
+            },
+            phone: user.profile.phone, // include the phone number
+        };
             
         // Handling Card payments
-        if (paymentMethod === 'CARD' ||paymentMethod === 'card') {
+        if (paymentMethod === 'CARD' || paymentMethod === 'card') {
             // Process card payment with cardDetails
             try {
                 // Create payment intent on the backend
@@ -178,11 +148,13 @@ const Checkout = () => {
                 if(response.status  === 200 || response.status ===201){
 
                     // Display success message
+                    setOrderStatus(true);
                     setIsModalOpen(true);
                 }
                 else{
                     // Display error message
-                    toast.error('Failed to place order. Please try again.');
+                    setOrderStatus(false);
+                    setIsModalOpen(true);
                     
                 }
             } catch (error) {
@@ -200,13 +172,11 @@ const Checkout = () => {
 
     return (
         <div className="checkout-container">
-            <CheckoutModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            <CheckoutModal isOpen={isModalOpen} onClose={() => navigate('/buyer/')} isplaced={orderstatus} />
             <ToastContainer/>
             <div className='checkout-head'><h1>Checking out</h1><FontAwesomeIcon icon={faCartShopping} className='checkout-head-logo'/></div>
             <div className="checkout-content">
                 <div className="left-section">
-                    
-                        
                     {isLoggedIn ? (
                         <>
                         <div className="account-details">
@@ -215,10 +185,10 @@ const Checkout = () => {
                             <p><strong>Name:</strong> {user.profile.name}</p>
                             <p><strong>Email:</strong> {user.email}</p>
                             <p><strong>Phone:</strong> {user.profile.phone}</p>
-                            <p><strong>Addresses:</strong> (Select Address)
+                            <p><strong>Addresses:</strong> (Select Address) <a onClick={()=> navigate('/buyer/profile')} style={{cursor:'pointer', textDecoration:'underline', color:'blue'}}> Add New address</a>
                             <ul  style={{listStyleType:'none', paddingLeft:0}}>
                             {(user.profile.addresses || []).map((address, index) => (
-                                <li key={index} className='mt-3'>
+                                <li key={index} className='flex mt-3'>
                                 <input
                                     type="radio"
                                     id={`address-${index}`}
@@ -228,7 +198,7 @@ const Checkout = () => {
                                     onChange={() => handleAddressSelection(address._id)}
                                 />              
                                 &nbsp;
-                                <label htmlFor={`address-${index}`}> 
+                                <label className='m-0 text-base font-normal' htmlFor={`address-${index}`}> 
                                     {address.street}, {address.city}, {address.postalcode}
                                 </label>
                                 </li>
@@ -277,7 +247,7 @@ const Checkout = () => {
 
                     <div className="payment-section">
                         <h2>Payment Method</h2>
-                        <div className="payment-method">
+                        <div className="flex payment-method h-full">
                             <input
                                 type="radio"
                                 id="cod"
@@ -286,9 +256,9 @@ const Checkout = () => {
                                 checked={paymentMethod === 'cod'}
                                 onChange={() => setPaymentMethod('cod')}
                             />
-                            <label htmlFor="cod">&nbsp;Cash on Delivery (COD)</label>
+                            <label className='m-0 text-base font-normal' htmlFor="cod">&nbsp;Cash on Delivery (COD)</label>
                         </div>
-                        <div className="payment-method">
+                        <div className=" flex items-center  payment-method h-full">
                             <input
                                 type="radio"
                                 id="card"
@@ -297,10 +267,9 @@ const Checkout = () => {
                                 checked={paymentMethod === 'card'}
                                 onChange={() => setPaymentMethod('card')}
                             />
-                            <label htmlFor="card">&nbsp;Credit/Debit Card</label>
+                            <label className='m-0 text-base font-normal'  htmlFor="card">&nbsp;Credit/Debit Card</label>
                         </div>
                         <div className='order-process'>
-                            <a href="/cart" className="return-link">{'< Return to cart'}</a>
                             <button 
                                 className="continue-button" 
                                 onClick={handlePayment}>
@@ -315,6 +284,28 @@ const Checkout = () => {
                 <div className="right-section">
                 <div className="order-summary">
                 <h2>Order Summary</h2>
+                {product ? 
+                <>
+                <div key={product._id} className="order-item" style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '20px' }}>
+                    <img 
+                        src={`http://localhost:3001/uploads/${product.images[0]}`} 
+                        alt={product.images[0]} 
+                        className="product-image" 
+                        style={{ width: '150px', height: 'auto', borderRadius: '8px', marginRight: '20px' }} 
+                    />
+                    <div className="product-details" style={{ fontFamily: 'Arial, sans-serif' }}>
+                        <p style={{ color: '#666',textDecoration:'underline'  ,fontSize: '12px', margin: '0 0 5px' }}>{product._id}</p>
+                        <p style={{ fontWeight: 'bold', fontSize: '18px', margin: '5px 0', color: '#333' }}>{product.name}</p>
+                        <p style={{ fontSize: '14px', margin: '5px 0', color: '#555' }}><strong>QTY:</strong> {quantity}</p>
+                        <p style={{ fontSize: '14px', margin: '5px 0', color: '#555' }}><strong>Size:</strong> {selectedSize}</p>
+                        <p style={{ fontSize: '14px', margin: '5px 0', color: '#555' }}><strong>Price:</strong> Rs {product.price}</p>
+                    </div>
+  
+                                <hr/>
+                            </div>
+                </>
+                : 
+                <>
                 {selectedItems.map(item => (
                     <div key={item.product._id} className="order-item" style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '20px' }}>
                     <img 
@@ -324,18 +315,19 @@ const Checkout = () => {
                         style={{ width: '150px', height: 'auto', borderRadius: '8px', marginRight: '20px' }} 
                     />
                     <div className="product-details" style={{ fontFamily: 'Arial, sans-serif' }}>
-                        <p style={{ color: '#666', fontSize: '12px', margin: '0 0 5px' }}>{item.product._id}</p>
+                        <p style={{ color: '#666',textDecoration:'underline'  ,fontSize: '12px', margin: '0 0 5px' }}>{item.product._id}</p>
                         <p style={{ fontWeight: 'bold', fontSize: '18px', margin: '5px 0', color: '#333' }}>{item.product.name}</p>
                         <p style={{ fontSize: '14px', margin: '5px 0', color: '#555' }}><strong>QTY:</strong> {item.quantity}</p>
-                        <p style={{ fontSize: '14px', margin: '5px 0', color: '#555' }}><strong>Selected Size:</strong> {item.size}</p>
+                        <p style={{ fontSize: '14px', margin: '5px 0', color: '#555' }}><strong>Size:</strong> {item.size}</p>
                         <p style={{ fontSize: '14px', margin: '5px 0', color: '#555' }}><strong>Price:</strong> Rs {item.product.price}</p>
                     </div>
   
                                 <hr/>
                             </div>
                         ))}
-                        <div className="discount-code">
-                            <input type="text" placeholder="Discount code" />
+                </>}
+                        <div className="discount-code m-0 gap-2" style={{alignItems:'center'}}>
+                            <input type="text" className='m-0' placeholder="Discount code" />
                             <button className="apply-button">Apply</button>
                         </div>
                         <div className="total">

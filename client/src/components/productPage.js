@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingCart, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faShoppingCart, faHeart, faDollar } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import StarRating from './starcomponent';
 import SuggestedProductCard from './suggestedproduct';
@@ -10,19 +10,23 @@ import UserDetails from './UserDetails'; // Import Seller Profile component
 import Productinfo from './Productinfo'; 
 import Error404 from '../assests/error-404.png';
 import './stylesheets/productpage.css'; // CSS file imported
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer,toast } from 'react-toastify';
 import axios from 'axios';
 import ReviewModal from './ReviewModal';
 
 const ProductPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { dispatch } = useContext(CartContext);
 
   const { product } = location.state || {};
   const {isWishlisted} = location.state || '';
+  const [isLoading, setIsLoading] = useState(false);
 
   // State to track the selected size
   const [selectedSize, setSelectedSize] = useState('');
+  const [selectedQty, setSelectedQty] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   const [isWishlistedState, setIsWishlisted] = useState(isWishlisted);
   const [products, setProducts] = useState([]);
@@ -32,6 +36,8 @@ const ProductPage = () => {
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+
+  // const [reviewed, setReviewed] = useState(false);
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -51,77 +57,98 @@ const ProductPage = () => {
     setShowReviewModal(false);
   };
 
-  const handleSizeClick = (size) => {
+  useEffect(() => {
+    if (selectedQty && (selectedQty < quantity)) {
+      setQuantity(selectedQty); // Ensure selected quantity does not exceed available stock
+    }
+  }, [selectedQty]);
+
+  const handleSizeClick = (size, qty) => {
     setSelectedSize(size);
-    console.log(size);
+    setSelectedQty(qty); // Set the quantity based on selected size
+    // console.log(size, qty);
   };
 
+  const handleIncrement = () => {
+    if(!selectedQty){
+      toast.warning('Please Select Size First',{
+        autoClose: 1500,
+      });
+    }
+    if (quantity < selectedQty) {
+      setQuantity(prevQty => prevQty + 1);
+    }
+  };
+
+  const handleDecrement = () => {
+    if(!selectedQty){
+      toast.warning('Please Select Size First',{
+        autoClose: 1500,
+      });
+    }
+    if (quantity > 1 && selectedSize) {
+      setQuantity(prevQty => prevQty - 1);
+    }
+  };
 
   useEffect(() => {
-
-    const checkWishlistStatus = async () => {
-
-      try {
-
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-
-          console.info('No token found');
-
-          return;
-
-        }
-
-
-        const response = await axios.get(`http://localhost:3001/api/wishlist/${product._id}`, {
-
-          headers: {
-
-            Authorization: `Bearer ${token}`,
-
-          },
-
-        });
-
-        if (response.status === 200) {
-
-          setIsWishlisted(response.data.isWishlisted);
-
-        } else {
-
-          console.error('Failed to fetch wishlist status');
-
-        }
-
-      } catch (error) {
-
-        console.error('Error fetching wishlist status:', error);
-
-      }
-
-    };
     checkWishlistStatus();
-
-  }, [product]);
-
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/api/featured_products');
-        setProducts(await response.data);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      }
-    };
+    // fetchOrdersStatus();
     fetchProducts();
+    fetchReviews();
   }, [product]);
 
-  
-  useEffect(() => {
-    fetchReviews();
-  },[])
+  const checkWishlistStatus = async () => {
+
+    try {
+
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+
+        console.info('No token found');
+
+        return;
+
+      }
+
+
+      const response = await axios.get(`http://localhost:3001/api/wishlist/${product._id}`, {
+
+        headers: {
+
+          Authorization: `Bearer ${token}`,
+
+        },
+
+      });
+
+      if (response.status === 200) {
+
+        setIsWishlisted(response.data.isWishlisted);
+
+      } else {
+
+        console.error('Failed to fetch wishlist status');
+
+      }
+
+    } catch (error) {
+
+      console.error('Error fetching wishlist status:', error);
+
+    }
+
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/api/featured_products');
+      setProducts(await response.data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  };
 
   // Fetch reviews for the current product
   const fetchReviews = async () => {
@@ -139,13 +166,58 @@ const ProductPage = () => {
     }
   };
 
+  // const fetchOrdersStatus = async () => {
+  //   try {
+  //     const token = localStorage.getItem('token');
+  //     const response = await axios.get(`http://localhost:3001/api/review_order_status/${product._id}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`
+  //       }
+  //     });
+  //     if(response.status === 200)
+  //     {
+  //       setReviewed(true);
+  //       alert(response.status);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching reviews:', error.status.message);
+  //     // alert(error.status);
+  //     setReviewed(false);
+  //   }
+  // }
+
   if (!product) {
-    return <div>Loading...</div>; // Placeholder for loading state if needed
+    return <div>Loading Product...</div>; // Placeholder for loading state if needed
   }
-  const { name, price, condition,qty , images, size, type, material, category, description } = product;
+  const { name, price, condition ,sizes, images, type, material, category, description } = product;
   const originalPrice = price * 1.1;
 
+  const buyNow = () => {
+    const token = localStorage.getItem('token');
+  
+    if (!token) {
+      toast.warning('Please log in to proceed', { autoClose: 1500 });
+      return;
+    }
+  
+    if (!selectedSize) {
+      toast.warning('Please select a size', { autoClose: 1500 });
+      return;
+    }
+  
+    // Navigate to checkout page with product data, selected size, and quantity as state
+    navigate('/buyer/checkout', {
+      state: {
+        product,
+        selectedSize,
+        quantity,
+      },
+    });
+  };  
+
+
   const handleAddToWishlist = async () => {
+    setIsLoading(true);
     try {
 
         const token = localStorage.getItem('token');
@@ -168,12 +240,15 @@ const ProductPage = () => {
           console.log(`${response.data}`);
           const isWishlisted = response.data.isWishlisted;
           setIsWishlisted(isWishlisted);
+          setTimeout(() => {
+            setIsLoading(false); // Reset loading state after 2 seconds
+          }, 2000);
           const message = isWishlisted ? 'Product added to wishlist!' : 'Product removed from wishlist!';
           if(isWishlisted){
-            toast.success(message);
+            toast.success(message, 1500);
           }
           else{
-            toast.warning(message);
+            toast.warning(message,1500);
           }
           
 
@@ -184,6 +259,8 @@ const ProductPage = () => {
         toast.error('Error toggling wishlist: ', error.message);
         console.error('Error toggling wishlist:', error);
     
+      }finally{
+        setIsLoading(false)
       }
   };
   
@@ -191,7 +268,8 @@ const ProductPage = () => {
     try {
         const token = localStorage.getItem('token');
         if (!token) {
-            toast.error('Please log in to add products in cart.');
+            toast.error('Please log in to add products in cart.', {
+              autoClose: 1500,});
             return;
         }
 
@@ -227,10 +305,12 @@ const ProductPage = () => {
   const suggestedProducts = products.filter(p => p._id !== product._id && p.category === category);
 
   return (
-      <div className="product-page-container mb-10">
-        <div className="product-content">
+      <div className="product-page-container mb-10 gap-1">
+        <ToastContainer/>
+        <div className="product-content flex flex-col lg:flex-row gap-8">
           {/* Left Section for Product Image */}
-            <div className="d-flex flex-column align-items-center product-image-section border-1">
+          <div className="product-image-section mt-0 p-4 border border-gray-200 rounded-md">
+
             {/* Main Product Image */}
             <img
               src={`http://localhost:3001/uploads/${images[currentImageIndex]}`}
@@ -240,94 +320,110 @@ const ProductPage = () => {
             />
 
             {/* Image Thumbnails */}
-            <div className="d-flex justify-content-center mb-3 image-thumbnails">
+            <div className="d-flex justify-content-center w-full border-b-2 mb-2 image-thumbnails">
               {images.map((_, index) => (
                 <img
                   key={index}
                   src={`http://localhost:3001/uploads/${images[index]}`}
                   alt={`Thumbnail ${index + 1}`}
-                  className={`thumbnail ${index === currentImageIndex ? 'active' : ''} mx-1`} // Add margin for spacing between thumbnails
+                  className={`thumbnail mt-3 mb-3 cursor-pointer ${index === currentImageIndex ? 'border border-teal-500' : ''}`}
                   onClick={() => handleDotClick(index)}
                 />
               ))}
             </div>
-
-            {/* Product Info */}
-            <div className='flex h-full w-full mb-30'>
-            <Productinfo reviews={reviews} description={description} />
-
+            
+            <div className="flex flex-col">
+              <Productinfo reviews={reviews} description={description} />
             </div>
+
+            
           </div>
 
           {/* Right Section for Product Details */}
-          <div className="product-details-section">
-            <h1 className="product-title">
-              {name}
-            </h1>
-            
-            {/* Display the product price */}
-            <div className="d-flex justify-start text-xl gap-2">
-              <div className="product-original-price line-through text-gray-500">Rs: {originalPrice.toFixed(2)}</div>
-              <div className="">Rs {price}</div>
+          <div className="product-details-section bg-white lg:w-1/2 p-4 lg:p-8 border border-gray-200 rounded-md">
+          <h1 className="product-title text-2xl font-bold mb-4">{name}</h1>
+          <div className="flex gap-2 text-xl mb-4">
+            <span className="line-through text-gray-500">Rs: {originalPrice.toFixed(2)}</span>
+            <span>Rs {price}</span>
+          </div>
+          <ul className="product-specs list-unstyled mb-4 space-y-2">
+            <li><strong>Material:</strong> {material}</li>
+            <li><strong>Type:</strong> {type || 'None'}</li>
+            {type === 'Used' && (
+              <li><strong>Condition:</strong> <StarRating condition={condition} /> ({condition}/10)</li>
+            )}
+          </ul>
+
+             {/* Quantity Selector */}
+          <div className="quantity-selector">
+            <div className="flex items-center justify-center border-1 p-2 rounded-32 w-2/4 gap-4">
+              <button onClick={handleDecrement} className=" text-xl px-3 py-2 bg-gray-600 hover:bg-gray-400 rounded-full">-</button>
+              <span>{quantity}</span>
+              <button onClick={handleIncrement} className=" text-xl px-3 py-2 bg-gray-600 hover:bg-gray-400 rounded-full">+</button>
             </div>
-            <ul className="list-unstyled product-specs">
-              <div className='d-flex ' style={{justifyContent: 'start', alignItems: 'center'}}>
-              <li className='m-0'><strong>Size: </strong></li>
-              <div className="size-blocks">
-                {size.map((s, index) => (
+            {/* <p className="mt-2 text-gray-500">Items left: {selectedQty}</p> */}
+          </div>
+
+          {/* Size Selection */}
+          {sizes.length !== 0 && (
+            <div className="size-selection mt-3">
+              <h4>Available Sizes:</h4>
+              <div className="size-options flex flex-wrap gap-2 mt-2">
+                {sizes.map((sizeObj, index) => (
                   <button
                     key={index}
-                    onClick={() => handleSizeClick(s)}
-                    className={`size-block ${selectedSize === s ? 'selected' : ''}`}
+                    className={`size-button w-12 p-2 rounded ${selectedSize === sizeObj.size ? 'bg-teal-500 text-white' : 'bg-gray-200 hover:bg-gray-400 text-gray-700'}`}
+                    onClick={() => handleSizeClick(sizeObj.size, sizeObj.qty)}
                   >
-                    {s}
+                    {sizeObj.size}
                   </button>
                 ))}
               </div>
-              </div>
-              <li className='mt-2'><strong>Item left: </strong> {qty}</li>
-              <li className='mt-2'><strong>Material: </strong> {material}</li>
-              <li className='mt-2'><strong>Type: </strong> {type ? type : 'None'}</li>
-              {type==='Used'? <li><strong>Condition: </strong> <StarRating condition={condition} /> ({condition}/10)</li>: null}
-            </ul>
-
-            {/* Product Action Buttons */}
-            <div className="product-action-buttons d-flex align-items-center mt-4">
-              <button className="btn add-to-bag-btn" onClick={addToCart}>
-                <FontAwesomeIcon icon={faShoppingCart} /> Add to Cart
-              </button>
-              <button className="btn wishlist-btn" onClick={handleAddToWishlist}>
-                {isWishlistedState ? (
-                  <FontAwesomeIcon icon={faHeart} />
-                ) : (
-                  <FontAwesomeIcon icon={faHeartRegular} />
-                )}
-              </button>
             </div>
-
-            {/* Button to open Review Form Modal */}
-            <button className="btn leave-review-btn mt-3" onClick={handleShowReviewModal}>
+          )}
+              {/* Quantity Info */}
+              <div className="selected-quantity mt-2">
+                {selectedQty? `Items left: ${selectedQty}`: `Items left: ${sizes?.reduce((total, item) => total + item.qty, 0)}` || 'out of stock'}
+              </div>
+              
+          
+          {/* Action Buttons */}
+          <div className="product-action-buttons d-flex gap-2 mt-6">
+            <button className="add-to-bag-btn w-36 text-white px-4 py-2 rounded-md"
+              onClick={buyNow}>
+              <FontAwesomeIcon icon={faDollar}/> Buy Now
+            </button>
+            <button className="bg-teal-500 hover:bg-teal-700 text-white px-4 py-2 rounded-md"
+              onClick={addToCart}>
+              {!isLoading ? <FontAwesomeIcon icon={faShoppingCart} /> : 'loading'}
+            </button>
+            <button className="wishlist-btn text-red-500" onClick={handleAddToWishlist}>
+              <FontAwesomeIcon icon={isWishlistedState ? faHeart : faHeartRegular} />
+            </button>
+          </div>
+          {/* Review Button */}
+          {/* {reviewed === true? */}
+            <button className="leave-review-btn mt-4 bg-gray-300 p-2 rounded" onClick={handleShowReviewModal}>
               Leave a Review
             </button>
-
-            {showReviewModal && (
-              <ReviewModal onClose={handleCloseReviewModal} productId={product._id} />
-            )}
-
-            {/*seller profile details */} 
+          {/* :
+            <></>
+          } */}
+          {showReviewModal && <ReviewModal onClose={()=>handleCloseReviewModal} productId={product._id} />}
+          <div className="seller-details mt-6">
             <UserDetails product={product} />
-
-          {/* Suggested Products Section */}
-          <div className="suggested-products-section">
-            <h3>Suggested Products</h3>
+          </div>
+         {/* Suggested Products Section */}
+         <div className="suggested-products-section p-2 w-full  m-0 mt-2">
+            <h3 className='text-xs '>Similar Products</h3>
               <div className="suggested-products d-flex flex-wrap">
                 {suggestedProducts.length > 0 ? (
                   suggestedProducts.map((suggestedProduct) => (
                     <SuggestedProductCard key={suggestedProduct._id} product={suggestedProduct} />
                   ))
                 ) : (
-                  <p>
-                    Sorry, Nothing to Suggest 
+                  <p style={{display:'flex',justifyContent: 'center' ,alignItems:'center'}}>
+                    No Similar Products Found 
                     <img src={Error404} alt="error-404" style={{ width: '60px', height: '60px' }} />
                   </p>
                 )}
@@ -336,17 +432,13 @@ const ProductPage = () => {
             </div>
           </div>
         </div>
-      {/* Modal for displaying full-size image */}
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50" onClick={closeModal}>
-          <div className="d-flex relative w-[60%] justify-center">
-            <img src={`http://localhost:3001/uploads/${selectedImage}`} alt="Review image" className="w-3/6 h-3/6 rounded-md" />
-            <button onClick={closeModal} className="absolute bg-transparent top-4 right-4 text-white text-xl font-bold">✕</button>
-          </div>
+        <div className="modal fixed h-4/6 w-4/6 inset-0 bg-black bg-opacity-75 flex justify-center items-center">
+          <img src={`http://localhost:3001/uploads/${selectedImage}`} alt="Modal Image" className="rounded-md" />
+          <button className="close-modal absolute top-4 right-4 text-white text-2xl" onClick={closeModal}>✕</button>
         </div>
       )}
-      <ToastContainer />
-      </div>
+    </div>
   );
 };
 

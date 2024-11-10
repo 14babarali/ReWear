@@ -11,16 +11,23 @@ exports.upload = async (req, res) => {
     const userId = req.user.id;
 
     // Check if all required fields are provided
-    const { name, type, material, category, subcategory,subChildCategory, description,size, price, qty, condition } = req.body;
-
-    // Ensure size is an array if provided
-    const sizes = Array.isArray(size) ? size : (size ? [size] : []);
+    const { name, type, material, category, subcategory,subChildCategory, description,sizes, price, condition } = req.body;
+    // console.log('Backend Data: ',sizes,condition, price);
+    // Ensure sizes is parsed correctly as an array of objects
+    let parsedSizes;
+    try {
+        parsedSizes = JSON.parse(sizes);
+        if (!Array.isArray(parsedSizes) || !parsedSizes.every(size => size.size && !isNaN(size.qty))) {
+            throw new Error("Invalid sizes format.");
+        }
+    } catch (error) {
+        return res.status(400).json({ success: false, message: "Invalid sizes format." });
+    }
 
     // Convert price and qty to numbers
     const numericPrice = parseFloat(price);
-    const numericQty = parseInt(qty, 10);
 
-    if (!name || !type || !material || !category ||!subcategory || !subChildCategory || sizes.length ===0 || !description || isNaN(numericPrice) || isNaN(numericQty) || (type === 'Used' && (!condition || condition.trim() === ''))) {
+    if (!name || !type || !material || !category ||!subcategory || !subChildCategory || parsedSizes.length === 0 || !description || (type === 'Used' && (!condition || condition.trim() === ''))) {
         return res.status(400).json({ success: false, message: 'All fields are required.' });
     }
 
@@ -48,16 +55,16 @@ exports.upload = async (req, res) => {
         category,
         subcategory,
         subChildCategory,
-        size: sizes,
+        size: parsedSizes,
         description,
         price: numericPrice,
-        qty: numericQty,
         condition: type === 'Used' ? condition : undefined,
         images: imagePaths,
     });
 
     try {
         const savedProduct = await newProduct.save();
+        console.log(savedProduct);
         res.status(201).json({ success: true, product: savedProduct });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Server Error', error: error.message });
@@ -87,12 +94,22 @@ exports.edit = async (req, res) => {
     }
 
     // Check if all required fields are provided
-    const { name, type, material, category, size, description, price, qty, condition } = req.body;
+    const { name, type, material, category, sizes, description, price, condition } = req.body;
 
-    // Ensure size is an array if provided
-    const sizes = Array.isArray(size) ? size : (size ? [size] : []);
+    console.log('Backend Data: ',sizes,condition, price);
 
-    if (!name || !type || !material || !category || sizes.length === 0 || !description || !price || !qty || !condition) {
+    // Ensure sizes is parsed correctly as an array of objects
+    let parsedSizes;
+    try {
+        parsedSizes = JSON.parse(sizes);
+        if (!Array.isArray(parsedSizes) || !parsedSizes.every(size => size.size && !isNaN(size.qty))) {
+            throw new Error("Invalid sizes format.");
+        }
+    } catch (error) {
+        return res.status(400).json({ success: false, message: "Invalid sizes format." });
+    }
+
+    if (!name || !type || !material || !category || parsedSizes.length === 0 || !description || !price || ((type === 'Used' || type !== 'New')  && (!condition || condition.trim() === ''))) {
         return res.status(400).json({ success: false, message: 'All fields are required.' });
     }
 
@@ -105,11 +122,10 @@ exports.edit = async (req, res) => {
     product.type = type;
     product.material = material;
     product.category = category;
-    product.size = sizes;
+    product.sizes = parsedSizes;
     product.description = description;
     product.price = price;
-    product.qty = qty;
-    product.condition = condition;
+    product.condition = type === 'Used'? condition:'' ;
 
     // Append new images if any
     if (imagePaths.length > 0) {
@@ -119,6 +135,7 @@ exports.edit = async (req, res) => {
     // Save the updated product
     try {
         const updatedProduct = await product.save();
+        console.log(updatedProduct);
         res.status(200).json(updatedProduct);
     } catch (error) {
         res.status(500).json({ success: false, message: 'Server Error', error: error.message });
@@ -253,17 +270,15 @@ exports.getcartproductsById = async (req, res) => {
 exports.fetchall = async (req, res) => {
     try {
 
-        const filter = { qty: { $gt: 0 } };
          // Check if user is logged in
          if (!req.user || !req.user.id) {
             // If user is not logged in, return all products
-            const products = await Product.find(filter).populate('userId');
+            const products = await Product.find().populate('userId');
             res.json(products);
         } else {
             // If user is logged in, filter out products added by current user
             const userId = req.user.id;
             const products = await Product.find({
-                ...filter,
                 userId: { $ne: userId }
             }).populate('userId');
             res.json(products);
@@ -415,11 +430,11 @@ exports.categoryProducts = async (req, res) => {
         console.log('Received category ID:', categoryId); // Log the received category ID
 
         // Define the filter
-        const filter = { subChildCategory: categoryId, qty: { $gt: 0 } };
+        const filter = { subChildCategory: categoryId};
         console.log('Filter:', filter); // Log the filter
 
         // Fetch products from the database
-        const products = await Product.find(filter);
+        const products = await Product.find(filter).populate('userId');
         console.log('Products Found:', products); // Log the found products
 
         // Handle no products found

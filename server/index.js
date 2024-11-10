@@ -1,6 +1,6 @@
 const cors = require('cors');
 const express = require('express');
-const authMiddleware = require('./middleware/authMiddleware');
+const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes');
 const categoriesRoutes = require('./routes/categoriesRoutes');
 const paymentRoute = require('./routes/paymentRoute');
@@ -18,6 +18,12 @@ const app = express();
 
 // Serve static files from the "uploads" directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
+// app.use(cors({
+//   origin: 'http://localhost:3000/' // replace with your actual frontend URL
+// }));
 
 app.use(cors({
   origin: 'http://localhost:3000', // Adjust this to match the origin of your frontend app

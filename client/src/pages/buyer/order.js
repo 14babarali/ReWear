@@ -47,13 +47,13 @@ const OrdersPage = () => {
                             <div key={order._id} className="order-card">
                                 <h3 className="order-id">Order ID: {customOrderId}</h3>
                                 <p className="order-status">Status: <span className={`status ${order.status}`}>{order.status}</span></p>
-                                
                                 <div className="order-products">
                                 {order.products.map((item, index) => (
                                     <div key={`${order._id}-${item.product_id?._id || index}`} className="product-item">
                                         <div className='d-flex' style={{gap:'10px'}}>
                                             <img 
-                                                src={`http://localhost:3001/uploads/${item.productImage}`} 
+                                                src={`http://localhost:3001/uploads/${item.
+                                                    product_id.images[0]}`} 
                                                 alt={item.product_id?.name} 
                                                 style={{width:'120px', height:'120px', objectFit:'cover'}}
                                             />

@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './stylesheets/navbar.css';
 import './stylesheets/categories.css';
 import logo from '../assests/rewear-logo.png';
+import tailor_logo from '../assests/clean-clothes.png';
 
 const AppHeader = () => {
   const navigate = useNavigate();
@@ -221,39 +222,44 @@ const AppHeader = () => {
 
           {/* Desktop Links */}
           <div className="link-container">
-          <div className="hidden lg:flex items-center space-x-6">
+          <div className="hidden lg:flex items-center gap-3">
+            <Link  to="/buyer/TailorSearch" className="flex gap-1 text-gray-700 m-0 hover:text-current no-underline">
+              <img src={tailor_logo} style={{height:'20px', width:'20px'}}/>
+              <span>Tailor</span>
+            </Link>
+
             {/* Search Bar */}
             {searchVisible && (
-              <div className="search-container">
+              <div className="search-container p-1">
                 <input
                   type="text"
-                  className="search-input"
+                  className="search-input m-0 border-0"
                   value={searchTerm}
                   onChange={handleSearchChange}
                   placeholder="Search..."
                 />
-                <button className="search-button"><FontAwesomeIcon icon={faFilter}/></button>
+                <button className="search-button m-0 p-1 "><FontAwesomeIcon icon={faFilter}/></button>
               </div>
             )}
-            <button className="search-btn text-gray-700 hover:text-current" onClick={handleSearchToggle}>
+            <button className="search-btn m-0 text-gray-700 hover:text-current" onClick={handleSearchToggle}>
               <FontAwesomeIcon icon={faSearch} />
             </button>
 
             {/* Cart Icon */}
-            <Link to="/buyer/cart" className="text-gray-700 hover:text-current">
+            <Link to="/buyer/cart" className="text-gray-700 m-0 hover:text-current">
               <FontAwesomeIcon icon={faCartShopping} />
             </Link>
 
             {/* Wishlist, User Profile, and Logout Dropdown */}
             {isLoggedIn ? (
               <>
-                <Link to="/buyer/wishlist" className="text-gray-700 hover:text-current">
+                <Link to="/buyer/wishlist" className="text-gray-700 m-0 hover:text-current">
                   <FontAwesomeIcon icon={faHeart} />
                 </Link>
-                <div className="relative">
+                <div className="relative m-0">
                   <button 
                     ref={dropdownbtnRef}
-                    className="search-btn flex items-center text-gray-700 hover:text-current" 
+                    className="search-btn m-0 flex items-center text-gray-700 hover:text-current" 
                     onClick={toggleDropdown} 
                     onBlur={handleProfileBlur}>
                     <FontAwesomeIcon icon={faUser} />
@@ -280,8 +286,8 @@ const AppHeader = () => {
               </>
             ) : (
               <>
-             <Link className="text-gray-700 no-underline" to="/login">Login</Link>
-<Link className="text-gray-700 no-underline ml-4" to="/register">Register</Link>
+                <Link className="text-gray-700 m-0 no-underline" to="/login">Login</Link>
+                <Link className="text-gray-700 m-0 no-underline ml-4" to="/register">Register</Link>
 
               </>
             )}

@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from "react";
 import "./GigAdd.css"; // Custom CSS file for styling
 import Lottie from "react-lottie";
+import { useNavigate } from "react-router-dom";
 import loaderAnimation from "./Giff/loader_complete.json"; // Path to your loader JSON file
 import axios from "axios"; // Import axios for API requests
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
 const GigAdd = () => {
+  const navigate = useNavigate();
+  // const [gigs, setGigs] = useState([]);
+  // const [user, setUser] = useState(() => {
+  //   // Attempt to retrieve the user data from localStorage
+  //   const savedUser = localStorage.getItem('user');
+    
+  //   // Parse the JSON data if it exists, otherwise default to null
+  //   return savedUser ? JSON.parse(savedUser) : null;
+  // });
   const [gigImage, setGigImage] = useState(null);
-  const [services, setServices] = useState([]); // Change to an array for multiple services
-  const [newService, setNewService] = useState(""); // State to hold new service input
+  // const [services, setServices] = useState([]); // Change to an array for multiple services
+  // const [newService, setNewService] = useState(""); // State to hold new service input
 
   const [loading, setLoading] = useState(false); // Loader state
   const [errorMessage, setErrorMessage] = useState(""); // Error message for validation
@@ -17,6 +29,28 @@ const GigAdd = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [experienceYears, setExperienceYears] = useState();
+
+  // useEffect(() => {
+  //   fetchGig();
+  //   if (user) {
+  //     if (!gigs) {
+  //       navigate('/tailor/Gigs');
+  //     }
+  //   }
+  // }, [navigate]);
+
+
+  // const fetchGig = async () => {
+  //   const token = localStorage.getItem('token');
+  //   try {
+  //     const response = await axios.get('http://localhost:3001/gigs/myGig', {
+  //       headers: { Authorization: `Bearer ${token}` }
+  //     });
+  //     setGigs(response.data);
+  //   } catch (error) {
+  //     console.error('Error fetching gig:', error);
+  //   }
+  // }
 
   // Lottie animation settings
   const defaultOptions = {
@@ -41,10 +75,10 @@ const GigAdd = () => {
       setErrorMessage("Description must be more than 5 words.");
       return;
     }
-    if (services.length === 0) { // Check if services array is empty
-      setErrorMessage("At least one service type is required.");
-      return;
-    }
+    // if (services.length === 0) { // Check if services array is empty
+    //   setErrorMessage("At least one service type is required.");
+    //   return;
+    // }
     if (isNaN(experienceYears) || experienceYears < 2) {
       setErrorMessage("Minimum 2 Years Experience Required");
       return;
@@ -62,7 +96,7 @@ const GigAdd = () => {
     formData.append("gigImage", gigImage);
     formData.append("title", title);
     formData.append("description", description);
-    formData.append("services", JSON.stringify(services.map(service => ({ name: service }))));
+    // formData.append("services", JSON.stringify(services.map(service => ({ name: service }))));
     formData.append("experience", experienceYears);
 
     try {
@@ -77,11 +111,10 @@ const GigAdd = () => {
       setSuccessMessage("Your gig has been successfully created!");
 
       // Clear form fields
-      setTitle("");
-      setDescription("");
-      setServices([]);
-      setExperienceYears("");
-      setGigImage(null);
+      setTimeout(() => {
+        navigate(-1);        
+      }, 1500);
+
     } catch (error) {
       setLoading(false); // Hide loader
       setErrorMessage(
@@ -95,9 +128,9 @@ const GigAdd = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const validImageTypes = ["image/jpeg", "image/png", "image/jpg"];
+    const validImageTypes = ["image/jpeg", "image/png", "image/jpg", "image/jfif", "image/avif"];
     if (!validImageTypes.includes(file.type)) {
-      setErrorMessage("Please upload a valid image file (jpg, jpeg, png).");
+      setErrorMessage("Please upload a valid image file (jpg, jpeg, png, jfif, avif).");
       setGigImage(null);
       return;
     }
@@ -106,22 +139,26 @@ const GigAdd = () => {
     setErrorMessage(""); // Clear any previous error
   };
 
-  const addService = () => {
-    if (newService.trim() === "") {
-      setErrorMessage("Service cannot be empty.");
-      return;
-    }
-    // Add the new service to the services array
-    setServices([...services, newService]);
-    setNewService(""); // Clear the input field
-    setErrorMessage(""); // Clear any previous error
-  };
+  // const addService = (index = services.length) => {
+  //   if (newService.trim() === "") {
+  //     setErrorMessage("Service cannot be empty.");
+  //     return;
+  //   }
+    
+  //   // Update services array by directly assigning the value at the specified index
+  //   const updatedServices = [...services];
+  //   updatedServices[index] = newService;
+  //   setServices(updatedServices);
 
-  const removeService = (index) => {
-    // Remove the service by its index
-    const updatedServices = services.filter((_, i) => i !== index);
-    setServices(updatedServices);
-  };
+  //   setNewService(""); // Clear input field
+  //   setErrorMessage(""); // Clear error
+  // };
+
+  // const removeService = (index) => {
+  //   // Remove the service at the specified index
+  //   const updatedServices = services.filter((_, i) => i !== index);
+  //   setServices(updatedServices);
+  // };
 
   return (
     <div className="max-w-4xl mt-3 mx-auto p-6 bg-white shadow-md rounded-lg">
@@ -158,7 +195,7 @@ const GigAdd = () => {
           <input
             type="file"
             name="gigImage"
-            accept="image/jpeg,image/png,image/jpg"
+            accept="image/jpeg,image/png,image/jpg,image/avif, image/jfif"
             onChange={handleImageChange}
             className="mt-1 block w-full p-2 text-sm text-gray-500 border border-gray-300 rounded-lg cursor-pointer focus:outline-none"
           />
@@ -186,40 +223,41 @@ const GigAdd = () => {
         </div>
 
         {/* Service Selection */}
-        <div className="d-flex flex-col">
+        {/* <div className="d-flex flex-col">
           <label className="block text-sm font-medium text-gray-700">
             Service Type: <span className="text-red-500">*</span>
           </label>
-          <input
-            type="text"
-            value={newService} // Bind to newService state
-            onChange={(e) => setNewService(e.target.value)} // Update newService state
-            className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-          />
-          <button
-            type="button"
-            onClick={addService} // Call addService on click
-            className="mt-2 w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition duration-200"
-          >
-            Add Service
-          </button>
+          <div className="flex" style={{ alignItems: 'center' }}>
+            <input
+              type="text"
+              value={newService} // Bind to newService state
+              onChange={(e) => setNewService(e.target.value)} // Update newService state
+              className="mt-1 mb-0 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            />
+            <button
+              type="button"
+              onClick={() => addService()} // Call addService to add/replace at the next available position
+              className="mt-1 bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition duration-200"
+            >
+              Add
+            </button>
+          </div>
 
-          {/* Display added services */}
           <ul className="mt-4">
             {services.map((service, index) => (
               <li key={index} className="flex justify-between items-center p-2 border-b border-gray-300">
                 {service}
                 <button
                   type="button"
-                  onClick={() => removeService(index)} // Call removeService with index
-                  className="text-red-500 hover:text-red-700"
+                  onClick={() => removeService(index)} // Remove service by index
+                  className="bg-transparent border-1 rounded text-gray-500 hover:text-red-300"
                 >
-                  Delete
+                  <FontAwesomeIcon icon={faTrashAlt} />
                 </button>
               </li>
             ))}
           </ul>
-        </div>
+        </div> */}
 
         {/* Experience Years */}
         <div>

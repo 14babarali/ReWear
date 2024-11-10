@@ -34,3 +34,19 @@
 .feature_img{
   color: white;
 }
+
+/* Add this CSS to your stylesheets */
+.fade-in-bg {
+  animation: fadeInEaseOut 1s ease-out;
+}
+
+@keyframes fadeInEaseOut {
+  0% {
+    opacity: 0;
+    transform: scale(1.05); /* Start slightly zoomed-in */
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1); /* Return to normal size */
+  }
+}

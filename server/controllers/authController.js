@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const BlacklistedToken = require('../models/BlacklistedToken');
+const mongoose = require('mongoose');
 const User = require('../models/User');
 const nodemailer = require("nodemailer");
 const EmailVerificationToken = require("../models/EmailVerificationToken");
@@ -198,11 +199,38 @@ exports.login = async (req, res) => {
 exports.logout = async (req, res) => {
   try {
     const token = req.headers.authorization.split(' ')[1];
-    const decoded = jwt.decode(token);
+
+    if (!token) {
+      return res.status(400).json({ message: 'No token provided' });
+    }
+
+    // Check if MongoDB is connected
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ message: 'Database connection error. Please try again later.' });
+    }
 
     const blacklistedToken = new BlacklistedToken({token});
 
-    await blacklistedToken.save();
+    // Use a 10-second timeout for saving the blacklisted token
+    const saveWithTimeout = new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error('Server Connection Error'));
+      }, 10000); // 10-second timeout
+
+      blacklistedToken.save()
+        .then(result => {
+          clearTimeout(timeout);
+          resolve(result);
+        })
+        .catch(err => {
+          clearTimeout(timeout);
+          reject(err);
+        });
+    });
+
+    await saveWithTimeout;
+
+
 
     res.status(200).json({ message: 'Logout successful' });
   } catch (error) {

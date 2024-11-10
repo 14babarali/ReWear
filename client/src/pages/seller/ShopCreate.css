@@ -1,0 +1,217 @@
+/* Basic reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Container styling */
+  .shop-container {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column layout by default */
+    max-width: 1200px; /* Set a maximum width for larger screens */
+    margin: 40px auto;
+    padding: 30px; /* Consistent padding */
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Responsive layout for larger screens */
+  @media (min-width: 1024px) {
+    .shop-container {
+      grid-template-columns: repeat(2, 1fr); /* Two columns layout */
+      gap: 20px; /* Space between columns */
+    }
+  }
+  
+  /* Header styling */
+  .shop-header {
+    grid-column: span 2; /* Make the header span across both columns */
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .shop-header h2 {
+    font-size: 32px; /* Larger font size for headings */
+    color: #333;
+  }
+  
+  /* Image upload styling */
+  .shop-image-upload label,
+  .shop-portfolio-upload label {
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+    color: #555;
+  }
+  
+  .shop-image-upload input,
+  .shop-portfolio-upload input {
+    display: block;
+    margin-top: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  /* Image preview styling */
+  .shop-image-preview,
+  .portfolio-image-preview {
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Form input styling */
+  label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+    color: #555;
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-top: 5px;
+    background-color: #fff;
+    transition: border 0.3s;
+  }
+  
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  textarea:focus {
+    border-color: #007bff; /* Highlight border color on focus */
+  }
+  
+  /* Error message styling */
+  .error {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  
+  /* Submit button styling */
+  .submit-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Full width for better tap area */
+  }
+  
+  .submit-button:hover:not(:disabled) {
+    background-color: #0056b3; /* Darker shade on hover */
+  }
+  
+  .submit-button:disabled {
+    background-color: #ccc;
+  }
+  
+  /* Loader styling */
+  .loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Modal Overlay */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .modal-content p {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #28a745;
+  }
+  
+  /* Success message styling */
+  .success {
+    color: green;
+    font-size: 16px;
+    margin-top: 10px;
+    text-align: center;
+  }
+  
+  /* Media Queries for Responsiveness */
+  @media (max-width: 1024px) {
+    .shop-container {
+      grid-template-columns: 1fr; /* Single column layout for smaller screens */
+    }
+  
+    .shop-header h2 {
+      font-size: 28px; /* Adjust header size */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .shop-container {
+      padding: 15px; /* Reduce padding on smaller screens */
+    }
+  
+    .shop-header h2 {
+      font-size: 24px; /* Smaller header for smaller screens */
+    }
+  
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      font-size: 14px; /* Slightly smaller input font size */
+    }
+  
+    .submit-button {
+      font-size: 14px; /* Smaller button font size */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .shop-header h2 {
+      font-size: 20px; /* Even smaller header */
+    }
+  
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      padding: 8px; /* Reduce padding in inputs */
+      font-size: 12px; /* Further reduce font size */
+    }
+  
+    .submit-button {
+      padding: 8px 16px; /* Smaller button size */
+    }
+  }
+  

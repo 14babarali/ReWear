@@ -80,16 +80,20 @@ const AdminProduct = () => {
   };
 
   return (
-    <div className="admin-product-list">
-      <h1 className="admin-product-title">Products</h1>
-
-      {/* Filter Button */}
-      <div className='d-flex mb-2' style={{gap:'10px', justifyContent: 'end'}}>
-      <FontAwesomeIcon icon={faFilter}  style={{ cursor: 'pointer', fontSize: '24px' }} onClick={() => setIsFilterOpen(true)} />
-        <p>|</p>
-      <a onClick={removeFilters} style={{color: '#333', textDecoration: 'underlined', cursor: 'pointer'}}>
-        Remove Filters
-      </a>
+    <div className="admin-product-list flex flex-col justify-center p-2">
+      
+      <div className=' mb-2 flex justify-between' style={{justifyContent: 'center'}}>
+        <div className='d-flex' style={{alignItems:'center'}}>
+          <h1 className="admin-product-title m-0 p-0">Products</h1>
+        </div>
+        <div className='flex gap-3 p-2 border-1 rounded' style={{alignItems:'center'}}>
+          {/* Filter Button */}
+          <FontAwesomeIcon icon={faFilter}  style={{ cursor: 'pointer', fontSize: '24px' }} onClick={() => setIsFilterOpen(true)} />
+            <p>|</p>
+          <a onClick={removeFilters} style={{color: '#333', textDecoration: 'underlined', cursor: 'pointer'}}>
+            Remove Filters
+          </a>
+        </div>
       </div>
 
       {/* Filter Modal */}
@@ -128,11 +132,11 @@ const AdminProduct = () => {
       ) : (
         <div className="admin-product-grid">
           {filteredProducts.map((product) => (
-            <div key={product.id} className="admin-product-card p-1">
+            <div key={product.id} className="admin-product-card p-1 w-9/12 md:w-full">
               {/* Image */}
               
               <img
-                src={`http://localhost:3001/uploads/${product.images[0]}` ? `http://localhost:3001/uploads/${product.images[0]}` : 'https://via.placeholder.com/150'}
+                src={`http://localhost:3001/uploads/${product.images[0]}` ? `http://localhost:3001/uploads/${product.images[0]}` : 'http://localhost:3001/uploads/no-image.jpg'}
                 alt={product.name}
                 className="admin-product-image"
               />
@@ -140,26 +144,48 @@ const AdminProduct = () => {
 
               {/* Product Info */}
               <div className="admin-product-info">
-                <h2 className="admin-product-name">{product.name}</h2>
+                <h2 className="admin-product-name text-sm" 
+                    style={{
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      maxWidth: '100%' // or specify a specific width like '200px'
+                    }}>
+
+                  {product.name}
+                  </h2>
                 {/* <p className="admin-product-catalog">
                   Catalog: {product.catalogName}
                 </p> */}
-                <p className="admin-product-type">Type: {product.type}</p>
+                <p className="admin-product-type">Type: {product.type === 'New'? product.type : `${product.type} (${product.condition}/10)`}</p>
 
-                <p className="admin-product-condition admin-product-new">
+                {/* <p className="admin-product-condition admin-product-new">
                   Condition: {product.condition}
-                </p>
+                </p> */}
 
-                <p className="admin-product-quantity">
-                  Quantity: {product.qty}
-                </p>
+                {/* <p className="admin-product-quantity">
+                  Quantity: {product.qty? product.qty : 'N/A'}
+                </p> */}
                 {/* <p className="admin-product-description">
                   {product.description}
                 </p> */}
-                <p className="admin-product-price">
-                  Price: Rs.{product.price.toFixed(2)}
+                <p className="admin-product-size">Size: 
+                {product.sizes.map((sizeObj, index) => (
+                    <span key={index}>
+                      {sizeObj.size}{index < product.sizes.length - 1 ? ', ' : ''} 
+                    </span>
+                ))}
                 </p>
-                <p className="admin-product-size">Size: {product.size}</p>
+                <p className="admin-product-size">Qty: 
+                {product.sizes.map((sizeObj, index) => (
+                    <span key={index}>
+                      {sizeObj.qty}{index < product.sizes.length - 1 ? ', ' : ''}
+                    </span>
+                ))}
+                </p>
+                <p className="admin-product-price">
+                  Rs: {product.price.toFixed(2)}
+                </p>
               </div>
             </div>
           ))}

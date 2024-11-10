@@ -49,10 +49,8 @@ exports.createReview = async (req, res) => {
 exports.getProductReviews = async (req, res) => {
     try {
         const { id } = req.params;
-        const user = await User.findById(req.user.id);
         // console.log(id);
         
-        if(user){
         
             // Find reviews for the given product
             const reviews = await Reviews.find({ product_id: id })
@@ -63,11 +61,6 @@ exports.getProductReviews = async (req, res) => {
             }
             // console.log(reviews);
             res.status(200).json(reviews);
-
-        }
-        else{
-            res.status(404).json({message: 'User Not Found.'});
-        }
         
     } catch (error) {
         console.error('Error fetching reviews:', error);
@@ -90,17 +83,19 @@ exports.getAllReviews = async (req, res) => {
         if (user.role === 'Admin') {
             // If the user is an Admin, fetch all reviews
             reviews = await Reviews.find()
-                .populate('reviewer_id', 'name')     // Optionally populate reviewer details
-                .populate('product_id', 'name')      // Optionally populate product details
-                .exec();
+            .populate('reviewer_id')     // Populate reviewer details
+            .populate('reviewee_id')     // Populate reviewee details
+            .populate('product_id')      // Populate product details
+            .exec();
         } else if (user.role === 'Seller') {
             
             const sellerId = userId; // Use user ID for non-admin roles
             
             // Fetch all reviews where reviewee_id matches the seller's ID
             reviews = await Reviews.find({ reviewee_id: sellerId })
-                .populate('reviewer_id', 'name')     // Optionally populate reviewer details
-                .populate('product_id', 'name')      // Optionally populate product details
+                .populate('reviewer_id')     // Populate reviewer details
+                .populate('reviewee_id')     // Populate reviewee details
+                .populate('product_id') 
                 .exec();
         }
         else {

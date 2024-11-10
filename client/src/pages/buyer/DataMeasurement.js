@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './DataMeasurement.css';
 
@@ -7,12 +7,14 @@ const DataMeasurement = () => {
   const initialMeasurements = location.state?.measurements || {};
   const [measurements, setMeasurements] = useState(initialMeasurements);
   const [userCategory, setUserCategory] = useState('male');
-  const [fitType, setFitType] = useState(''); // Fit type state
-  const [description, setDescription] = useState(''); // Description state
-  const [picture, setPicture] = useState(null); // Picture state
-  const [errorMessage, setErrorMessage] = useState(''); // Error message state
-
-  const navigate = useNavigate(); // Hook to navigate to another page
+  const [fitType, setFitType] = useState(''); 
+  const [description, setDescription] = useState(''); 
+  const [picture, setPicture] = useState(null); 
+  const [errorMessage, setErrorMessage] = useState(''); 
+  useEffect(() => {
+    window.scrollTo(0, 0); 
+  }, []);
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -222,7 +224,7 @@ const DataMeasurement = () => {
         </div>
 
         <div className="form-group-custom">
-          <h5>Upload Design (if any)</h5>
+          <h5>Upload Design</h5>
           <input type="file" accept=".png, .jpeg" onChange={handlePictureChange} />
           {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
         </div>

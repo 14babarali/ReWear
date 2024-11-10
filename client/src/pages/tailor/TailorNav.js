@@ -1,61 +1,76 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import './TailorNav.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 
 const TailorNav = ({ toggleSidebar }) => {
   const [user, setUser] = useState();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser)); // Parse the user from localStorage
+      setUser(JSON.parse(storedUser));
     }
-  },[]);
 
-  // Toggle dropdown menu
+    // Close dropdown when clicking outside
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  // Logout function
   const handleLogout = async () => {
-      navigate('/logout');
+    navigate('/logout');
   };
 
-  // Handle navigation to profile page
   const handleProfileClick = () => {
-    navigate('/tailor/profile'); // Ensure this is the correct route for your admin profile
+    navigate('/tailor/profile');
   };
 
   return (
-    <header className="header">
-      {/* Sidebar toggle button */}
-      <button className="menu-toggle-button" onClick={toggleSidebar}>
-        <span className="material-icons-outlined">menu</span>
-      </button>
+    <header className="header flex flex-wrap items-center justify-between p-4 bg-blue-600 text-white shadow-md">
+      <div className="flex items-center">
+        <button className="menu-toggle-button mr-4" onClick={toggleSidebar}>
+          <span className="material-icons-outlined">menu</span>
+        </button>
+      </div>
+      <div className='text-center'>
+      <h2 className="admin-panel-title text-lg sm:text-xl">Tailor Panel</h2>
+      </div>
 
-      <h2 className="admin-panel-title">Tailor Panel</h2>
+      <div className="header-right flex items-center space-x-4">
+        <span className="user-name hidden sm:inline-block">{user?.profile?.name}</span>
 
-      <div className="header-right">
-        <span className="user-name">{user?.profile?.name}</span>
-
-        {/* Notifications Icon */}
         <button className="notifications-button">
           <span className="material-icons-outlined">notifications</span>
         </button>
 
-        {/* Account Icon with Dropdown */}
-        <div className="account-dropdown">
+        <button className="notifications-button">
+          <FontAwesomeIcon icon={faGlobe} />
+        </button>
+
+        <div className="relative account-dropdown" ref={dropdownRef}>
           <button className="account-icon" onClick={toggleDropdown}>
             <span className="material-icons-outlined">account_circle</span>
           </button>
 
           {/* Dropdown Menu */}
           <div
-            className={`absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2 ${
+            className={`absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2 z-50 ${
               dropdownOpen ? 'block' : 'hidden'
             }`}
           >

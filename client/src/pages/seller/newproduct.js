@@ -39,7 +39,7 @@ const AddProduct = () => {
         category: editproduct?.category?.name || '',
         subcategory: editproduct?.subcategory?.name || '',
         subChildCategory: editproduct?.subChildCategory?.name || '',
-        size: Array.isArray(editproduct?.size) ? editproduct.size : (editproduct?.size ? [editproduct.size] : []),
+        sizes: Array.isArray(editproduct?.sizes) ? editproduct.sizes : [{ size: '', qty: 1 }],
         description: editproduct?.description || '',
         price: editproduct?.price || '',
         qty: editproduct?.qty || '',
@@ -49,14 +49,28 @@ const AddProduct = () => {
 
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
-        const newImagesArray = files.map((file) => URL.createObjectURL(file));
-
+        const validImageTypes = ['image/jpeg', 'image/png', 'image/jfif', 'image/webp'];
+    
+        // Filter out invalid file types and alert the user if any are invalid
+        const validFiles = files.filter((file) => {
+            if (!validImageTypes.includes(file.type)) {
+                alert("Only image files are allowed. Please select valid image files.");
+                return false;
+            }
+            return true;
+        });
+    
+        // Generate previews only for valid files
+        const newImagesArray = validFiles.map((file) => URL.createObjectURL(file));
+    
+        // Update previews and product images state
         setPreviews((prevPreviews) => [...prevPreviews, ...newImagesArray]);
         setProduct((prevProduct) => ({
             ...prevProduct,
-            images: [...prevProduct.images, ...files]
+            images: [...prevProduct.images, ...validFiles]
         }));
     };
+    
 
     const [categories, setCategories] = useState([]);
     const [selectedParent, setSelectedParent] = useState('');
@@ -187,12 +201,20 @@ const AddProduct = () => {
         setProduct((prevProduct) => ({ ...prevProduct, [name]: value }));
     };
 
-    const handleSizeChange = (e) => {
-        const selectedOptions = Array.from(e.target.selectedOptions).map(option => option.value);
-        setProduct((prevProduct) => ({
-            ...prevProduct,
-            size: selectedOptions
-        }));
+    const handleSizeChange = (index, field, value) => {
+        const updatedSizes = [...product.sizes];
+        updatedSizes[index][field] = value;
+        setProduct({ ...product, sizes: updatedSizes });
+    };
+
+    const addSize = () => {
+        const newSize = { size: '', qty: 1 }; // Default size and quantity for new entry
+        setProduct({ ...product, sizes: [...product.sizes, newSize] });
+    };
+
+    const removeSize = (index) => {
+        const updatedSizes = product.sizes.filter((_, i) => i !== index);
+        setProduct({ ...product, sizes: updatedSizes });
     };
     
 
@@ -201,20 +223,23 @@ const AddProduct = () => {
         e.preventDefault();
 
         // Basic form validation
-        if (!product.name || !product.type || !product.material || !selectedParent || !selectedChild || !selectedSubChild || !product.description || !product.price || !product.qty || (product.type === 'Used' && !product.condition)) {
-            setModal({ isOpen: true, title: 'Warning', message: 'Please fill in all required fields.' });
+        if (!product.name || !product.type || !product.material || !selectedParent || !selectedChild || !selectedSubChild || !product.description || !product.price || (product.type === 'Used' && !product.condition)) {
+            setModal({ isOpen: true, title: 'Warning', message: 'Please fill the missing fields.' });
             return;
         }
 
-        if (!product.id) {
-            if (!product.images[0]) {
-                toast.error('Please add at least 1 picture for products.');
-                return;
-            }
+        if (product.sizes.length === 0 || !product.sizes.some(size => size.size && size.qty)) {
+            toast.error("Please add at least one size and quantity.");
+            return;
+        }
+
+        if (!product.id && !product.images[0]) {
+            toast.error('Please add at least 1 picture for products.');
+            return;
         }
 
         // Ensure numeric validation for price, qty, and condition
-        if (isNaN(product.price) || isNaN(product.qty)) {
+        if (isNaN(product.price)) {
             toast.error(t('Only Numbers Allowed'));
             return;
         }
@@ -233,7 +258,7 @@ const AddProduct = () => {
             return;
         }
 
-        if (product.description.length > 160) {
+        if (product.description.length > 150) {
             toast.warning(t('descriptionLimit'));
             return;
         }
@@ -246,19 +271,22 @@ const AddProduct = () => {
         if (selectedSubChild) {
             formData.append('subChildCategory', selectedSubChild);
         }
-        // handle multiple sizes
-        product.size.forEach((size) => {
-            formData.append('size', size); // Appending each size individually
-        });
+        // Convert sizes to JSON string before appending
+        formData.append(
+            'sizes',
+            JSON.stringify(product.sizes.map(sizeObj => ({
+                size: sizeObj.size,
+                qty: sizeObj.qty
+            })))
+        );     
         formData.append('description', product.description);
         formData.append('price', product.price);
-        formData.append('qty', product.qty);
         formData.append('condition', product.condition);
 
         product.images.forEach((image) => {
             formData.append('images', image);
         });
-
+        console.log('Form Data:', Object.fromEntries(formData.entries()));
         try {
             let response;
 
@@ -267,7 +295,6 @@ const AddProduct = () => {
                 response = await axios.put(`http://localhost:3001/api/editproduct/${product.id}`, formData, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data'
                     }
                 });
             } else {
@@ -298,7 +325,7 @@ const AddProduct = () => {
                     category: '',
                     subcategory: '',
                     subChildCategory: '',
-                    size: [],
+                    sizes: [],
                     description: '',
                     price: '',
                     qty: '',
@@ -316,8 +343,8 @@ const AddProduct = () => {
         }
     };
 
-    {console.log(selectedParentName, selectedChildName)}
-    console.log('Available Sizes:', sizeOptions[selectedParentName]?.[selectedChildName]);
+    // {console.log(selectedParentName, selectedChildName)}
+    // console.log('Available Sizes:', sizeOptions[selectedParentName]?.[selectedChildName]);
     return (
         <div className=''>
             <Button className='bg-transparent text-black tracking-wider' style={{ textDecoration: 'underline' }} onClick={() => { window.history.back() }}>{'<Back'}</Button>
@@ -401,39 +428,30 @@ const AddProduct = () => {
                             <input type="text" name="material" value={product.material} onChange={handleChange} required style={styles.input} />
                         </div>
 
-                    {selectedParentName && selectedChildName && (
-                        <div style={styles.section}>
-                            <label style={styles.label}>Size</label>
-                            <select
-                                name="size"
-                                value={product.size}
-                                onChange={handleSizeChange}
-                                style={{ ...styles.select, height: 'auto' }}
-                                multiple
-                            >
-                                <option value="">Select Size</option>
-                                {
-                                    // Check if size options exist for the selected parent and subcategory names
-                                    sizeOptions[selectedParentName] &&
-                                    sizeOptions[selectedParentName][selectedChildName] ? (
-                                        sizeOptions[selectedParentName][selectedChildName].map((option) => (
-                                            typeof option === 'string' ? ( // For string sizes
-                                                <option key={option} value={option}>
-                                                    {option}
-                                                </option>
-                                            ) : ( // For objects with size and ageRange
-                                                <option key={option.size} value={option.size}>
-                                                    {option.size} ({option.ageRange})
-                                                </option>
-                                            )
-                                        ))
-                                    ) : (
-                                        <option disabled>No sizes available</option>
-                                    )
-                                }
-                            </select>
+                        {product.sizes.map((sizeObj, index) => (
+                        <div key={index}>
+                            <input 
+                                type="text" 
+                                placeholder="Size"
+                                minLength={1}
+                                maxLength={50} 
+                                value={sizeObj.size} 
+                                onChange={(e) => handleSizeChange(index, 'size', e.target.value)} 
+                            />
+                            <input 
+                                type="number" 
+                                placeholder="Quantity" 
+                                value={sizeObj.qty} 
+                                min={1}
+                                max={30}
+                                onChange={(e) => handleSizeChange(index, 'qty', e.target.value, 10)} 
+                            />
+                            <button className=' flex bg-transparent mt-2 border-1 text-gray-500 ' type="button" onClick={() => removeSize(index)}>Remove Size</button>
                         </div>
-                    )}
+                        
+                    ))}
+                    <button className=' flex bg-transparent mt-2 border-1 text-gray-500 ' type="button" onClick={addSize}>Add Size</button>
+
                     </div>
 
                     <div style={styles.section}>
@@ -445,11 +463,6 @@ const AddProduct = () => {
                         <div style={styles.section}>
                             <label style={styles.label}>Price</label>
                             <input type="number" name="price" value={product.price} min={0} onChange={handleChange} required style={styles.input} />
-                        </div>
-
-                        <div style={styles.section}>
-                            <label style={styles.label}>Quantity</label>
-                            <input type="number" name="qty" value={product.qty} min={0} onChange={handleChange} required style={styles.input} />
                         </div>
                     </div>
 
@@ -463,7 +476,13 @@ const AddProduct = () => {
                     {/* Product Images Section */}
                     <div style={styles.section}>
                         <label style={styles.label}>Product Images</label>
-                        <input type="file" name="images" multiple onChange={handleImageChange} required={!editproduct} />
+                        <input 
+                            type="file"
+                            accept="image/*"  
+                            name="images" 
+                            multiple 
+                            onChange={handleImageChange} 
+                            required={!editproduct} />
                         {previews.length > 0 && (
                             <div className='m-2' style={styles.imagePreviewContainer}>
                                 {previews.map((preview, index) => (

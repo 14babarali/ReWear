@@ -27,7 +27,7 @@ const Productinfo = ({ description, reviews }) => {
   };
 
   return (
-    <div className="info-section-container mb-2 w-full h-auto" style={{position: 'relative'}}>
+    <div className="info-section-container mb-2 w-full">
       <div className="info-item" onClick={() => toggleSection('description')}>
         <span className="info-label">Description</span>
         <FaChevronDown className={`info-arrow ${activeSection === 'description' ? 'active' : ''}`} />

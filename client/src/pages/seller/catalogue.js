@@ -84,8 +84,6 @@ const categoryModel = ({ isOpen, onClose, onSubmit, category, setCategory, paren
   );
 };
 
-
-
 const Catalogue = () => {
     const [categories, setCategories] = useState([]);
     const [hoveredCategory, setHoveredCategory] = useState(null);
@@ -123,11 +121,33 @@ const Catalogue = () => {
 
 
     const [productList, setProductList] = useState([]);
+    const [reviews, setReviews] = useState([]);
 
     // Fetch products from backend when component mounts
     useEffect(() => {
         fetchProducts();
+        fetchReviews();
     }, []);
+
+    // Fetching reviews data from the server
+    const fetchReviews = async () => {
+        try {
+          const response = await axios.get('http://localhost:3001/reviews/getall', {
+  
+            headers: {
+              'Authorization': `Bearer ${token}`
+          }
+  
+          } ); // Replace with your API endpoint
+          setReviews([]);
+          setReviews(response.data); // Add static review to the fetched reviews
+          setLoading(false);
+        } catch (error) {
+          console.error('Error fetching reviews:', error);
+          // setReviews([staticReview]);
+          setLoading(false);
+        }
+      };
 
     const fetchProducts = async () => {
         try {
@@ -319,7 +339,7 @@ const Catalogue = () => {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            <div className="seller-product-card-image" style={styles.sellerProductCardImage}>
+            <div className="seller-product-card-image p-0" style={styles.sellerProductCardImage}>
                 {product.images && product.images.length > 0 && (
                     <img
                         src={`http://localhost:3001/uploads/${product.images[0]}`}
@@ -346,17 +366,48 @@ const Catalogue = () => {
                 <p>
                     Type: {product.type} {product.type === 'Used' && `(${product.condition}/10)`}
                 </p>
-                <p>Size: {product.size.join(', ')}</p>
-                <p>QTY: {product.qty}</p>
+                {product.sizes?.length > 0 ?
+                (
+                    <div className='d-flex flex-col mb-2'>
+                        <div>
+                            <span>
+                                Size: 
+                            </span>
+                            <span>
+                                {product.sizes?.map((item) => item.size).filter(size => size).join(', ') || 'No sizes available.'}
+                            </span>
+                        </div>
+                    
+                        <div className='mt-2 '>
+                            <span>
+                                Qty: 
+                            </span>
+                            <span>
+                                {product.sizes?.map((item) => item.qty).filter(qty => qty).join(', ') || 'No qty available.'}
+                            </span>
+                        </div>
+
+                    </div>
+                ):
+                (
+                    <>
+                    <p>Size: 'Not Added'</p>
+                    <p>QTY: 'Not Added'</p>
+                    </>
+                )
+                }
                 <p>Price: Rs {product.price}</p>
+                <span className='w-full p-2 rounded text-center bg-orange-500 text-white cursor-pointer'>
+                    Reviews({})
+                </span>
             </div>
         </div>
     );
 
     return (
         <>
-            <Button className='bg-transparent text-black tracking-wider' style={{textDecoration: 'underline'}} onClick={() => {window.history.back()}}>{'<Back'}</Button>
-        <div style={styles.container}>
+            {/* <Button className='bg-transparent text-black tracking-wider' style={{textDecoration: 'underline'}} onClick={() => {window.history.back()}}>{'<Back'}</Button> */}
+        <div className='mt-3' style={styles.container}>
             {/* Modal for Delete Confirmation */}
             <Modal
                 show={showConfirmModal}

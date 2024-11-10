@@ -34,7 +34,7 @@ function Home() {
         const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
         const response = await axios.get('http://localhost:3001/api/featured_products', config); 
         setProducts(response.data);
-        // console.log(products);
+        // console.log(response.data);
       } catch (error) {
         if (error.response && error.response.status === 401) {
           // Clear any stored token (optional)
@@ -55,10 +55,10 @@ function Home() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentIndex(prevIndex => (prevIndex + 1) % images.length);
-    }, Math.floor(Math.random() * (4000 - 3000 + 1)) + 3000);
+    },3000);
 
     return () => clearInterval(intervalId);
-  }, [images.length]);
+  }, []);
 
   const productsPerPage = 5;
   const totalPages = Math.ceil(products.length / productsPerPage);
@@ -67,95 +67,95 @@ function Home() {
   const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
   // console.log(currentProducts);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate');
-          }
-        });
-      },
-      {
-        threshold: 0.1,
-      }
-    );
+  // useEffect(() => {
+  //   const observer = new IntersectionObserver(
+  //     entries => {
+  //       entries.forEach(entry => {
+  //         if (entry.isIntersecting) {
+  //           entry.target.classList.add('animate');
+  //         }
+  //       });
+  //     },
+  //     {
+  //       threshold: 0.1,
+  //     }
+  //   );
 
-    const elements = document.querySelectorAll('.fade-in-up');
-    elements.forEach(el => observer.observe(el));
+  //   const elements = document.querySelectorAll('.fade-in-up');
+  //   elements.forEach(el => observer.observe(el));
 
-    return () => {
-      elements.forEach(el => observer.unobserve(el));
-    };
-  }, []);
+  //   return () => {
+  //     elements.forEach(el => observer.unobserve(el));
+  //   };
+  // }, []);
 
   const handlePageClick = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  return (
+  return ( 
     <div className="px-4 lg:px-8">
       <ToastContainer />
-      
+
       {/* Hero Section */}
       <div 
-        className="text-center py-5 mx-auto bg-cover bg-center rounded-lg"
+        className="text-center py-5 mx-auto bg-cover object-contain bg-center rounded-lg"
         style={{ 
           backgroundImage: `url(${images[currentIndex]})`, 
-          height: '500px', 
+          height: '420px', 
           width: '100%', 
-          marginTop: '5px' 
+          marginTop: '5px',
+          animation: 'ease'
         }}
       >
-        {/* Optional content in hero */}
       </div>
 
-      {/* Major Categories */}
-      <div className="bg-maroon text-center py-2 rounded-lg mt-3" >
-        {/* <h2 className="text-white text-2xl">Major Categories</h2> */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 text-center text-white py-3">
-          <div className="flex flex-col items-center">
-            <Link to="/buyer/product/event-dresses" className="flex flex-col items-center text-white no-underline">
-              <img
-                src={eventdresses}
-                alt="Event Dresses"
-                className="w-20 h-30 object-cover rounded-full mb-2"
-              />
-              <p className="mt-2" style={{ textDecoration: 'none' }}>Formal</p>
-            </Link>
-          </div>
-          <div className="flex flex-col items-center">
-            <Link to="/buyer/product/tailor-made" className="flex flex-col items-center text-white no-underline">
-              <img
-                src={tailormade}
-                alt="Tailor Made"
-                className="w-20 h-30 object-cover rounded-full mb-2"
-              />
-              <p className="mt-2">Tailor Made</p>
-            </Link>
-          </div>
-          <div className="flex flex-col items-center">
-            <Link to="/buyer/product/casual-clothing" className="flex flex-col items-center text-white no-underline">
-              <img
-                src={clothing}
-                alt="Casual Clothing"
-                className="w-20 h-20 object-cover rounded-full mb-2"
-              />
-              <p className="mt-2 no-underline">Casual</p>
-            </Link>
-          </div>
-          <div className="flex flex-col items-center">
-            <Link to="/buyer/product/shoes" className="flex flex-col items-center text-white no-underline">
-              <img
-                src={shoes}
-                alt="Shoes"
-                className="w-20 h-30 object-cover rounded-full mb-2"
-              />
-              <p className="mt-2">Shoes</p>
-            </Link>
-          </div>
+    {/* Major Categories */}
+    <div className="bg-maroon text-center  rounded-lg mt-2 p-2" >
+      {/* <h2 className="text-white text-2xl">Major Categories</h2> */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 text-center text-white">
+        <div className="flex flex-col items-center">
+          <Link to="/buyer/product/event-dresses" className="flex flex-col items-center text-white no-underline">
+            <img
+              src={eventdresses}
+              alt="Event Dresses"
+              className="w-20 h-30 object-cover rounded-full"
+            />
+            <p className="mt-1 mb-0 text-white" style={{ textDecoration: 'none' }}>Formal</p>
+          </Link>
+        </div>
+        <div className="flex flex-col items-center">
+          <Link to="/buyer/product/tailor-made" className="flex flex-col items-center text-white no-underline">
+            <img
+              src={tailormade}
+              alt="Tailor Made"
+              className="w-20 h-30 object-cover rounded-full "
+            />
+            <p className="mt-1 mb-0 text-white">Tailor Made</p>
+          </Link>
+        </div>
+        <div className="flex flex-col items-center p-0">
+          <Link to="/buyer/product/casual-clothing" className="flex flex-col items-center text-white no-underline">
+            <img
+              src={clothing}
+              alt="Casual Clothing"
+              className="w-20 h-20 object-cover rounded-full "
+            />
+            <p className="mt-1 mb-0 text-white">Casual</p>
+          </Link>
+        </div>
+        <div className="flex flex-col items-center">
+          <Link to="/buyer/product/shoes" className="flex flex-col items-center text-white no-underline">
+            <img
+              src={shoes}
+              alt="Shoes"
+              className="w-20 h-30 object-cover rounded-full "
+            />
+            <p className="mt-1 mb-0 text-white">Shoes</p>
+          </Link>
         </div>
       </div>
+    </div>
 
         
 {/* Tailor image */}
@@ -170,7 +170,7 @@ function Home() {
 
   </div>
 </div>
-<div className="bg-maroon text-white py-12">
+<div className="bg-maroon text-white py-2">
       <div className="flex flex-col md:flex-row justify-around items-center text-center px-4">
         
         {/* Feature 1 */}

@@ -4,7 +4,7 @@ import Completed from '../pages/buyer/Giff/gif-success.gif';
 // Initialize the Modal
 Modal.setAppElement('#root'); 
 
-const CheckoutModal = ({ isOpen, onClose }) => {
+const CheckoutModal = ({ isOpen, onClose, isplaced }) => {
   return (
     <Modal
       isOpen={isOpen}
@@ -28,12 +28,23 @@ const CheckoutModal = ({ isOpen, onClose }) => {
         },
       }}
     >
-      <h2>Order Placed Successfully!</h2>
-      <img src={Completed} alt="Success" style={{ width: '150px', margin: '20px auto' }} />
-      <p>Your order has been placed. Please wait for confirmation.</p>
-      <button onClick={onClose} style={{ padding: '10px 20px', marginTop: '20px', cursor: 'pointer' }}>
-        Close
-      </button>
+      {isplaced ? 
+      <>
+        <h2>Order Placed Successfully!</h2>
+        <img src={Completed} alt="Success" style={{ width: '150px', margin: '20px auto' }} />
+        <p>Your order has been placed. Please wait for confirmation.</p>
+        <button onClick={onClose} style={{ padding: '10px 20px', marginTop: '20px', cursor: 'pointer' }}>
+          Close
+        </button>
+      </>
+      : 
+      <>
+        <h2>Error Occured While Placing Order!</h2>
+        <button onClick={onClose} style={{ padding: '10px 20px', marginTop: '20px', cursor: 'pointer' }}>
+          Close
+        </button>
+      </>
+      }
     </Modal>
   );
 };

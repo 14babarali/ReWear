@@ -13,6 +13,9 @@ import LogoutPage from '../routes/logout';
 import OTP from '../routes/OTPinput';
 import AddProduct from '../pages/seller/newproduct';
 import SellerSidebar from '../pages/seller/SellerSidebar';
+import Shop from '../pages/seller/Shop';
+import ShopCreate from '../pages/seller/ShopCreate';
+import ShopMain from '../pages/seller/ShopMain';
 import ERR404 from '../components/error404';
 
 const SellerLayout = () => {
@@ -48,6 +51,11 @@ const SellerLayout = () => {
               {/* <Route path='/orders' element={<OrderDetail />} />  order details page */}
               <Route path='/catalogue' element={<Catalogue />} />
               <Route path='/product/add' element={<AddProduct/>}/>
+
+              <Route path='/Shop' element={<Shop/>}/>
+              <Route path='/Shop/Create' element={<ShopCreate/>}/>
+              <Route path='/Shop/Main' element={<ShopMain/>}/>
+
               
               {/* <Route path='/myproduct' element={<Uploadproducts />} /> */}
               <Route path='/profile' element={<SellerProfilePage />} />

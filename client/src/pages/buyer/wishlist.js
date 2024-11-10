@@ -62,7 +62,8 @@ const Wishlist = () => {
       {!loading && !error && wishlist.length > 0 && (
         <div className="wishlist-grid">
           {wishlist.map((product) => (
-            <div key={product._id} className="col mb-4">
+            
+            <div key={product?._id} className="col mb-4">
               <ProductCard product={product} />
             </div>
           ))}

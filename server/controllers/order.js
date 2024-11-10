@@ -131,9 +131,12 @@ exports.getOrders = async (req, res) => {
         ];
       }
   
-      let orders = await Order.find(filters)
+    let orders = await Order.find(filters)
     .populate('buyer_id', 'profile.name email') // Ensure this matches your User model
-    .populate('products.product_id', 'name price')
+    .populate({
+      path: 'products.product_id',
+      select: 'name images', // Populate product name and images
+    })
     .sort({ created_at: -1 });
 
     console.log("Orders after population:", orders);
@@ -143,6 +146,11 @@ exports.getOrders = async (req, res) => {
           return {
               ...order._doc,
               buyerName: order.buyer_id ? order.buyer_id.name : 'Unknown', // Include buyer name
+              products: order.products.map(product => ({
+                ...product._doc,
+                productName: product.product_id ? product.product_id.name : 'Unknown Product',
+                productImages: product.product_id ? product.product_id.images : [], // Include images array
+              })),
           };
       });
 
@@ -177,7 +185,7 @@ exports.buyersOrders = async (req, res) => {
     })
       .populate({
         path: 'products.product_id', // Populate product details
-        select: 'name price' // Select only necessary fields to avoid excess data
+        select: 'name images' // Select only necessary fields to avoid excess data
       })
       .populate({
         path: 'buyer_id', // Populate buyer details
@@ -217,5 +225,42 @@ exports.updateOrderStatus = async (req, res) => {
   } catch (error) {
     console.error('Error updating order status:', error);
     return res.status(500).json({ message: 'Server error. Could not update status.' });
+  }
+};
+
+
+// Buyer Orders status for reviews button rendering
+
+exports.checkProductInOrders = async (req, res) => {
+  try {
+    // Extract the current user's ID and productId from the request
+    const userId = mongoose.Types.ObjectId(req.user.id);
+    const productId = mongoose.Types.ObjectId(req.params);
+
+    // Find orders for the current user containing the product with the specified productId
+    const order = await Order.findOne({
+      buyer_id: userId,
+      'products.product_id': productId,
+    });
+
+    // If no order is found with the productId, return 404 response
+    if (!order) {
+      console.log('Product Not Found for Order: ',order);
+      return res.status(404).json({ message: 'Product not found in any order for this user.' });
+    }
+
+    // Check if the order's status is 'delivered'
+    if (order.status === 'delivered') {
+      console.log('Review Button Available for Status: ',order.status);
+      return res.status(200).json({ message: 'Product found in delivered order.' });
+    } else {
+      // Return a different response if the order exists but is not delivered
+      console.log('Review Button Disabled for Status: ',order.status);
+      return res.status(400).json({ message: 'Product found but order is not delivered.' });
+    }
+  } catch (error) {
+    console.error(error);
+    // Handle any unexpected errors
+    return res.status(500).json({ message: 'Server error occurred.' });
   }
 };

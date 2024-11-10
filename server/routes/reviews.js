@@ -6,7 +6,7 @@ const review = require('../controllers/reviews');
 
 router.post('/add',authMiddleware.verifyToken,upload.array('images', 10), review.createReview);
 
-router.get('/get/:id', authMiddleware.verifyToken, review.getProductReviews);
+router.get('/get/:id', review.getProductReviews);
 
 router.get('/getall',authMiddleware.verifyToken, review.getAllReviews);
 

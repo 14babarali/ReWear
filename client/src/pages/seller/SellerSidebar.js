@@ -30,9 +30,9 @@ const SellerSidebar = ({ isOpen, toggleSidebar }) => {
           <span className="material-icons-outlined">shopping_cart</span>
           <span className="ml-3 text-base">Orders</span>
         </Link>
-        <Link to="/seller/Product" className="sidebar-link">
+        <Link to="/seller/Shop" className="sidebar-link">
           <span className="material-icons-outlined">inventory_2</span>
-          <span className="ml-3 text-base">Products</span>
+          <span className="ml-3 text-base">Shop</span>
         </Link>
         <Link to="/seller/reviews" className="sidebar-link">
           <span className="material-icons-outlined">analytics</span>

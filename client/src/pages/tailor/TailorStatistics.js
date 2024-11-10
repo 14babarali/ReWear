@@ -68,7 +68,7 @@ const TailorStatistics = () => {
       username: 'Dua',
       product: 'Alphaedge 4d reflective shoes R',
       image: 'https://via.placeholder.com/50', // Placeholder image
-      price: '$133.00',
+      price: 'Rs. 1330',
     },
   ];
 

@@ -1,129 +1,122 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
-import loader from "./Giff/loader.gif"; // Import the loader image
+import loader from "./Giff/loader.gif";
+import { useNavigate } from "react-router-dom";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+// import axios from "axios";
 
-const GigPackage = ({ packages }) => {
-  const [selectedPackage, setSelectedPackage] = useState("basic");
+const GigPackage = ({ services }) => {
+  const [selectedPackage, setSelectedPackage] = useState("Basic");
   const [isLoading, setIsLoading] = useState(false);
-  const [orderConfirmed, setOrderConfirmed] = useState(false);
-  
-  const navigate = useNavigate(); // Initialize the navigate hook
+  // const [activeService, setActiveService] = useState(null);s
+  const [activePlan, setActivePlan] = useState('Basic');
+  const [expanded, setExpanded] = useState(false);
+  const navigate = useNavigate();
 
-  // Simulated loading handler, modify this if you're using an actual API call
   const handleContinue = () => {
     setIsLoading(true);
-
-    // Simulate a delay for order confirmation
     setTimeout(() => {
-      setOrderConfirmed(true);
-    }, 2000); // Simulate 2-second loading time
+      setIsLoading(false);
+      navigate("/buyerOrderPage", { state: { selectedPackage } });
+    }, 2000);
   };
 
-  // Function to handle navigation to home page
-  const handleGoToHome = () => {
-    navigate("/"); // Navigate to the home page
+  const toggleExpand = (serviceId) => {
+    setExpanded((prev) => (prev === serviceId ? null : serviceId));
   };
+
+  // const deleteService = async (serviceId) => {
+  //   try {
+  //     // Make a DELETE request to the backend to delete the service
+  //     await axios.delete(`http://localhost:3001/gigs/services/delete/${serviceId}`, {
+  //       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  //     });
+  //     // Assuming a function fetchServices to update the services list
+  //     fetchServices();
+  //   } catch (error) {
+  //     console.error("Error deleting service:", error);
+  //     alert("Failed to delete the service. Please try again.");
+  //   }
+  // };
 
   return (
-    <div className="relative">
-      {/* Tab Buttons */}
-      <div className="flex justify-center space-x-4 mb-4">
-        <button
-          className={`px-4 py-2 font-semibold ${
-            selectedPackage === "basic" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
-          } rounded`}
-          onClick={() => setSelectedPackage("basic")}
-        >
-          Basic
-        </button>
-        <button
-          className={`px-4 py-2 font-semibold ${
-            selectedPackage === "premium" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
-          } rounded`}
-          onClick={() => setSelectedPackage("premium")}
-        >
-          Premium
-        </button>
+    <div>
+      <div className="p-4 rounded-lg shadow-md bg-white">
+        <h3 className="font-bold text-lg mb-4">Available Services</h3>
+
+        <ul className="space-y-4 p-0">
+          {services.map((service) => (
+            <li key={service._id} className="w-full p-2 bg-white shadow rounded-lg border border-gray-200">
+              <div className="flex flex-row p-1 justify-between cursor-pointer" onClick={() => toggleExpand(service._id)} >
+                <div className="flex justify-between items-center m-0 w-full">
+                  <h2 className="text-sm m-0 font-normal text-gray-800">{service.name}</h2>
+                </div>
+
+                {/* Expandable Plans Section */}
+                <div className="flex">
+                <button style={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    display: "block",
+                  }} className="w-full bg-transparent text-left text-blue-600 text-sm font-normal">
+                  {expanded === service._id ? "Hide Plans" : "View Plans"}
+                </button>
+                </div>
+              </div>
+
+              {expanded === service._id && (
+                <div className="mt-3">
+                  <div className="flex gap-4 border-b pb-2 mb-3">
+                    {service.plans.map((plan) => (
+                      <button
+                        key={plan.name}
+                        onClick={() => setActivePlan(plan.name)}
+                        className={`py-1 bg-transparent text-sm font-medium ${
+                          activePlan === plan.name ? 'text-blue-600 border-blue-600 border-b-2' : 'text-gray-500 hover:text-blue-600'
+                        }`}
+                      >
+                        {plan.name}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Active Plan Content */}
+                  <div className="p-3 bg-gray-50 rounded border border-gray-200">
+                    {service.plans.map((plan, idx) =>
+                      activePlan === plan.name ? (
+                        <div key={idx} className="text-sm text-gray-700 space-y-1">
+                          <div className="flex justify-between">
+                            <span>Price:</span>
+                            <span className="font-medium">Rs {plan.price}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Delivery:</span>
+                            <span className="font-medium">{plan.deliveryDays} days</span>
+                          </div>
+                          {/* Continue Button */}
+                          <button onClick={handleContinue} className="mt-6 bg-blue-500 text-white w-full py-2 rounded">
+                            Continue
+                          </button>
+                        </div>
+                      ) : null
+                    )}
+                  </div>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+
+        {/* Loading Indicator */}
+        {isLoading && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <img src={loader} alt="Loading" className="w-20 h-20" />
+          </div>
+        )}
+
+        
       </div>
-
-      {/* Conditional Rendering of Selected Package */}
-      {selectedPackage === "basic" && (
-        <div className="border p-4 rounded-lg shadow-md mb-6">
-          <div className="flex items-center space-x-4">
-            <h3 className="font-bold text-lg">Basic</h3>
-            <p className="text-gray-600">PKR {packages.basic.price}</p>
-          </div>
-          <p className="text-gray-500 mt-2">{packages.basic.description}</p>
-          <ul className="text-sm text-gray-600 mt-2">
-            {packages.basic.features.map((feature, index) => (
-              <li key={index} className="flex items-center space-x-2">
-                <span>✔️</span>
-                <p>{feature}</p>
-              </li>
-            ))}
-          </ul>
-          <button
-            className="mt-4 bg-blue-500 text-white w-full py-2 rounded"
-            onClick={handleContinue} // Handle order placement
-          >
-            Continue
-          </button>
-        </div>
-      )}
-
-      {selectedPackage === "premium" && (
-        <div className="border p-4 rounded-lg shadow-md">
-          <div className="flex items-center space-x-4">
-            <h3 className="font-bold text-lg">Premium</h3>
-            <p className="text-gray-600">PKR {packages.premium.price}</p>
-          </div>
-          <p className="text-gray-500 mt-2">{packages.premium.description}</p>
-          <ul className="text-sm text-gray-600 mt-2">
-            {packages.premium.features.map((feature, index) => (
-              <li key={index} className="flex items-center space-x-2">
-                <span>✔️</span>
-                <p>{feature}</p>
-              </li>
-            ))}
-          </ul>
-          <button
-            className="mt-4 bg-blue-500 text-white w-full py-2 rounded"
-            onClick={handleContinue} // Handle order placement
-          >
-            Continue
-          </button>
-        </div>
-      )}
-
-      {/* Loader with Blurred Background */}
-      {isLoading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
-          <div className="flex flex-col items-center justify-center">
-            <img
-              src={loader} // Use the imported loader image
-              alt="Loading"
-              className="w-20 h-20 mb-4"
-            />
-            <p className="text-white font-semibold text-lg mb-4">
-              Your request is on its way. Your order will be accepted soon.
-            </p>
-            {/* Go to Home Button */}
-            <button
-              className="bg-white text-black px-4 py-2 rounded-lg font-semibold"
-              onClick={handleGoToHome}
-            >
-              Go to Home
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Display order confirmation message */}
-      {orderConfirmed && !isLoading && (
-        <div className="mt-4 p-4 bg-green-100 text-green-800 rounded-lg">
-          Your request is on its way. Your order will be accepted shortly.
-        </div>
-      )}
     </div>
   );
 };

@@ -21,6 +21,12 @@ const BodyMeasurement = () => {
   const [popupMessage, setPopupMessage] = useState('');
   const pictureInterval = 1000;
   const navigate = useNavigate(); // Initialize useNavigate hook
+  
+  useEffect(() => {
+    if (phase === 0) {
+      window.scrollTo(0, 0); // Scroll to the top
+    }
+  }, [phase])
 
   const videoConstraints = {
     width: 640,
@@ -159,7 +165,7 @@ const BodyMeasurement = () => {
     setTimeout(() => {
       setShowPopup(false);
       setIsTakingPictures(true);
-      setTotalPictures(5); // Set total pictures to 5 for front
+      setTotalPictures(15); // Set total pictures to 15 for front
       setCurrentPictureCount(0);
     }, 3000);
   };
@@ -172,7 +178,7 @@ const BodyMeasurement = () => {
     setTimeout(() => {
       setShowPopup(false);
       setIsTakingPictures(true);
-      setTotalPictures(3); // Set total pictures to 3 for back
+      setTotalPictures(5); // Set total pictures to 5 for back
       setCurrentPictureCount(0);
     }, 5000);
   };
@@ -223,7 +229,7 @@ const BodyMeasurement = () => {
   };
 
   return (
-    <div className="measurement-container-super-dooper-complex">
+    <div className="measurement-container-super-dooper-complex w-full h- m-3">
       <h2>Body Measurement Tool</h2>
 
       {showPopup && (
@@ -237,14 +243,14 @@ const BodyMeasurement = () => {
 
       {phase === 0 && (
         <div className="category-selection-super-dooper-complex">
-          <h3>Are you:</h3>
+          <h3>Are you?</h3>
           <div className="card-container-super-dooper-complex">
             <div className="card-super-dooper-complex" onClick={() => handleCategorySelect('male')}>
               <img src={Male} alt="Male" />
               <p>Male</p>
             </div>
             <div className="card-super-dooper-complex" onClick={() => handleCategorySelect('female')}>
-              <img src={Female} alt="Female" />
+              <img src={Female} alt="Female"/>
               <p>Female</p>
             </div>
          

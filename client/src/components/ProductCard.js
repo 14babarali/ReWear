@@ -3,7 +3,9 @@ import { CartContext } from '../context/CartContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
-import StarRating from './starcomponent';
+// import StarRating from './starcomponent';
+import { StarIcon } from '@heroicons/react/24/solid';
+
 import './stylesheets/productcard.css';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -146,16 +148,22 @@ const ProductCard = ({ product }) => {
   return (
     <div className="card h-100 shadow-sm" style={{ borderRadius: '10px', overflow: 'hidden' }}>
       <div className="image-container" style={{ position: 'relative' }}>
-      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-4">
-          <img
-              src={product.images && product.images.length > 0 ? `http://localhost:3001/uploads/${product.images[0]}` : 'https://via.placeholder.com/300'}
-              alt={product.name}
-              className="card-img-top"
-              style={{ height: '250px', objectFit: 'cover' }}
-          />
+        <div className="row row-cols-1 flex-grow row-cols-md-2 row-cols-lg-5 g-4">
+          <div className="overflow-hidden rounded-lg" style={{ height: '250px', width: '100%' }}>
+            <img
+              src={
+                product?.images && product?.images.length > 0
+                  ? `http://localhost:3001/uploads/${product.images[0]}`
+                  : 'https://via.placeholder.com/300'
+              }
+              alt={product?.name}
+              className="card-img-top transition-transform duration-300 ease-in-out hover:scale-110"
+              style={{ height: '100%', width: '100%', objectFit: 'cover' }}
+            />
+          </div>
         </div>
-          <span className="badge badge-condition">
-          {product.type ? product.type : 'None'}
+        <span className={`badge badge-condition ${product?.type === 'New' ? 'badge-new' : ''}`}>
+            {product?.type ? product?.type : 'None'}
         </span>
         <button
           className="btn-sm add-to-cart-btn"
@@ -165,29 +173,39 @@ const ProductCard = ({ product }) => {
         </button>
       </div>
       <div className="card-body d-flex flex-column">
-          <h6 className="product-card-title text-truncate p-1" title={product.name}>
-            <Link className="text" to={`/buyer/productpage/${product._id}`} state={{product, isWishlisted} }>{product.name}</Link>
+          <h6 className="product-card-title text-truncate p-1" title={product?.name}>
+            <Link className="text" to={`/buyer/productpage/${product?._id}`} state={{product, isWishlisted} }>{product?.name}</Link>
           </h6>
         <div className="d-flex justify-content-between align-items-center mb-1">
-          <p className="card-text text-muted mb-0">PKR {product.price}</p>
+          <p className="card-text text-muted mb-0">Rs {product?.price}</p>
           <FontAwesomeIcon 
             icon={ isWishlisted ? faHeart : faHeartRegular} 
             onClick={handleAddToWishlist} 
             style={{ color: isWishlisted ? 'red' : 'gray', cursor: 'pointer'}}
           />
         </div>
+        {/* <div className="mb-2">
+        <p className="card-text mb-0">Size: {product.sizes.map((size,index)=> {
+          product.sizes.size.join(', ');
+          })}</p>
+        </div> */}
         <div className="mb-2">
-        <p className="card-text mb-0">Size: {product.size.join(', ')}</p>
+        <p className="card-text mb-0">
+            Item Remaining: {product?.sizes?.reduce((total, item) => total + item.qty, 0) || 'out of stock'}
+        </p>
         </div>
-        <div className="mb-2">
-          <p className="card-text mb-0">Item Remaining: {product.qty}</p>
-        </div>
-        {product.type === 'Used' && (
+        {/* {product.type === 'Used' && (
           <div className="mb-2">
-            <p className="card-text mb-0">Condition <StarRating condition={product.condition} /> </p>
+            <div className="flex items-center space-x-1">
+              {[...Array(5)].map((_, index) => (
+                <StarIcon
+                  key={index}
+                  className={`h-6 w-6 cursor-pointer ${index <= (product.condition/2) ? 'text-yellow-400' : 'text-gray-300'}`}
+                />
+              ))}
+            </div>
           </div>
-        )}
-
+        )} */}
       </div>
     </div>
   );

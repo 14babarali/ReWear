@@ -72,18 +72,30 @@ exports.getUserCategories = async (req, res) => {
 
 // Get all categories (for the buyers menu)
 exports.getBuyerCategories = async (req, res) => {
-  
-    try {
-  
-      const categories = await Category.find({});
-  
-        // console.log('categories:', categories);
-        
-        res.status(200).json(categories);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-  };
+  try {
+    // Set up a 10-second timeout
+    const fetchCategories = new Promise(async (resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error('Timeout while fetching categories from database'));
+      }, 10000); // 10 seconds
+
+      try {
+        const categories = await Category.find({});
+        clearTimeout(timeout);
+        resolve(categories);
+      } catch (error) {
+        clearTimeout(timeout);
+        reject(error);
+      }
+    });
+
+    const categories = await fetchCategories;
+    res.status(200).json(categories);
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    res.status(400).json({ message: error.message });
+  }
+};
 
 // Soft delete a category
 exports.deleteCategory = async (req, res) => {

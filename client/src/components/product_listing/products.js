@@ -32,7 +32,7 @@ const Products = () => {
         const lowerSegment = segment.toLowerCase();
         return categoryMap[lowerSegment] || segment.charAt(0).toUpperCase() + segment.slice(1).toLowerCase();
       })
-      .join('/'); // Join them back together with a slash
+      .join('-'); // Join them back together with a slash
   
     // console.log(formattedCategory);
 
@@ -51,14 +51,17 @@ const Products = () => {
           }
       } catch (error) {
           console.error('Error:', error); // Log the error
-          setError(error.response?.data.message || 'An error occurred while fetching products'); // Use error message from response if available
+          // setError(error.response?.data.message || 'An error occurred while fetching products'); // Use error message from response if available
       } finally {
           setLoading(false);
       }
   };
     
     useEffect(() => {
+      setNoProducts('');
       fetchProductsForBuyer();
+      setError('');
+      setProductList([]);
     }, [categoryId]); // Ensure it runs again if categoryId changes
 
   // const filteredProducts = productList.filter((product) => {
@@ -93,7 +96,9 @@ const Products = () => {
                             </div>
                         ))
                     ) : (
-                        <p className="text-center mt-4 mb-4">No products match your selection.</p>
+                        <div className="d-flex justify-center text-center mt-4 mb-4">
+                          <span>No products match your selection</span>
+                        </div>
                     )}
             </div>
       </div>

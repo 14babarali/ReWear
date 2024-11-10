@@ -12,7 +12,7 @@ const StarRating = ({ condition }) => {
       <FontAwesomeIcon
         key={i}
         icon={faStar}
-        style={{ color: i < filledStars ? 'gold' : 'lightgray' }}
+        style={{ color: i <= filledStars ? 'gold' : 'lightgray' }}
       />
     );
   }

@@ -1,8 +1,10 @@
 /* Container for the product page */
 .product-page-container {
   max-width: 1200px;
+  max-height: 1000px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 15px;
+  justify-content: center;
   font-family: 'Arial', sans-serif;
 }
 
@@ -109,10 +111,10 @@
 
 
 /* Buttons */
-.product-action-buttons {
+/* .product-action-buttons {
   display: flex;
   gap: 15px;
-}
+} */
 
 .add-to-bag-btn {
   background-color: #444;
@@ -176,4 +178,70 @@
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
+}
+
+
+/* General styling for the main container */
+.product-page-container {
+  padding: 1rem;
+}
+
+@media (max-width: 1024px) {
+  /* Make sections stack vertically on tablets */
+  .product-content {
+    flex-direction: row;
+  }
+
+  /* Adjust padding and font sizes */
+  .product-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Reduce padding on smaller screens */
+  .product-page-container {
+    padding: 0.5rem;
+  }
+
+  .product-details-section,
+  .product-image-section {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Increase spacing between sections on mobile */
+  .product-content {
+    gap: 4px;
+  }
+
+  /* Font adjustments */
+  .product-title {
+    font-size: 1.2rem;
+  }
+
+  /* Hide unnecessary UI elements on smaller screens */
+  .leave-review-btn, .product-action-buttons {
+    width: 100%;
+    padding: 0.8rem;
+  }
+
+  /* Modal image adjustment */
+  .modal img {
+    width: 90%;
+    height: auto;
+  }
+}
+/* Spin animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin {
+  animation: spin 1s linear infinite;
 }

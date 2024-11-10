@@ -7,18 +7,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function Footer() {
   return (
     <footer
+    className='p-0 mt-auto'
       style={{
-        backgroundColor: '#343a40',
-        color: 'white',
-        padding: '1.5rem 0',
-        marginTop: '250px',
+        backgroundColor: '#343a40',color: 'white',
       }}
     >
-      <div className="container">
+      <div className="container p-3">
         <div className="row">
           {/* Contact Section */}
-          <div
-            className="col-md-4"
+          <div className="col-md-4"
             style={{
               display: 'flex',
               flexDirection: 'column',
@@ -41,8 +38,7 @@ function Footer() {
           </div>
 
           {/* Newsletter Section */}
-          <div
-            className="col-md-4"
+          <div className="col-md-4"
             style={{
               backgroundColor: '#343a40',
               color: 'white',
@@ -111,7 +107,7 @@ function Footer() {
         </div>
 
         <div
-          className="row mt-4"
+          className="row "
           style={{
             display: 'flex',
             flexDirection: 'column',
@@ -139,10 +135,7 @@ function Footer() {
       </div>
 
       <div
-        className="footer-bottom text-center"
-        style={{
-          padding: '1rem 0',
-        }}
+        className="footer-bottom p-2 text-center"
       >
         <p style={{ marginBottom: '0' }}>&copy; 2024 Re-Wear. All Rights Reserved.</p>
       </div>

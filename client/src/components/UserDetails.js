@@ -5,20 +5,25 @@ import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
 const UserDetails = ({product}) => {
   const user = product.userId;
-  const img = `http://localhost:3001/uploads/${user.profile.profilePicture}`
+  const img = user && user.profile && user.profile.profilePicture
+  ? `http://localhost:3001/uploads/${user.profile.profilePicture}`
+  : 'http://localhost:3001/uploads/no-image.jpg';
   // console.log(img);
   const seller = {
-    name: user.profile.name ? user.profile.name : 'User',
-    image: img,
-    date: user.created_at ? new Date(user.created_at).toLocaleDateString('en-US', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-          }): 'Date not provided',
-    location: user.profile.addresses.length > 0 
-              ? `${user.profile.addresses[0].street}, ${user.profile.addresses[0].city}, ${user.profile.addresses[0].postalcode}` 
-              : 'Location not provided',
+    name: user?.profile?.name || 'User', // Checks if name exists, otherwise defaults to 'User'
+    image: img, // img is already being handled with default if no profile picture
+    date: user?.created_at
+      ? new Date(user.created_at).toLocaleDateString('en-US', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        })
+      : 'Date not provided', // Checks if created_at exists, otherwise defaults to 'Date not provided'
+    location: user?.profile?.addresses?.length > 0
+      ? `${user.profile.addresses[0].street}, ${user.profile.addresses[0].city}, ${user.profile.addresses[0].postalcode}`
+      : 'Location not provided', // Checks if addresses array exists and has content
   };
+  
 
   return (
     <div className="super-dooper-unique-user-details-container-23947">

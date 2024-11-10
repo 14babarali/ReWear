@@ -13,14 +13,21 @@ const AdminReports = async () => {
   ];
 
   const userData = [
-    { id: 1, name: 'John Doe', role: 'Buyer' },
-    { id: 2, name: 'Jane Smith', role: 'Seller' },
-    { id: 3, name: 'Mike Johnson', role: 'Tailor' }
+    { id: 1, name: 'Sufan ALi', role: 'Buyer' },
+    { id: 2, name: 'Sufan Ali', role: 'Seller' },
+    { id: 3, name: 'Talha Masood', role: 'Tailor' }
   ];
 
   const buyerOrdersData = [
-    { buyerId: 1, orderId: 101, week: 'Week 1', amount: 250 },
-    { buyerId: 1, orderId: 102, week: 'Week 2', amount: 150 }
+    { buyerId: '66e58fd216385a1fd95d3af6', orderId: '66e58fd216385a1fd95d3af6', week: 'Week 1', amount: 2500 },
+    { buyerId: "23fy8fd216385a1fd95d3aZ1", orderId: '23fy8fd216385a1fd95d3aZ1', week: 'Week 2', amount: 3500 },
+    { buyerId: '82e58fd216385a1fd95d3aF8', orderId: '82e58fd216385a1fd95d3aF8', week: 'Week 1', amount: 2500 },
+    { buyerId: "82fy8fd216385a1fd95d3aK3", orderId: '82fy8fd216385a1fd95d3aK3', week: 'Week 2', amount: 3500 },
+    { buyerId: "23fy8fd216385a1fd95d3aZ1", orderId: '23fy8fd216385a1fd95d3aZ1', week: 'Week 2', amount: 3500 },
+    { buyerId: '94e58fd216385a1fd95d3aY2', orderId: '94e58fd216385a1fd95d3aY2', week: 'Week 3', amount: 1200 },
+    { buyerId: '16e58fd216385a1fd95d3aR5', orderId: '94e58fd216385a1fd95d3aY2', week: 'Week 3', amount: 3600 },
+    { buyerId: '63e58fd216385a1fd95d3a2', orderId: '94e58fd216385a1fd95d3aY2', week: 'Week 4', amount: 1800 }
+
   ];
 
   // Create a new workbook
