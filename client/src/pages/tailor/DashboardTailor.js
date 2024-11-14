@@ -4,10 +4,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandHoldingDollar, faSackDollar, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 function DashboardTailor() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  // Language toggle function
+  const toggleLanguage = () => {
+    const newLanguage = i18n.language === 'en' ? 'ur' : 'en';
+    i18n.changeLanguage(newLanguage);
+    
+  };
 
   return (
     <div className="container mt-4">
+
       <div className="row">
         <div className="col-lg-4 col-md-6 mb-4">
           <div className="dashboard-card text-white bg-primary h-100">

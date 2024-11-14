@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
@@ -8,11 +9,16 @@ const EditGigModal = ({ gig, onClose, fetchGig }) => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const backendUrl = "http://localhost:3001/";
+  const { t, i18n } = useTranslation();
   const token = localStorage.getItem('token');
 
   // Debug initial values
   console.log("Initial gig data:", gig);
   console.log("Initial token:", token);
+  const toggleLanguage = () => {
+    const newLanguage = i18n.language === 'en' ? 'ur' : 'en';
+    i18n.changeLanguage(newLanguage);
+  };
 
   const handleInputChange = (e, field) => {
     const value = field === 'gigImage' ? e.target.files[0] : e.target.value;
@@ -34,12 +40,12 @@ const EditGigModal = ({ gig, onClose, fetchGig }) => {
     // Validate experience
     const experience = parseInt(updatedGig.experience, 10);
     if (!experience || experience < 2 || experience > 60) {
-      newErrors.experience = 'Experience must be a number between 2 and 60.';
+      newErrors.experience = t('Experience must be a number between 2 and 60.');
     }
 
     // Validate description
     if (updatedGig.description && updatedGig.description.length > 200) {
-      newErrors.description = 'Description can be a maximum of 200 characters.';
+      newErrors.description = t('Description can be a maximum of 200 characters.');
     }
 
     console.log("Validation errors:", newErrors);
@@ -105,13 +111,13 @@ const EditGigModal = ({ gig, onClose, fetchGig }) => {
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Edit Gig Details</h2>
+          <h2 className="text-xl font-semibold">{t('Gig Edit Gig Details:')}</h2>
           <button onClick={onClose} className="bg-transparent text-gray-500 hover:text-gray-700">
             <FontAwesomeIcon icon={faTimes} />
           </button>
         </div>
 
-        <label className="block mb-2">Gig Image:</label>
+        <label className="block mb-2">{t('Gig Image:')}</label>
         <input
           type="file"
           accept="image/*"
@@ -119,7 +125,7 @@ const EditGigModal = ({ gig, onClose, fetchGig }) => {
           className="border-1 p-1 rounded w-full mb-4"
         />
 
-        <label className="block mb-2">Title:</label>
+        <label className="block mb-2">{t('Title:')}</label>
         <input
           type="text"
           value={updatedGig.title || ''}
@@ -128,7 +134,7 @@ const EditGigModal = ({ gig, onClose, fetchGig }) => {
         />
         {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
 
-        <label className="block mb-2">Experience (years):</label>
+        <label className="block mb-2">{t('Experience (years):')}</label>
         <input
           type="number"
           value={updatedGig.experience || ''}
@@ -137,7 +143,7 @@ const EditGigModal = ({ gig, onClose, fetchGig }) => {
         />
         {errors.experience && <p className="text-red-500 text-sm">{errors.experience}</p>}
 
-        <label className="block mb-2">Description:</label>
+        <label className="block mb-2">{t('Description:')}</label>
         <textarea
           value={updatedGig.description || ''}
           onChange={(e) => handleInputChange(e, 'description')}
@@ -145,16 +151,16 @@ const EditGigModal = ({ gig, onClose, fetchGig }) => {
           className="w-full p-2 border rounded mb-2"
         />
         <p className="text-sm text-gray-500">
-          {200 - (updatedGig.description?.length || 0)} characters remaining
+          {200 - (updatedGig.description?.length || 0)} {t('characters remaining')}
         </p>
         {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
 
         <div className="flex justify-end mt-4">
           <button onClick={handleSaveGig} className="bg-blue-500 text-white px-4 py-2 rounded mr-2" disabled={loading}>
-            {loading ? 'Saving...' : 'Save'}
+            {loading ? 'Saving...' : t('Save')}
           </button>
           <button onClick={onClose} className="bg-red-500 text-white px-4 py-2 rounded">
-            Cancel
+            {t('Cancel')}
           </button>
         </div>
       </div>

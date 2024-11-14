@@ -1,11 +1,11 @@
 {
-    "dashboard": "Dashboard",
-    "manageOrders": "Manage Orders",
-    "myProducts": "My Products",
-    "myWallet": "My Wallet",
-    "buyersReviews": "Buyers Reviews",
-    "complaints": "Complaints",
-    "profile": "Profile",
-    "logout": "Logout"
-  }
-  
+  "ReWear": "ReWear",
+  "close": "close",
+  "Dashboard": "Dashboard",
+  "Catalogue": "Catalogue",
+  "Orders": "Orders",
+  "Shop": "Shop",
+  "Reviews": "Reviews",
+  "Messages": "Messages",
+  "Complaints": "Complaints"
+}

@@ -4,6 +4,10 @@
     padding: 0;
     box-sizing: border-box;
   }
+
+  .add-button {
+    background-color: #28a745; /* Green background */
+  }
   
   /* Container styling */
   .shop-container {
@@ -16,6 +20,25 @@
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-family: 'Arial', sans-serif;
+  }
+  
+  .add-button:hover {
+    background-color: #218838; /* Darker green on hover */
+  }
+  
+  .create-shop-button {
+    background-color: #007bff; /* Blue background */
+    color: #ffffff;
+    padding: 0.75rem;
+    width: 100%;
+    text-align: center;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+  }
+  
+  .create-shop-button:hover {
+    background-color: #0069d9; /* Darker blue on hover */
   }
   
   /* Responsive layout for larger screens */

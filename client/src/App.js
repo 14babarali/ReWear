@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate  } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './App.css';
 import BuyerLayout from './layouts/BuyerLayout';
 import SellerLayout from './layouts/SellerLayout';
 import TailorLayout from './layouts/TailorLayout';
 import AdminLayout from './layouts/AdminLayout';
-// import Cookie from './components/cookies';
 import Home from './routes';
 import Login from './routes/login';
 import Register from './routes/register';
@@ -38,21 +38,18 @@ const getNavbarByRole = () => {
 
 function AppRoutes () {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  // const navigate = useNavigate();
-  // const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token'); // Check for token
-  //   const user = JSON.parse(localStorage.getItem('user')); // Get user info
-
-  //   // If a token exists and it's the initial load, redirect to the user's specific layout
-  //   if (isInitialLoad && token && user) {
-  //     navigate('/' + user.role.toLowerCase());
-  //   }
-
-  //   // Set initial load to false after checking
-  //   setIsInitialLoad(false);
-  // }, [navigate, isInitialLoad]);
+  
+    const token = localStorage.getItem('token'); // Check for token
+    const user = JSON.parse(localStorage.getItem('user')); // Get user info
+    // Role-based redirection function
+    const redirectToRoleRoute = () => {
+      if (user && user.role) {
+        return <Navigate to={`/${user.role.toLowerCase()}`} replace />;
+      }
+      return null;
+    };
 
   useEffect(() => {
     // Update network status
@@ -77,9 +74,9 @@ function AppRoutes () {
     <>
     <Routes>
         {/* General Routes For all type of users */}
-        <Route path="/" element={<><AppHeader/><Home /><Footer/></>} />
-        <Route path="/login" element={<><AppHeader/><Login/><Footer/></>} />
-        <Route path="/register" element={<><AppHeader/><Register /><Footer/></>} />
+        <Route path="/" element={user ? redirectToRoleRoute() : <><AppHeader /><Home /><Footer /></>} />
+        <Route path="/login" element={user ? redirectToRoleRoute() : <><AppHeader /><Login /><Footer /></>} />
+        <Route path="/register" element={user ? redirectToRoleRoute() : <><AppHeader /><Register /><Footer /></>} />
         <Route path='/logout' element={<LogoutPage/>}/>
         <Route path="/OTPinput" element={<OTPinput />} />
 

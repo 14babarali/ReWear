@@ -4,6 +4,15 @@
     "weeklyOrders": "Weekly Orders",
     "decreased": "Decreased by 10%",
     "totalOrders": "Total Orders",
-    "since": "Since 2024-06-05"
+    "since": "Since 2024-06-05",
+    
+      "Sale Statistics": "Sale Statistics",
+      "Lifetime Sales": "Lifetime Sales",
+      "10 orders": "10 orders",
+      "Rs 250000 lifetime sale": "Rs 250000 lifetime sale",
+      "95% of orders completed": "95% of orders completed",
+      "5% of orders cancelled": "5% of orders cancelled",
+      "Recent Orders": "Recent Orders"
+      
   }
   

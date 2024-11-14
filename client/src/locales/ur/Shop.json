@@ -1,0 +1,27 @@
+{
+    "Title is required.": "عنوان ضروری ہے۔",
+    "Description must be more than 5 words.": "تفصیل پانچ الفاظ سے زیادہ ہونی چاہئے۔",
+    "At least one service type is required.": "کم از کم ایک سروس کی قسم ضروری ہے۔",
+    "Minimum 5 Working Hours Required": "کم از کم 5 کام کے اوقات کی ضرورت ہے",
+    "Please upload a shop picture.": "براہ کرم دکان کی تصویر اپ لوڈ کریں۔",
+    "Your shop has been successfully created!": "آپ کی دکان کامیابی کے ساتھ بنائی گئی ہے!",
+    "Failed to create the shop. Please try again.": "دکان بنانے میں ناکام۔ براہ کرم دوبارہ کوشش کریں۔",
+    "Please upload a valid image file (jpg, jpeg, png, jfif, avif).": "براہ کرم ایک درست تصویر فائل اپ لوڈ کریں (jpg, jpeg, png, jfif, avif)۔",
+    "Service cannot be empty.": "سروس خالی نہیں ہو سکتی۔",
+    "Shop Details": "دکان کی تفصیلات",
+    "Shop Title": "دکان کا عنوان",
+    "Upload your Shop Picture": "اپنی دکان کی تصویر اپ لوڈ کریں",
+    "Description": "تفصیل",
+    "Service Type": "سروس کی قسم",
+    "Add": "شامل کریں",
+    "Working hours": "کام کے اوقات",
+    "Creating...": "بنا رہا ہے...",
+    "Create Shop": "دکان بنائیں",
+    "Working Hours": "کام کے اوقات",
+    "Desc": "تفصیل",
+    "Services": "خدمات",
+    "Add Collection": "کلیکشن شامل کریں",
+    "Products": "مصنوعات",
+    "Collections": "کلیکشنز"
+  }
+  

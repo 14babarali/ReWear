@@ -180,22 +180,22 @@ const AdminOrder = () => {
                       <img 
                         src={`http://localhost:3001/uploads/${product.product_id.images[0]}`}
                         alt={product.product_id.name} 
-                        style={{width:'120px', height:'120px', objectFit:'cover'}}
+                        style={{width:'120px', height:'150px', objectFit:'cover'}}
                       />
                       <div>
-                        <h2 className="text-xl font-semibold m-0">{product.product_id.name}</h2>
-                        <span className='text-gray-600 m-0'>QTY: {product.quantity ? product.quantity: 'n/a'}</span>
+                        <h2 className="text-base font-normal m-0">{product.product_id.name}</h2>
+                        <span className='text-sm text-gray-700 m-0'>QTY: {product.quantity ? product.quantity: 'n/a'}</span>
                         <div>
-                          <span className='text-gray-600'>Payment Method: </span>
-                          <span>{order.type}</span>
+                          <span className='text-sm text-gray-700'>Payment Method: </span>
+                          <span className='text-sm text-gray-500'>{order.type}</span>
                         </div>
                         <div className=" justify-between items-center">
-                          <span className="text-gray-600">Amount:</span>
-                          <span className="text-gray-900">Rs. {order.total_price}</span>
+                          <span className="text-sm text-gray-700">Amount:</span>
+                          <span className="text-sm text-gray-500">Rs. {order.total_price}</span>
                         </div>
                         <div className=" justify-between items-center">
-                          <span className="text-gray-600">Date:</span>
-                          <span className="text-gray-900">{new Date(order.created_at).toLocaleDateString()}</span>
+                          <span className="text-sm text-gray-700">Date:</span>
+                          <span className="text-sm text-gray-500">{new Date(order.created_at).toLocaleDateString()}</span>
                         </div>
                       </div>
                       
@@ -203,13 +203,13 @@ const AdminOrder = () => {
                   </div>
                   <div className="flex justify-between items-center gap-2 mb-4">
                     <button
-                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                      className="bg-blue-500 hover:bg-blue-700 text-sm text-white font-normal py-2 px-4 rounded"
                       onClick={() => openModal(order, 'Buyer')}
                     >
                       Buyer Details
                     </button>
                     <button
-                      className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                      className="bg-green-500 hover:bg-green-700 text-sm text-white font-normal py-2 px-4 rounded"
                       onClick={() => openModal(order, 'Seller')}
                     >
                       Seller Details

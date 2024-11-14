@@ -3,6 +3,8 @@ import { initReactI18next } from 'react-i18next';
 // Import your translation files
 import dashboardEN from './locales/en/Das.json';
 import dashboardUR from './locales/ur/Das.json';
+import HeadEN from './locales/en/Head.json';
+import HeadUR from './locales/ur/Head.json';
 import sellerStatisticsEN from './locales/en/Sta.json';
 import sellerStatisticsUR from './locales/ur/Sta.json';
 import sellerHomeEN from './locales/en/Home.json';
@@ -13,6 +15,22 @@ import SellerProdEN from './locales/en/Prod.json';
 import SellerProdUR from './locales/ur/Prod.json';
 import SideEn from './locales/en/Side.json';
 import SideUr from './locales/ur/Side.json';
+import DashEN from './localesT/en/Das.json';
+import DashUR from './localesT/ur/Das.json';
+import GigEN from './localesT/en/Gig.json';
+import GigUR from './localesT/ur/Gig.json';
+import BarSEN from './locales/en/Bar.json';
+import BarSUR from './locales/ur/Bar.json';
+import BarEN from './localesT/en/Bar.json';
+import BarUR from './localesT/ur/Bar.json';
+import OrdEN from './localesT/en/Ord.json';
+import OrdUR from './localesT/ur/Ord.json';
+import OrdSEN from './locales/en/Ord.json';
+import OrdSUR from './locales/ur/Ord.json';
+import ShopEN from './locales/en/Shop.json';
+import ShopUR from './locales/ur/Shop.json';
+
+
 
 
 const resources = {
@@ -23,7 +41,18 @@ const resources = {
       ...sellerHomeEN,
       ...SellerProEN,
       ...SellerProdEN,
-      ...SideEn,
+      ...DashEN,
+      ...GigEN,
+      ...BarEN,
+      ...BarSEN,
+      ...OrdEN,
+      ...HeadEN,
+      ...OrdSEN,
+      ...ShopEN,
+
+
+
+      
 
     },
   },
@@ -35,6 +64,18 @@ const resources = {
       ...SellerProUR,
       ...SellerProdUR,
       ...SideUr,
+      ...DashUR,
+      ...GigUR,
+      ...BarUR,
+      ...BarSUR,
+      ...OrdUR,
+      ...HeadUR,
+      ...OrdSUR,
+      ...ShopUR,
+
+
+
+
     },
   },
 };

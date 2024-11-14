@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes, faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 import seller_logo from '../../assests/rewear-logo.png';
 import './navbar.css';
 import '../../i18n'; // Assumes the i18n configuration is in the src folder
@@ -14,6 +15,8 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [signalStrength, setSignalStrength] = useState(0);
+  const { t } = useTranslation();
+
 
   const sidebarRef = useRef(null);
   const menuButtonRef = useRef(null);
@@ -140,7 +143,7 @@ const Navbar = () => {
             <Link to={'/seller'}>
             <img src={`${seller_logo}`} alt="Profile" className="navbar-image" />
             </Link>
-            <h4>Seller's View</h4>
+            <h4>{t('Sellers View')}</h4>
           
           </div>
           <div className="navbar-right">

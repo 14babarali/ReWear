@@ -1,24 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import './DataMeasurement.css';
+import axios from 'axios';
 
 const DataMeasurement = () => {
   const location = useLocation();
-  const initialMeasurements = location.state?.measurements || {};
+  const initialMeasurements = location.state?.measurements?.shirt
+    ? { shirt: location.state.measurements.shirt, trouser: {}, shirtChecked: false, trouserChecked: false }
+    : { shirt: {}, trouser: {}, shirtChecked: false, trouserChecked: false };
+
+  // Retrieve data from localStorage
+  const gigId = localStorage.getItem("gigId") || 'Not Selected';
+  const selectedService = JSON.parse(localStorage.getItem("selectedService")) || 'Not Selected';
+  const selectedPlan = JSON.parse(localStorage.getItem("selectedPlan")) || 'Not Selected';
+
   const [measurements, setMeasurements] = useState(initialMeasurements);
   const [userCategory, setUserCategory] = useState('male');
   const [fitType, setFitType] = useState(''); 
   const [description, setDescription] = useState(''); 
   const [picture, setPicture] = useState(null); 
   const [errorMessage, setErrorMessage] = useState(''); 
+
   useEffect(() => {
     window.scrollTo(0, 0); 
   }, []);
   const navigate = useNavigate();
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e, section) => {
     const { name, value } = e.target;
-    setMeasurements({ ...measurements, [name]: value });
+    setMeasurements({
+      ...measurements,
+      [section]: {
+        ...measurements[section],
+        [name]: value
+      }
+    });
+  };
+
+  const handleCheckboxChange = (e, section) => {
+    const { checked } = e.target;
+    setMeasurements({
+      ...measurements,
+      [`${section}Checked`]: checked
+    });
   };
 
   const handleDescriptionChange = (e) => {
@@ -37,205 +60,231 @@ const DataMeasurement = () => {
   };
 
   const resetMeasurements = () => {
-    // Reset measurements to provided default values
-    setMeasurements({
-      neck: '',         
-      shoulderWidth: '', 
-      chestBust: '',     
-      waist: '',          
-      sleeveLength: '',   
-      bicep: '',         
-      wrist: '',         
-      shirtLength: ''    
-    });
+    setMeasurements({ shirt: {}, trouser: {}, shirtChecked: false, trouserChecked: false });
     setFitType('');
     setDescription('');
     setPicture(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const isAnyFieldEmpty = Object.values(measurements).some(value => value === '');
-    const wordCount = description.trim().split(/\s+/).length;
-
-    if (isAnyFieldEmpty) {
-      alert('Please fill in all the measurement fields before submitting.');
+  
+    const storedUser = localStorage.getItem('user');
+    const userData = JSON.parse(storedUser);
+    if (!userData) {
+      alert('Please Login first');
       return;
     }
-
+  
+    const isAnyShirtFieldEmpty = Object.values(measurements.shirt).some(value => value === '');
+    if (isAnyShirtFieldEmpty) {
+      alert('Please fill in all the shirt measurement fields before submitting.');
+      return;
+    }
+  
+    const wordCount = description.trim().split(/\s+/).length;
+    if (!measurements.shirtChecked && !measurements.trouserChecked) {
+      alert("Please confirm at least one measurement (Shirt or Trouser) before submitting.");
+      return;
+    }
+  
     if (wordCount < 5) {
       alert('Description must be at least 5 words.');
       return;
     }
-
+  
     if (!picture) {
       alert('Please upload a valid picture.');
       return;
     }
+  
+    // Prepare the data structure to include the takensize details
+    const measurementData = {};
+    if (measurements.shirtChecked) {
+      measurementData.shirt = {
+        type: 'shirt',
+        takensize: measurements.shirt, // Include all shirt measurements in takensize
+        confirmed: true,
+      };
+    }
+    if (measurements.trouserChecked) {
+      measurementData.trouser = {
+        type: 'trouser',
+        takensize: measurements.trouser, // Include all trouser measurements in takensize
+        confirmed: true,
+      };
+    }
+  
+    try {
+      // Prepare form data to be sent to the backend
+      const formData = new FormData();
+      formData.append("buyerId", userData._id);
+      formData.append("gigId", gigId);
+      formData.append("userCategory", userCategory);
+      formData.append("fitType", fitType);
+      formData.append("description", description);
 
-    // Navigate to the buyer page with measurements, description, and picture
-    navigate('/buyer/TailorSearch', { state: { measurements, userCategory, fitType, description, picture } });
-  };
+      // Stringify the full measurementData structure
+      const measurementsJSON = JSON.stringify(measurementData);
+      formData.append("measurements", measurementsJSON);
+      formData.append("picture", picture); // add the picture file
+      
+      console.log("Form Data:", Array.from(formData.entries())); 
 
-  const renderFitOptions = () => {
-    return (
-      <div className="fit-options-custom">
-        <label>
-          <input
-            type="radio"
-            name="fitType"
-            value="classic fit"
-            checked={fitType === 'classic fit'}
-            onChange={(e) => setFitType(e.target.value)}
-          />
-          Classic Fit
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="fitType"
-            value="slim fit"
-            checked={fitType === 'slim fit'}
-            onChange={(e) => setFitType(e.target.value)}
-          />
-          Slim Fit
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="fitType"
-            value="extreme slim fit"
-            checked={fitType === 'extreme slim fit'}
-            onChange={(e) => setFitType(e.target.value)}
-          />
-          Extreme Slim Fit
-        </label>
-      </div>
-    );
+      // Send data to the backend endpoint
+      const response = await axios.post('http://localhost:3001/tailoring-requests/create', formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // replace "token" with your actual token key if needed
+        },
+      });
+
+      if(response.status === 200 || response.status === 201){
+        // Clear previous values from localStorage
+        localStorage.removeItem("gigId");
+        localStorage.removeItem("selectedService");
+        localStorage.removeItem("selectedPlan");
+
+        console.log("Measurement request created:", response.data);
+        navigate('/buyer/RequestView', {
+          state: {
+            request: response.data,
+          }
+        });
+
+      }
+      else{
+        alert(response.status);
+      }
+  
+      
+    } catch (error) {
+      console.error("Error submitting measurement request:", error);
+      alert("An error occurred while submitting the request. Please try again.");
+    }
   };
+  
+
+  const renderFitOptions = () => (
+    <select 
+      value={fitType} 
+      onChange={(e) => setFitType(e.target.value)} 
+      className="w-full p-2 border border-gray-300 rounded-md text-sm"
+    >
+      <option value="classic fit">Classic Fit</option>
+      <option value="slim fit">Slim Fit</option>
+      <option value="extreme slim fit">Extreme Slim Fit</option>
+    </select>
+  );
 
   return (
-    <div className="form-container-custom">
-      <h2>Edit Measurement, Fitting Type, Description, and Picture</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group-custom">
-          <label>
-            User:
-            <select value={userCategory} disabled style={{ display: 'block', width: '100%' }}>
+    <div className="max-w-2xl mx-auto p-8 mb-5 bg-white shadow-md rounded-md">
+      <div>
+        <h2 className="text-2xl font-semibold text-center text-gray-800">Measurements</h2>
+        {/* <h4 className='text-center'>Fitting Type, Description, and Picture</h4> */}
+      </div>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        
+        <div className='flex gap-5' style={{alignItems:'center'}}>
+          <div className='flex gap-2' style={{alignItems:'center'}}>
+            <label className="block text-base mb-0 font-normal text-gray-700">User:</label>
+            <select value={userCategory} disabled className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 text-sm">
               <option value="male">Male</option>
             </select>
-          </label>
+          </div>
+
+          <div className='flex' style={{alignItems:'center'}}>
+            <label className="text-base font-normal text-center mb-0 text-gray-700 w-full">Fitting Type:</label>
+            {renderFitOptions()}
+          </div>
+        </div>
+        <div>
+          <span className='text-sm font-normal'>
+          <p>Selected Service: {selectedService.name}</p>
+          <p>Plan: {selectedPlan.name}</p>
+          </span>
         </div>
 
-        <div className="form-group-custom">
-          <h5>Fitting Type</h5>
-          {renderFitOptions()}
+        <div className="grid grid-cols-2 gap-8">
+          <div className='border-1 p-2 rounded'>
+            <h5 className="text-lg text-center font-medium mb-3 text-gray-700">Shirt Measurements</h5>
+            <label className="flex items-center space-x-2 mb-5 text-sm text-gray-600">
+              <input
+                type="checkbox"
+                name="shirtChecked"
+                checked={measurements.shirtChecked}
+                onChange={(e) => handleCheckboxChange(e, 'shirt')}
+                className="h-4 w-4"
+              />
+              <span className='text-sm font-normal text-red-400'>Confirm Shirt Measurements</span>
+            </label>
+            {['Neck', 'Shoulder Width', 'Chest Bust', 'Waist', 'Sleeve Length', 'Bicep', 'Wrist', 'ShirtLength'].map(field => (
+              <label key={field} className="block mb-4 text-sm font-normal text-gray-700">
+                {field.replace(/([A-Z])/g, ' $1')}:
+                <input
+                  type="number"
+                  name={field}
+                  value={measurements.shirt[field] || ''}
+                  onChange={(e) => handleInputChange(e, 'shirt')}
+                  disabled={!measurements.shirtChecked}
+                  className="w-full mt-1 p-2 border border-gray-300 rounded-md text-sm"
+                />
+              </label>
+            ))}
+          </div>
+          <div className='border-1 p-2 rounded'>
+            <h5 className="text-lg text-center font-medium mb-3 text-gray-700">Trouser Measurements</h5>
+            <label className="flex items-center space-x-2 mb-5 text-sm text-gray-600">
+              <input
+                type="checkbox"
+                name="trouserChecked"
+                checked={measurements.trouserChecked}
+                onChange={(e) => handleCheckboxChange(e, 'trouser')}
+                className="h-4 w-4"
+              />
+              <span className='text-sm text-red-400 font-normal'>Confirm Trouser Measurements</span>
+            </label>
+            {['Waist', 'Hip', 'InSeam', 'OutSeam', 'Thigh', 'Knee', 'FrontRise', 'BackRise', 'LegOpening'].map(field => (
+              <label key={field} className="block mb-4 text-sm font-normal text-gray-700">
+                {field.replace(/([A-Z])/g, ' $1')}:
+                <input
+                  type="number"
+                  name={field}
+                  value={measurements.trouser[field] || ''}
+                  onChange={(e) => handleInputChange(e, 'trouser')}
+                  disabled={!measurements.trouserChecked}
+                  className="w-full mt-1 p-2 border border-gray-300 rounded-md text-sm"
+                />
+              </label>
+            ))}
+          </div>
         </div>
 
-        <div className="form-group-custom">
-          <h5>Measurements</h5>
-          <p style={{ color: 'red', fontWeight: 'bold' }}>
-            * This measurement could be wrong. Please ensure accuracy while submitting.
-          </p>
-          <label>
-            Neck:
-            <input
-              type="number"
-              name="neck"
-              value={measurements.neck || ''}
-              onChange={handleInputChange}
-            />
-          </label>
-          <label>
-            Shoulder Width:
-            <input
-              type="number"
-              name="shoulderWidth"
-              value={measurements.shoulderWidth || ''}
-              onChange={handleInputChange}
-            />
-          </label>
-          <label>
-            Chest/Bust:
-            <input
-              type="number"
-              name="chestBust"
-              value={measurements.chestBust || ''}
-              onChange={handleInputChange}
-            />
-          </label>
-          <label>
-            Waist:
-            <input
-              type="number"
-              name="waist"
-              value={measurements.waist || ''}
-              onChange={handleInputChange}
-            />
-          </label>
-          <label>
-            Sleeve Length:
-            <input
-              type="number"
-              name="sleeveLength"
-              value={measurements.sleeveLength || ''}
-              onChange={handleInputChange}
-            />
-          </label>
-          <label>
-            Bicep:
-            <input
-              type="number"
-              name="bicep"
-              value={measurements.bicep || ''}
-              onChange={handleInputChange}
-            />
-          </label>
-          <label>
-            Wrist:
-            <input
-              type="number"
-              name="wrist"
-              value={measurements.wrist || ''}
-              onChange={handleInputChange}
-            />
-          </label>
-          <label>
-            Shirt Length:
-            <input
-              type="number"
-              name="shirtLength"
-              value={measurements.shirtLength || ''}
-              onChange={handleInputChange}
-            />
-          </label>
-        </div>
-
-        <div className="form-group-custom">
-          <h5>Description</h5>
+        <div>
+          <h5 className="text-lg font-medium mb-2 text-gray-700">Description</h5>
           <textarea
             value={description}
             onChange={handleDescriptionChange}
             placeholder="Write a description (at least 5 words)"
             rows="3"
-            style={{ width: '100%',  border: '1px solid black' }}
+            className="w-full p-2 border border-gray-300 rounded-md text-sm"
           />
         </div>
 
-        <div className="form-group-custom">
-          <h5>Upload Design</h5>
-          <input type="file" accept=".png, .jpeg" onChange={handlePictureChange} />
-          {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+        <div>
+          <h5 className="text-lg font-medium mb-2 text-gray-700">Upload Design</h5>
+          <input 
+            type="file" 
+            accept=".png, .jpeg" 
+            onChange={handlePictureChange} 
+            className="w-full p-2 border border-gray-300 rounded-md text-sm"
+          />
+          {errorMessage && <p className="text-red-600 mt-2">{errorMessage}</p>}
         </div>
 
-        <div className="button-group-custom">
-          <button type="submit" className="submit-button-custom">
-            Submit
-          </button>
-          <button type="button" className="reset-button-custom" onClick={resetMeasurements}>
-            Reset
-          </button>
+        <div className="flex justify-end space-x-4 mt-6">
+          <button type="submit" className="px-6 py-2 bg-blue-600 text-white rounded-md text-sm font-medium">Submit</button>
+          <button type="button" onClick={resetMeasurements} className="px-6 py-2 bg-gray-400 text-white rounded-md text-sm font-medium">Reset</button>
         </div>
       </form>
     </div>

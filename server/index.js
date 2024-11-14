@@ -9,6 +9,7 @@ const admin = require('./routes/admin');
 const review = require('./routes/reviews');
 const gigsRoute = require('./routes/gigs');
 const services = require('./routes/services');
+const measurementRequestRoutes = require('./routes/measurementRequestRoutes');
 
 const path = require("path");
 const morgan = require('morgan');
@@ -51,6 +52,8 @@ app.use('/gigs', gigsRoute);
 app.use('/services',services);
 ''
 app.use('/reviews',review);
+
+app.use('/tailoring-requests', measurementRequestRoutes);
 
 // Register error handling middleware
 app.use(errorHandler);

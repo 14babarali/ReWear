@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./GigAdd.css"; // Custom CSS file for styling
 import Lottie from "react-lottie";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import loaderAnimation from "./Giff/loader_complete.json"; // Path to your loader JSON file
 import axios from "axios"; // Import axios for API requests
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,6 +10,7 @@ import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
 const GigAdd = () => {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   // const [gigs, setGigs] = useState([]);
   // const [user, setUser] = useState(() => {
   //   // Attempt to retrieve the user data from localStorage
@@ -68,11 +70,11 @@ const GigAdd = () => {
 
     // Basic validation
     if (!title) {
-      setErrorMessage("Title is required.");
+      setErrorMessage(t("Title is required."));
       return;
     }
     if (description.length < 5) {
-      setErrorMessage("Description must be more than 5 words.");
+      setErrorMessage(t("Description must be more than 5 words."));
       return;
     }
     // if (services.length === 0) { // Check if services array is empty
@@ -80,12 +82,12 @@ const GigAdd = () => {
     //   return;
     // }
     if (isNaN(experienceYears) || experienceYears < 2) {
-      setErrorMessage("Minimum 2 Years Experience Required");
+      setErrorMessage(t("Minimum 2 Years Experience Required"));
       return;
     }
     
     if (!gigImage) {
-      setErrorMessage("Please upload a gig picture.");
+      setErrorMessage(t("Please upload a gig picture:"));
       return;
     }
 
@@ -108,7 +110,7 @@ const GigAdd = () => {
       });
 
       setLoading(false); // Hide loader
-      setSuccessMessage("Your gig has been successfully created!");
+      setSuccessMessage(t("Your gig has been successfully created!"));
 
       // Clear form fields
       setTimeout(() => {
@@ -119,7 +121,7 @@ const GigAdd = () => {
       setLoading(false); // Hide loader
       setErrorMessage(
         error.response?.data?.error ||
-          "Failed to create the gig. Please try again."
+        (t("Failed to create the gig. Please try again."))
       );
     }
   };
@@ -130,7 +132,7 @@ const GigAdd = () => {
 
     const validImageTypes = ["image/jpeg", "image/png", "image/jpg", "image/jfif", "image/avif"];
     if (!validImageTypes.includes(file.type)) {
-      setErrorMessage("Please upload a valid image file (jpg, jpeg, png, jfif, avif).");
+      setErrorMessage(t("Please upload a valid image file (jpg, jpeg, png, jfif, avif)."));
       setGigImage(null);
       return;
     }
@@ -163,7 +165,7 @@ const GigAdd = () => {
   return (
     <div className="max-w-4xl mt-3 mx-auto p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl text-center font-semibold mb-4">
-        Portfolio Details
+       {t( "Portfolio Details")}
       </h2>
 
       <form
@@ -173,7 +175,7 @@ const GigAdd = () => {
         {/* Title Input */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Gig Title: <span className="text-red-500">*</span>
+          {t( "Gig Title:")} <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -190,7 +192,7 @@ const GigAdd = () => {
             htmlFor="gigImage"
             className="block text-sm font-medium text-gray-700"
           >
-            Upload your Gig Picture: <span className="text-red-500">*</span>
+             {t(" Please upload a gig picture")}<span className="text-red-500">*</span>
           </label>
           <input
             type="file"
@@ -211,7 +213,7 @@ const GigAdd = () => {
         {/* Description Input */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Description: <span className="text-red-500">*</span>
+          {('Description:')}<span className="text-red-500">*</span>
           </label>
           <textarea
             value={description}
@@ -262,7 +264,7 @@ const GigAdd = () => {
         {/* Experience Years */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Experience Years: <span className="text-red-500">*</span>
+          {t( "Experience Years:")}  <span className="text-red-500">*</span>
           </label>
           <input
             type="number"
@@ -287,7 +289,7 @@ const GigAdd = () => {
                 isPaused={false}
               />
             ) : (
-              "Create Gig"
+              (t( "Create Gig"))
             )}
           </button>
         </div>

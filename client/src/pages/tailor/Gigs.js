@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 // import Slider from 'react-slick';
 // import 'material-icons/iconfont/material-icons.css';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./Gigs.css";
 import EditGigModal from "./EditGig.js";
+// import ServiceWithTabbedPlans  from '../../components/servicetabs.js';
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -28,6 +30,7 @@ const Gigs = () => {
   });
 
   const [gigs, setGigs] = useState([]);
+  const { t, i18n } = useTranslation();
   const [showEditModal, setShowEditModal] = useState(false);
   const token = localStorage.getItem("token");
   
@@ -75,7 +78,7 @@ const Gigs = () => {
   const openMediaModal = (item) => setSelectedMedia(item);
   const closeMediaModal = () => setSelectedMedia(null);
   const [showServiceModal, setShowServiceModal] = useState(false);
-  // const imageUrl = "http://localhost:3001/uploads/cover.jfif";
+  const imageUrl = "http://localhost:3001/uploads/cover.jfif";
 
   const handleEditToggle = () => {
     setShowEditModal(!showEditModal);
@@ -157,10 +160,10 @@ const Gigs = () => {
         } else if (error.response.status === 400) {
           alert(`Error: ${error.response.data.message}`);
         } else {
-          alert("There was an error deleting the service.");
+          alert(t('There was an error deleting the service.'));
         }
       } else {
-        alert("Network error. Please try again.");
+        alert(t('Network error. Please try again.'))
       }
     }
   };
@@ -647,11 +650,11 @@ const Gigs = () => {
                       : "https://via.placeholder.com/150"
                   }
                   alt="Gig"
-                  className="w-32 h-32 bg-gray-800 rounded-full ml-3 mr-4"
+                  className="w-32 h-32 object-cover mt-1 bg-gray-800 rounded-full ml-3 mr-4"
                 />
                 </div>
 
-                <div className="flex-1 text-white ml-2 mt-2">
+                <div className="flex-1 text-white ml-3 mt-2">
                   {/* Gig Title */}
                   <div className="flex items-center">
                     <h1 className="text-xl font-bold mb-1">
@@ -669,20 +672,20 @@ const Gigs = () => {
                   </div>
 
                   {/* Gig Experience */}
-                  <div className="flex items-center">
+                  <div className="flex text-sm items-center">
                     
-                      <p>
-                        <strong>Experience:</strong>{" "}
-                        {`${gig.experience} years` || "N/A"}
+                      <p className='mb-0'>
+                        <span className='text-sm font-bold'>Experience:</span>{""}
+                        {`${gig.experience} years` || "NA"}
                       </p>
                     
                   </div>
 
                   {/* Gig Description */}
-                  <div className="flex items-center">
+                  <div className="flex text-sm items-center">
                     
                       <p>
-                        <strong>Bio:</strong> {gig.description || "N/A"}
+                        <span className='text-sm font-bold'>Description:</span> {gig.description || "N/A"}
                       </p>
                     
                   </div>

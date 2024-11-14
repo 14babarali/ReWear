@@ -1,23 +1,26 @@
 {
-    "profile": "Profile",
-    "name": "Name",
-    "email": "Email",
-    "phone": "Phone",
-    "address": "Address",
-    "editProfile": "Edit Profile",
-    "closeEditProfile": "Close Edit Profile",
-    "changePassword": "Change Password",
-    "closeChangePassword": "Close Change Password",
-    "currentPassword": "Current Password",
-    "newPassword": "New Password",
-    "confirmNewPassword": "Confirm New Password",
-    "showPassword": "Show Password",
-    "hidePassword": "Hide Password",
-    "removeAddress": "Remove Address",
-    "addNewAddress": "Add New Address",
-    "updateProfile": "Update Profile",
-    "profilePicture": "Profile Picture",
-    "cnicFrontImage": "CNIC Front Image",
-  "cnicBackImage": "CNIC Back Image"
-  }
+  "profile_details": "Profile Details",
+  "edit_profile": "Edit Profile",
+  "change_password": "Change Password",
+  "address": "Address",
+  "postal_code": "Postal Code",
+  "profile_picture": "Profile Picture",
+  "cnic_front": "CNIC Front",
+  "cnic_back": "CNIC Back",
+  "cnic_reviewed": "CNIC is being reviewed.",
+  "save_changes": "Save Changes",
+  "current_password": "Current Password",
+  "new_password": "New Password",
+  "confirm_new_password": "Confirm New Password",
+  "show_password": "Show Password",
+  "city": "City",
+  "street": "Street",
+  "phone": "Phone",
+  "email": "Email",
+  "name": "Name",
+  "addresses": "Addresses"
+}
+
   
+
+

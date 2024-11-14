@@ -42,7 +42,7 @@ const ShowCase = () => {
         </div>
 
         <div className="bg-white p-6 shadow-lg rounded-lg">
-          <GigPackage services={tailor.tags} />
+          <GigPackage services={tailor.tags} gigId={gig._id} />
         </div>
       </div>
     </div>

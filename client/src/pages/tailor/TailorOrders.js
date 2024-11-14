@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import './TailorOrders.css';
+import { useTranslation } from 'react-i18next';
 
 const TailorOrders = () => {
   const [orders, setOrders] = useState([]);
+  const { t } = useTranslation();
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [filters, setFilters] = useState({ status: '', price: '', date: '' });
   const [searchTerm, setSearchTerm] = useState('');
@@ -117,42 +119,42 @@ const TailorOrders = () => {
         )
       );
 
-      alert('Order status updated successfully.');
+      alert(t('Order status updated successfully.'));
     } catch (error) {
-      setError('Failed to update order status.');
+      setError(t('Failed to update order status.'));
     }
   };
   
   return (
     <div className="orders-page">
-      <h1 className="text-center">Manage Orders</h1>
+      <h1 className="text-center">{t('Manage Orders')}</h1>
 
       <div className="filters">
         <select name="date" onChange={handleFilterChange} value={filters.date}>
-          <option value="">All Time</option>
-          <option value="week">This Week</option>
-          <option value="month">This Month</option>
-          <option value="year">This Year</option>
+          <option value="">{t('All Time')}</option>
+          <option value="week">{t('This Week')}</option>
+          <option value="month">{t('This Month')}</option>
+          <option value="year">{t('This Year')}</option>
         </select>
 
         <select name="price" onChange={handleFilterChange} value={filters.price}>
-          <option value="">Price Filter</option>
-          <option value="low-to-high">Low to High</option>
-          <option value="high-to-low">High to Low</option>
+          <option value="">{t('Price Filter')}</option>
+          <option value="low-to-high">{t('Low to High')}</option>
+          <option value="high-to-low">{t('High to Low')}</option>
         </select>
 
         <select name="status" onChange={handleFilterChange} value={filters.status}>
-          <option value="">All Status</option>
-          <option value="pending">Pending</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="shipped">Shipped</option>
-          <option value="delivered">Delivered</option>
-          <option value="cancelled">Cancelled</option>
+          <option value="">{t('All Status')}</option>
+          <option value="pending">{t('Pending')}</option>
+          <option value="confirmed">{t('Confirmed')}</option>
+          <option value="shipped">{t('Shipped')}</option>
+          <option value="delivered">{t('Delivered')}</option>
+          <option value="cancelled">{t('Cancelled')}</option>
         </select>
 
         <input
           type="text"
-          placeholder="Search by Order ID, Product, or Customer"
+          placeholder={t("Search by Order ID, Product, or Customer")}
           value={searchTerm}
           onChange={handleSearchChange}
         />
@@ -163,14 +165,14 @@ const TailorOrders = () => {
       <table className="orders-table">
         <thead>
           <tr>
-            <th>Order ID</th>
-            <th>Customer Info</th>
-            <th>Products Info</th>
-            <th>Order Type</th>
-            <th>Total Price</th>
-            <th>Address</th>
-            <th>Status</th>
-            <th>Date & Time</th>
+            <th>{t('Order ID')}</th>
+            <th>{t('Customer Info')}</th>
+            <th>{t('Products Info')}</th>
+            <th>{t('Order Type')}</th>
+            <th>{t('Total Price')}</th>
+            <th>{t('Address')}</th>
+            <th>{t('Status')}</th>
+            <th>{t('Date & Time')}</th>
           </tr>
         </thead>
         <tbody>
@@ -180,7 +182,7 @@ const TailorOrders = () => {
               <span
                 onClick={() => {
                   navigator.clipboard.writeText(order._id);
-                  alert('Order ID copied to clipboard!');
+                  alert(t('Order ID copied to clipboard!'))
                 }}
                 style={{ cursor: 'pointer' }}
               >
@@ -193,8 +195,8 @@ const TailorOrders = () => {
                   {order.products.map((product) => (
                     <li key={product._id}>
                       <strong>{product.product_id.name}</strong> <br />
-                      Price: {product.product_id.price} <br />
-                      QTY: {product.quantity}
+                      {t('Price: ')}{product.product_id.price} <br />
+                      {t('QTY: ')}{product.quantity}
                     </li>
                   ))}
                 </ul>
@@ -210,11 +212,11 @@ const TailorOrders = () => {
                   onChange={(e) => handleStatusChange(order._id, e.target.value)}
                   className="status-select"
                 >
-                  <option value="pending">Pending</option>
-                  <option value="confirmed">Confirmed</option>
-                  <option value="shipped">Shipped</option>
-                  <option value="delivered">Delivered</option>
-                  <option value="cancelled">Cancelled</option>
+                  <option value="pending">{t('Pending')}</option>
+                  <option value="confirmed">{t('Confirmed')}</option>
+                  <option value="shipped">{t('Shipped')}</option>
+                  <option value="delivered">{t('Delivered')}</option>
+                  <option value="cancelled">{t('Cancelled')}</option>
                 </select>
               </td>
               <td>{new Date(order.created_at).toLocaleString()}</td>

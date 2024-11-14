@@ -207,6 +207,7 @@ const BodyMeasurement = () => {
         setPopupMessage('Measurement process is complete.');
         // Simulate the measurements being available
         setMeasurements({ 
+          shirt:{
           neck: 39,         
           shoulderWidth: 46, 
           chestBust: 102,     
@@ -215,6 +216,7 @@ const BodyMeasurement = () => {
           bicep: 33,         
           wrist: 18,         
           shirtLength: 76    
+          }
         });
                 
       }
@@ -293,47 +295,47 @@ const BodyMeasurement = () => {
           {/* Render action buttons regardless of measurements */}
           <div className="action-buttons-super-dooper-complex">
           <button
-  onClick={() => navigate('/buyer/DataMeasurement', { state: { measurements } })}
-  className="show-measurements-button-super-dooper-complex"
-  style={{
-    backgroundColor: '#333',
-    color: '#fff',
-    padding: '5px 10px', // Adjust padding for a smaller button
-    border: 'none',
-    borderRadius: '3px',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s',
-  }}
-  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#000')} // Dark black on hover
-  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#333')} // Revert to original color
->
-  Submit
-</button>
+            onClick={() => navigate('/buyer/DataMeasurement', { state: { measurements } })}
+            className="show-measurements-button-super-dooper-complex"
+            style={{
+              backgroundColor: '#333',
+              color: '#fff',
+              padding: '5px 10px', // Adjust padding for a smaller button
+              border: 'none',
+              borderRadius: '3px',
+              cursor: 'pointer',
+              transition: 'background-color 0.3s',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#000')} // Dark black on hover
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#333')} // Revert to original color
+          >
+            Submit
+          </button>
 
-<button
-  onClick={() => {
-    setCapturedImages([]);
-    setMeasurements(null);
-    setPhase(0);
-    setGuidance('');
-  }}
-  className="reset-button-super-dooper-complex"
-  style={{
-    backgroundColor: 'red',
-    color: '#fff',
-    padding: '5px 10px', 
-    border: 'none',
-    borderRadius: '3px',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s',
-  }}
-  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#b22222')} 
-  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'red')} 
->
-  Retake
-</button>
+          <button
+            onClick={() => {
+              setCapturedImages([]);
+              setMeasurements(null);
+              setPhase(0);
+              setGuidance('');
+            }}
+            className="reset-button-super-dooper-complex"
+            style={{
+              backgroundColor: 'red',
+              color: '#fff',
+              padding: '5px 10px', 
+              border: 'none',
+              borderRadius: '3px',
+              cursor: 'pointer',
+              transition: 'background-color 0.3s',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#b22222')} 
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'red')} 
+          >
+            Retake
+          </button>
 
-</div>
+          </div>
 
         </>
       )}

@@ -38,11 +38,11 @@ router.post("/verify_otp", authController.verifyOTP);
 // Upload/Add New Product
 router.post('/uploadproduct', authMiddleware.verifyToken,upload.array('images'), product.upload);
 
-// Fetching Products 
-router.get('/fetchproducts', authMiddleware.verifyToken, product.fetch);
-
 // Edit product and save
 router.put('/editproduct/:id', authMiddleware.verifyToken,upload.array('images'), product.edit);
+
+// Fetching Products 
+router.get('/fetchproducts', authMiddleware.verifyToken, product.fetch);
 
 // Delete Product
 router.delete('/products/:id', authMiddleware.verifyToken, product.delete);
@@ -109,7 +109,7 @@ router.post('/orderplace', authMiddleware.verifyToken, order.placeOrder);
 router.get('/orders', authMiddleware.verifyToken, order.getOrdersByUser);
 
 // Review Button Rendering for Buyer componet/ProductPage.js
-router.get('/review_order_status',authMiddleware.verifyToken, order.checkProductInOrders);
+router.get('/review_order_status/:id',authMiddleware.verifyToken, order.checkProductInOrders);
 
 // Seller's Routes for orders management
 

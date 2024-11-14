@@ -42,7 +42,7 @@ exports.getUserCategories = async (req, res) => {
   try {
     
 
-    const categories = await Category.find({ isDeleted: false });
+    const categories = await Category.find();
 
     if (!categories || categories.length === 0) {
       return res.status(404).json({ message: "No categories found." });
@@ -97,7 +97,7 @@ exports.getBuyerCategories = async (req, res) => {
   }
 };
 
-// Soft delete a category
+// Delete a category
 exports.deleteCategory = async (req, res) => {
   const { categoryId } = req.params;
   const userId = req.user.id;
@@ -105,8 +105,8 @@ exports.deleteCategory = async (req, res) => {
   const user = await User.findById(userId);
 
   try {
-    if(user.role === 'Admin' && categoryId){
-              // Find the category by ID
+    if(categoryId){
+      // Find the category by ID
       const category = await Category.findById(categoryId);
 
       if (!category) {
@@ -114,19 +114,23 @@ exports.deleteCategory = async (req, res) => {
       }
 
       // Check if the user is the owner of the category
-      if (category.userId.toString() !== userId) {
+      if (user.role !== 'Admin') {
           return res.status(403).json({ message: "You don't have permission to delete this category." });
       }
 
-      // Mark the category as deleted
-      category.isDeleted = true;
-      await category.save();
+      // Delete the specified category and any categories with this category as their parent
+      await Category.deleteMany({
+        $or: [
+          { _id: categoryId },
+          { parent: categoryId }
+        ]
+      });
 
-      res.status(200).json({ message: "Category deleted successfully." });
+      res.status(200).json({ message: "Category and its childs deleted successfully." });
     }
     else {
         // If userId or categoryId is missing, return a bad request response
-        return res.status(400).json({ message: "User ID and Category ID are required." });
+        return res.status(400).json({ message: "Category ID is required." });
     }
   } catch (error) {
       res.status(400).json({ message: error.message });

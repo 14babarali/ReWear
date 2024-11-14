@@ -230,19 +230,19 @@ const SellerProfilePage = () => {
         className={`tab-button ${activeTab === 'profile' ? 'active' : ''}`}
         onClick={() => setActiveTab('profile')}
       >
-        {t('Profile Details')}
+        {t('profile_details')}
       </button>
       <button
         className={`tab-button ${activeTab === 'edit' ? 'active' : ''}`}
         onClick={() => setActiveTab('edit')}
       >
-        {t('Edit Profile')}
+        {t('edit_profile')}
       </button>
       <button
         className={`tab-button ${activeTab === 'password' ? 'active' : ''}`}
         onClick={() => setActiveTab('password')}
       >
-        {t('Change Password')}
+        {t('change_password')}
       </button>
     </div>
 
@@ -262,20 +262,20 @@ const SellerProfilePage = () => {
           {/* Profile Details */}
           <div className="profile-details-info">
             <p className="text-lg  text-gray-800 mb-2">
-              <strong>{t('Name')}:</strong> {user.profile.name}
+              <strong>{t('name')}:</strong> {user.profile.name}
             </p>
             <p className="text-lg  text-gray-800 mb-2">
-              <strong>{t('Email')}:</strong> {user.email}
+              <strong>{t('email')}:</strong> {user.email}
             </p>
             <p className="text-lg  text-gray-800 mb-2">
-              <strong>{t('Phone')}:</strong> {user.profile.phone}
+              <strong>{t('phone')}:</strong> {user.profile.phone}
             </p>
             
             {/* Addresses */}
             {user.profile.addresses && user.profile.addresses.length > 0 && (
               <div className="addresses mb-2">
                 <p className="text-lg  text-gray-800">
-                  <strong>{t('Addresses')}:</strong>
+                  <strong>{t('addresses')}:</strong>
                 </p>
                 <ul className="list-disc list-inside">
                   {user.profile.addresses.map((address, index) => (
@@ -295,7 +295,7 @@ const SellerProfilePage = () => {
         <div className="edit-profile">
           <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label htmlFor="name">{t('Name')}</label>
+                  <label htmlFor="name">{t('name')}</label>
                   <input
                     type="text"
                     id="name"
@@ -304,7 +304,7 @@ const SellerProfilePage = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="email">{t('Email')}</label>
+                  <label htmlFor="email">{t('email')}</label>
                   <input
                     type="email"
                     id="email"
@@ -315,7 +315,7 @@ const SellerProfilePage = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="phone">{t('Phone')}</label>
+                  <label htmlFor="phone">{t('phone')}</label>
                   <ReactPhoneInput
                     defaultCountry="pk"
                     value={phone}
@@ -325,18 +325,18 @@ const SellerProfilePage = () => {
                 </div>
                 {addresses.map((address, index) => (
                   <div className="form-group" key={index}>
-                    <label>{t('Address')}</label>
+                    <label>{t('address')}</label>
                     <input
                       type="text"
-                      name="street"
-                      placeholder={t('Street')}
+                      name={t('street')}
+                      placeholder={t('street')}
                       value={address.street}
                       onChange={(e) => handleAddressChange(index, e)}
                     />
                     <input
                       type="text"
                       name="city"
-                      placeholder={t('City')}
+                      placeholder={t('city')}
                       value={address.city}
                       onChange={(e) => handleAddressChange(index, e)}
                     />
@@ -356,33 +356,33 @@ const SellerProfilePage = () => {
                 <div className="button-group">
                   <button type="button" onClick={handleAddAddress}>
                     <FontAwesomeIcon icon={faPlusCircle}/>
-                    {t(' Address')}
+                    {t('address')}
                   </button>
                 </div>
                 <div className="form-group mt-4">
-                  <label htmlFor="profilePicture">{t('Profile Picture')}</label>
+                  <label htmlFor="profilePicture">{t('profile_picture')}</label>
                   <input type="file" id="profilePicture" onChange={handleImageChange} />
                 </div>
                 {/* CNIC Upload Section */}
                   {!cnicUploaded ? (
                     <>
                       <div className="form-group">
-                        <label htmlFor="cnicFront">{t('CNIC Front')}</label>
+                        <label htmlFor="cnicFront">{t('cnic_front')}</label>
                         <input type="file" id="cnicFront" onChange={handleCnicFrontChange} />
                       </div>
                       <div className="form-group">
-                        <label htmlFor="cnicBack">{t('CNIC Back')}</label>
+                        <label htmlFor="cnicBack">{t('cnic_back')}</label>
                         <input type="file" id="cnicBack" onChange={handleCnicBackChange} />
                       </div>
                     </>
                   ) : (
                     <div className="cnic-status mb-4">
-                      <p>{t('CNIC is being reviewed.')}</p>
+                      <p>{t('cnic_reviewed')}</p>
                       <img src={undereview} alt="loading icon" />
                     </div>
                   )}
                 <div className="form-group">
-                  <button type="submit">{t('Save Changes')}</button>
+                  <button type="submit">{t('save_changes')}</button>
                 </div>
           </form>
         </div>
@@ -393,7 +393,7 @@ const SellerProfilePage = () => {
         <div className="change-password">
           <form onSubmit={handlePasswordChange}>
             <div className="form-group">
-              <label htmlFor="currentPassword">{t('Current Password')}</label>
+              <label htmlFor="currentPassword">{t('current_password')}</label>
               <input
                 type={showPassword ? 'text' : 'password'}
                 id="currentPassword"
@@ -402,7 +402,7 @@ const SellerProfilePage = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="newPassword">{t('New Password')}</label>
+              <label htmlFor="newPassword">{t('new_password')}</label>
               <input
                 type={showPassword ? 'text' : 'password'}
                 id="newPassword"
@@ -411,7 +411,7 @@ const SellerProfilePage = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="confirmNewPassword">{t('Confirm New Password')}</label>
+              <label htmlFor="confirmNewPassword">{t('confirm_new_password')}</label>
               <input
                 type={showPassword ? 'text' : 'password'}
                 id="confirmNewPassword"
@@ -427,10 +427,10 @@ const SellerProfilePage = () => {
                 onChange={(e) => setShowPassword(e.target.checked)}
               />
               &nbsp;
-              <label htmlFor="showPassword">{t('Show Password')}</label>
+              <label htmlFor="showPassword">{t('show_password')}</label>
             </div>
             <div className="form-group">
-              <button type="submit">{t('Change Password')}</button>
+              <button type="submit">{t('change_password')}</button>
             </div>
           </form>
         </div>

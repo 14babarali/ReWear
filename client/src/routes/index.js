@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import img1 from '../assests/1.png';
 import img2 from '../assests/2.png';
 import img3 from '../assests/3.png';
@@ -8,19 +9,15 @@ import img5 from '../assests/5.png';
 import Feature1 from '../assests/Feature1.png';
 import Feature2 from '../assests/Feature2.png';
 import Feature3 from '../assests/Feature3.png';
-import Measure from './stylesheet/Measure.mp4';
 import clothing from '../assests/casual_clothing.jpg';
 import tailormade from '../assests/tailor_made.png';
 import eventdresses from '../assests/event_dresses.png';
 import shoes from '../assests/shoes_wear.png';
 import ProductCard from '../components/ProductCard';
-import ReactPlayer from "react-player";
-import './stylesheet/index.css';
-import axios from 'axios';
 import { ToastContainer } from 'react-toastify';
 
 function Home() {
-  const images = [img1, img2, img3, img4];
+  const images = [img1, img2, img3, img4, img5];
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,17 +27,14 @@ function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const token = localStorage.getItem('token'); // Assuming you store the token in localStorage
+        const token = localStorage.getItem('token');
         const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
-        const response = await axios.get('http://localhost:3001/api/featured_products', config); 
+        const response = await axios.get('http://localhost:3001/api/featured_products', config);
         setProducts(response.data);
-        // console.log(response.data);
       } catch (error) {
         if (error.response && error.response.status === 401) {
-          // Clear any stored token (optional)
           localStorage.removeItem('token');
           localStorage.removeItem('user');
-          // Redirect to logout or login page
           navigate('/logout');
         } else {
           console.error('Error fetching products:', error);
@@ -49,258 +43,118 @@ function Home() {
     };
 
     fetchProducts();
-  },[navigate]);
-
+  }, [navigate]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentIndex(prevIndex => (prevIndex + 1) % images.length);
-    },3000);
+    }, 3000);
 
     return () => clearInterval(intervalId);
   }, []);
 
-  const productsPerPage = 5;
+  const productsPerPage = 20;
   const totalPages = Math.ceil(products.length / productsPerPage);
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
-  // console.log(currentProducts);
 
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver(
-  //     entries => {
-  //       entries.forEach(entry => {
-  //         if (entry.isIntersecting) {
-  //           entry.target.classList.add('animate');
-  //         }
-  //       });
-  //     },
-  //     {
-  //       threshold: 0.1,
-  //     }
-  //   );
+  const handlePageClick = (pageNumber) => setCurrentPage(pageNumber);
 
-  //   const elements = document.querySelectorAll('.fade-in-up');
-  //   elements.forEach(el => observer.observe(el));
-
-  //   return () => {
-  //     elements.forEach(el => observer.unobserve(el));
-  //   };
-  // }, []);
-
-  const handlePageClick = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  return ( 
-    <div className="px-4 lg:px-8">
+  return (
+    <div className="px-4 lg:px-8 bg-gray-50">
       <ToastContainer />
 
       {/* Hero Section */}
-      <div 
-        className="text-center py-5 mx-auto bg-cover object-contain bg-center rounded-lg"
-        style={{ 
-          backgroundImage: `url(${images[currentIndex]})`, 
-          height: '420px', 
-          width: '100%', 
-          marginTop: '5px',
-          animation: 'ease'
-        }}
+      <div
+        className="flex mt-2 items-center justify-center h-[560px] object-contain bg-cover bg-center rounded-lg mb-8 text-white"
+        style={{ backgroundImage: `url(${images[currentIndex]})` }}
       >
-      </div>
-
-    {/* Major Categories */}
-    <div className="bg-maroon text-center  rounded-lg mt-2 p-2" >
-      {/* <h2 className="text-white text-2xl">Major Categories</h2> */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 text-center text-white">
-        <div className="flex flex-col items-center">
-          <Link to="/buyer/product/event-dresses" className="flex flex-col items-center text-white no-underline">
-            <img
-              src={eventdresses}
-              alt="Event Dresses"
-              className="w-20 h-30 object-cover rounded-full"
-            />
-            <p className="mt-1 mb-0 text-white" style={{ textDecoration: 'none' }}>Formal</p>
-          </Link>
-        </div>
-        <div className="flex flex-col items-center">
-          <Link to="/buyer/product/tailor-made" className="flex flex-col items-center text-white no-underline">
-            <img
-              src={tailormade}
-              alt="Tailor Made"
-              className="w-20 h-30 object-cover rounded-full "
-            />
-            <p className="mt-1 mb-0 text-white">Tailor Made</p>
-          </Link>
-        </div>
-        <div className="flex flex-col items-center p-0">
-          <Link to="/buyer/product/casual-clothing" className="flex flex-col items-center text-white no-underline">
-            <img
-              src={clothing}
-              alt="Casual Clothing"
-              className="w-20 h-20 object-cover rounded-full "
-            />
-            <p className="mt-1 mb-0 text-white">Casual</p>
-          </Link>
-        </div>
-        <div className="flex flex-col items-center">
-          <Link to="/buyer/product/shoes" className="flex flex-col items-center text-white no-underline">
-            <img
-              src={shoes}
-              alt="Shoes"
-              className="w-20 h-30 object-cover rounded-full "
-            />
-            <p className="mt-1 mb-0 text-white">Shoes</p>
+        <div className="bg-black bg-opacity-50 p-5 rounded-lg text-center">
+          <h1 className="text-4xl font-semibold mb-2">Explore Our Exclusive Collection</h1>
+          <p className="text-lg mb-4">Find the perfect style for every occasion</p>
+          <Link
+            to="/buyer/products"
+            className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2 rounded-full font-semibold"
+          >
+            Shop Now
           </Link>
         </div>
       </div>
-    </div>
 
-        
-{/* Tailor image */}
-<div className="text-center py-5 mx-auto bg-cover bg-center rounded-lg">
-  <div className="relative">
-  
-    <img 
-      src={img5} 
-      alt="Tailor Order" 
-      className="w-100 h-auto object-cover"
-    />
-
-  </div>
-</div>
-<div className="bg-maroon text-white py-2">
-      <div className="flex flex-col md:flex-row justify-around items-center text-center px-4">
-        
-        {/* Feature 1 */}
-        <div className="flex flex-col items-center mb-6 md:mb-0">
-       
-          <img src={Feature1} alt="Custom Designed Clothes" className="feature_img w-16 h-16 mb-4" />
-          <h3 className="feature_text text-lg font-semibold">Custom Designed Clothes</h3>
+      {/* Major Categories */}
+      <div className="bg-maroon rounded-lg p-6 text-center mb-8 shadow-md">
+        <h2 className="text-2xl font-semibold mb-6 text-gray-100">Shop by Category</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+          {[{ src: eventdresses, label: 'Formal', link: '/buyer/product/event-dresses' },
+          { src: tailormade, label: 'Tailor Made', link: '/buyer/product/tailor-made' },
+          { src: clothing, label: 'Casual', link: '/buyer/product/casual-clothing' },
+          { src: shoes, label: 'Shoes', link: '/buyer/product/shoes' }].map((category) => (
+            <Link
+              to={category.link}
+              key={category.label}
+              className="flex flex-col items-center text-gray-800 transition-transform transform hover:scale-105"
+            >
+              <img
+                src={category.src}
+                alt={category.label}
+                className="w-24 h-24 object-cover rounded-full mb-2 border-2 border-gray-200"
+              />
+              <p className="font-normal text-gray-200 underline">{category.label}</p>
+            </Link>
+          ))}
         </div>
-
-        {/* Feature 2 */}
-        <div className="flex flex-col items-center mb-6 md:mb-0">
-      
-          <img src={Feature2} alt="Custom Measurements" className="feature_img w-16 h-16 mb-4 color-light" />
-          <h3 className="feature_text text-lg font-semibold">Custom Measurements Via Phone Scan</h3>
-        </div>
-
-        {/* Feature 3 */}
-        <div className="flex flex-col items-center">
-      
-          <img src={Feature3} alt="Perfect Fit Guarantee" className="feature_img w-16 h-16 mb-4" />
-          <h3 className="feature_text text-lg font-semibold">Perfect Fit Guarantee (With Free Refunds)</h3>
-        </div>
-
-      </div>
-    </div>
-
-<div className="flex flex-col md:flex-row items-center justify-center bg-white p-8">
-      {/* Left section: Text */}
-      <div className="w-full md:w-1/2 text-left p-8">
-        <h2 className="text-3xl font-bold mb-4">Measurements Easy As ABC</h2>
-        <p className="text-red-700 text-2xl mb-4">Take Measurement At home, As accurate as Tailor</p>
-        <p className="text-gray-600 mb-6">
-          In under 30 seconds our System measure 10 different points for clothes that are as accurate than a professional tailor.
-        </p>
-        <Link 
-  to="/buyer/measurement" 
-  className="bg-[#333] text-white px-6 py-3 rounded-lg hover:bg-[#1a1a1a] no-underline text-sm mt-8"
->
-  Order Now 
-</Link>
-
       </div>
 
-      {/* Right section: Video */}
-      <div className="w-full md:w-1/2">
-        <ReactPlayer 
-          url={Measure} // Update this with your video path
-          controls 
-          playing={true} 
-          loop={true} 
-          muted={true} 
-          width="100%"
-          height="100%"
-        />
+      {/* Key Features */}
+      <div className="bg-gray-900 text-gray-800 rounded-lg p-6 mb-8 shadow-md">
+        <h2 className="text-2xl font-semibold text-gray-100 text-center mb-6">Why Choose Us?</h2>
+        <div className="flex flex-col md:flex-row justify-around  rounded pt-2 text-center">
+          {[{ src: Feature1, label: 'Custom Stitched Clothes' },
+          { src: Feature2, label: 'Tailoring Services' },
+          { src: Feature3, label: 'Wide Variety(New/Used)' }].map((feature) => (
+            <div key={feature.label} className="flex flex-col items-center bg-gray-900 mb-6 md:mb-0">
+              <img src={feature.src} alt={feature.label} className="w-16 h-16 mb-2" />
+              <p className="text-lg text-white font-normal">{feature.label}</p>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
 
       {/* Featured Products */}
       <div className="my-8">
-        <h2 className="text-center text-2xl font-semibold mb-4">Featured Products</h2>
+        <h2 className="text-center text-2xl font-semibold mb-4 text-gray-800">ReWear Products</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {currentProducts.length === 0 ? (
             <div className="col-span-full text-center">
-              <p>No products to show</p>
+              <p className="text-gray-500">No products to show</p>
             </div>
           ) : (
-            currentProducts.map(product => (
-              <div key={product._id}>
-                <ProductCard product={product} />
-              </div>
+            currentProducts.map((product) => (
+              <ProductCard key={product._id} product={product} />
             ))
           )}
         </div>
+
+        {/* Pagination */}
         {totalPages > 1 && (
-          <nav className="mt-6">
-            <ul className="flex justify-center space-x-2">
-              {Array.from({ length: totalPages }, (_, index) => (
-                <li key={`page-${index}`}>
-                  <button
-                    className={`px-4 py-2 rounded-lg ${index + 1 === currentPage ? 'bg-dark text-white' : 'bg-light text-black border'}`}
-                    onClick={() => handlePageClick(index + 1)}
-                  >
-                    {index + 1}
-                  </button>
-                </li>
-              ))}
-            </ul>
+          <nav className="mt-6 flex justify-center space-x-2">
+            {Array.from({ length: totalPages }, (_, index) => (
+              <button
+                key={index}
+                onClick={() => handlePageClick(index + 1)}
+                className={`px-3 py-1 rounded-lg ${
+                  currentPage === index + 1 ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-800'
+                } transition-colors hover:bg-indigo-500 hover:text-white`}
+              >
+                {index + 1}
+              </button>
+            ))}
           </nav>
         )}
       </div>
     </div>
   );
-};
+}
 
 export default Home;
-
-// apply this validation on OrderNow button
-
-// import { Link, useNavigate } from "react-router-dom";
-// import React from "react";
-
-// const OrderNowButton = () => {
-//   const navigate = useNavigate();
-
-//   // Assuming user data is stored in localStorage
-//   const user = JSON.parse(localStorage.getItem("user")) || {}; // Fallback to an empty object if no user is found
-//   const isLoggedIn = !!localStorage.getItem("token"); // Check if the user is logged in
-//   const userRole = user.role; // Get the user's role
-
-//   const handleValidation = (e) => {
-//     if (!isLoggedIn) {
-//       e.preventDefault();
-//       alert("You need to log in to place an order.");
-//       navigate("/login"); // Redirect to login page
-//     } else if (userRole !== "buyer") {
-//       e.preventDefault();
-//       alert("Only buyers are allowed to place orders.");
-//     }
-//   };
-
-//   return (
-//     <Link
-//       to="/buyer/measurement"
-//       className="absolute bottom-4 right-20 bg-[#333] text-white px-3 py-1 rounded-lg hover:bg-[#1a1a1a] no-underline text-sm"
-//       style={{ marginRight: '30px' }}
-//       onClick={handleValidation} // Apply validation on click
-//     >
-//       Order Now
-//     </Link>
-//   );
-// };
-
-// export default OrderNowButton;

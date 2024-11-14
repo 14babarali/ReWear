@@ -1,10 +1,13 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from "react-i18next";
 import Shopi from "./Giff/Shopi.png"
 import './ShopMain.css';
 
 const ShopMain = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="shop-main-profile-container">
      <img
@@ -29,15 +32,15 @@ const ShopMain = () => {
           </div>
           <div className="shop-main-profile-details">
             <h2>Dress Maker</h2>
-            <p><strong>Working Hours:</strong> 8 Hours</p>
-            <p><strong>Desc:</strong> Lovely Bridal Dresses that can make life happy</p>
+            <p><strong>{t("Working Hours")}:</strong> 8 Hours</p>
+            <p><strong>{t("Desc")}</strong> Lovely Bridal Dresses that can make life happy</p>
           </div>
         </div>
 
         <div className="shop-main-content-section">
           {/* Services Section */}
           <div className="shop-main-services-section">
-            <h3>Services</h3>
+            <h3>{t("Services")}</h3>
             <ul>
               <li>
                 Bridal Dresses 
@@ -53,7 +56,7 @@ const ShopMain = () => {
               </li>
             </ul>
             <button className="shop-main-add-service-btn">
-              <FontAwesomeIcon icon={faPlus} /> Add
+              <FontAwesomeIcon icon={faPlus} /> {t("Add")}
             </button>
           </div>
 
@@ -63,11 +66,11 @@ const ShopMain = () => {
               <div className="shop-main-add-collection-circle">
                 <FontAwesomeIcon icon={faPlus} className="shop-main-add-icon" />
               </div>
-              <p>Add Collection</p>
+              <p>{t("Add Collection")}</p>
             </div>
             <div className="shop-main-content-buttons">
-              <button className="shop-main-content-tab active">Products</button>
-              <button className="shop-main-content-tab">Collections</button>
+              <button className="shop-main-content-tab active">{t("Products")}</button>
+              <button className="shop-main-content-tab">{t("Collections")}</button>
             </div>
           </div>
         </div>

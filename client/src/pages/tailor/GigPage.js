@@ -55,30 +55,30 @@ const GigPage = () => {
   const validateForm = () => {
     // Check if image is uploaded
     if (!gigImage) {
-      setErrorMessage('Please upload a gig picture.');
+      setErrorMessage(t('Please upload a gig picture.'));
       return false;
     }
 
     // Check if description is more than 5 words
     const wordCount = description.trim().split(/\s+/).length;
     if (wordCount < 5) {
-      setErrorMessage('Description must be more than 5 words.');
+      setErrorMessage(t("Description must be more than 5 words."));
       return false;
     }
 
     // Validate prices
     if (!basicPrice || basicPrice < 1000 || basicPrice > 3000) {
-      setErrorMessage('Basic price must be between 1000 and 3000 PKR.');
+      setErrorMessage(t('Basic price must be between 1000 and 3000 PKR.'));
       return false;
     }
     if (!premiumPrice || premiumPrice < 3000 || premiumPrice > 10000) {
-      setErrorMessage('Premium price must be between 3000 and 10,000 PKR.');
+      setErrorMessage(t('Premium price must be between 3000 and 10,000 PKR.'));
       return false;
     }
 
     // Check if all skills are filled
     if (skills.some((skill) => skill.trim() === '')) {
-      setErrorMessage('All three skills are required.');
+      setErrorMessage(t('All three skills are required.'));
       return false;
     }
 

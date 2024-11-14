@@ -9,6 +9,7 @@ import Wishlist from '../pages/buyer/wishlist';
 import CategoryLinks from '../pages/buyer/CategoryLinks';
 import ProfilePage from '../routes/profile';
 import Products from '../components/product_listing/products';
+import AllProducts from '../pages/buyer/allproducts';
 import ProductPage from '../components/productPage';
 import UserDetails from '../components/UserDetails';
 import Productinfo from '../components/Productinfo';
@@ -16,9 +17,11 @@ import OrdersPage from '../pages/buyer/order';
 import Home from '../routes';
 import Measurement from '../pages/buyer/BodyMeasurement';
 import DataMeasurement from '../pages/buyer/DataMeasurement';
+import RequestView from '../pages/buyer/RequestView';
 import TailorSearch from '../pages/buyer/TailorSearch';
 import TailorCard from '../pages/buyer/TailorCard';
 import ShowCase from '../pages/buyer/ShowCase';
+import MeasurementChoice from '../pages/buyer/MeasurementChoice';
 import GigDes from '../pages/buyer/GigDes';
 import GigPackage from '../pages/buyer/GigPackage';
 import GigHead from '../pages/buyer/GigHead';
@@ -54,7 +57,7 @@ const BuyerLayout = () => {
       <AppHeader />
       <div
         className="h-fit"
-        style={{ justifyContent: 'center', margin: '5px', width: 'auto', height: '100%', overflow: 'scroll' }}
+        style={{ justifyContent: 'center', margin: '5px', width: 'auto', height: '100%', overflowY: 'auto' }}
       >
         <Routes>
           <Route path="/checkout" element={<Checkout />} />
@@ -62,6 +65,7 @@ const BuyerLayout = () => {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/product/:category" element={<CategoryLinks />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/products" element={<AllProducts />} />
           <Route path="/Seller" element={<UserDetails />} />
           <Route path="/products/:category" element={<Products />} />
           <Route path="/productpage/:productId" element={<ProductPage />} />
@@ -69,8 +73,10 @@ const BuyerLayout = () => {
           <Route path="/Info" element={<Productinfo />} />
           <Route path="/measurement" element={<Measurement />} />
           <Route path="/DataMeasurement" element={<DataMeasurement />} />
+          <Route path="/RequestView" element={<RequestView />} />
           <Route path="/TailorSearch" element={<TailorSearch />} />
           <Route path="/Card" element={<TailorCard />} />
+          <Route path="/MeasurementChoice" element={<MeasurementChoice />} />
           <Route path="/ShowCase" element={<ShowCase />} />
           <Route path="/GigDes" element={<GigDes />} />
           <Route path="/GigPackage" element={<GigPackage />} />

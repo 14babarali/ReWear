@@ -1,0 +1,28 @@
+{
+    "Title is required.": "Title is required.",
+    "Description must be more than 5 words.": "Description must be more than 5 words.",
+    "At least one service type is required.": "At least one service type is required.",
+    "Minimum 5 Working Hours Required": "Minimum 5 Working Hours Required",
+    "Please upload a shop picture.": "Please upload a shop picture.",
+    "Your shop has been successfully created!": "Your shop has been successfully created!",
+    "Failed to create the shop. Please try again.": "Failed to create the shop. Please try again.",
+    "Please upload a valid image file (jpg, jpeg, png, jfif, avif).": "Please upload a valid image file (jpg, jpeg, png, jfif, avif).",
+    "Service cannot be empty.": "Service cannot be empty.",
+    "Shop Details": "Shop Details",
+    "Shop Title": "Shop Title",
+    "Upload your Shop Picture": "Upload your Shop Picture",
+    "Description": "Description",
+    "Service Type": "Service Type",
+    "Add": "Add",
+    "Working hours": "Working hours",
+    "Creating...": "Creating...",
+    "Create Shop": "Create Shop",
+    "Working Hours": "Working Hours",
+  "Desc": "Description",
+  "Services": "Services",
+  "Add Collection": "Add Collection",
+  "Products": "Products",
+  "Collections": "Collections"
+ 
+  }
+  

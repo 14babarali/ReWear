@@ -190,9 +190,13 @@ const ProductCard = ({ product }) => {
           })}</p>
         </div> */}
         <div className="mb-2">
-        <p className="card-text mb-0">
-            Item Remaining: {product?.sizes?.reduce((total, item) => total + item.qty, 0) || 'out of stock'}
-        </p>
+          {product?.sizes?.reduce((total, item) => total + item.qty, 0) > 0 ? (
+              <p className="card-text mb-0">
+                  Item Remaining: {product?.sizes?.reduce((total, item) => total + item.qty, 0)}
+              </p>
+          ) : (
+              <p className="text-sm text-red-500 mb-0">Out of Stock</p>
+          )}
         </div>
         {/* {product.type === 'Used' && (
           <div className="mb-2">

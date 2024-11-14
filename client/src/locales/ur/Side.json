@@ -1,11 +1,12 @@
+
 {
-    "dashboard": "ڈیش بورڈ",
-    "manageOrders": "آرڈرز کا انتظام کریں",
-    "myProducts": "میرے پروڈکٹس",
-    "myWallet": "میرا بٹوہ",
-    "buyersReviews": "خریداروں کے جائزے",
-    "complaints": "شکایات",
-    "profile": "پروفائل",
-    "logout": "لاگ آؤٹ"
-  }
-  
+  "ReWear": "ری ویئر",
+  "close": "بند کریں",
+  "Dashboard": "ڈیش بورڈ",
+  "Catalogue": "کیٹلاگ",
+  "Orders": "آرڈرز",
+  "Shop": "دکان",
+  "Reviews": "جائزے",
+  "Messages": "پیغامات",
+  "Complaints": "شکایات"
+}

@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import AdminDashboard from "../pages/admin/AdminDashboard.js";
-import AdminServices from "../pages/admin/AdminServices.js";
-import AddService from '../pages/admin/AddService.js';
+// import AdminServices from "../pages/admin/AdminServices.js";
+// import AddService from '../pages/admin/AddService.js';
+import AdminReports from '../pages/admin/AdminReports.js';
 import AdminSidebar from "../pages/admin/AdminSidebar.js";
 import AdminOrder from "../pages/admin/AdminOrder.js";
 import AdminProduct from "../pages/admin/AdminProduct.js";
@@ -56,8 +57,8 @@ const AdminLayout = () => {
             {/* Admin Orders route */}
             <Route path="/Dashboard" element={<AdminDashboard />} />
             <Route path="/Order" element={<AdminOrder />} />
-            <Route path="/Services" element={<AdminServices />} />
-            <Route path="/Services/modify" element={<AddService />} />
+            {/* <Route path="/Services" element={<AdminServices />} /> */}
+            <Route path="/Report" element={<AdminReports />} />
             <Route path="/Product" element={<AdminProduct />} />
             <Route path="/Message" element={<AdminMessage />} />
             <Route path="/Users" element={<AdminUsers />} />

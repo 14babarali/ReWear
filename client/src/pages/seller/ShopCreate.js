@@ -4,11 +4,13 @@ import Lottie from "react-lottie";
 import { useNavigate } from "react-router-dom";
 import loaderAnimation from "./Giff/loader_complete.json"; // Path to your loader JSON file
 import axios from "axios"; // Import axios for API requests
+import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
 const ShopCreate = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [shopImage, setShopImage] = useState(null);
   const [services, setServices] = useState([]); // Array for multiple services
   const [newService, setNewService] = useState(""); // State to hold new service input
@@ -38,24 +40,25 @@ const ShopCreate = () => {
 
     // Basic validation
     if (!title) {
-      setErrorMessage("Title is required.");
+      setErrorMessage(t("Title is required."));
       return;
     }
     if (description.length < 5) {
-      setErrorMessage("Description must be more than 5 words.");
+      setErrorMessage(t("Description must be more than 5 words."));
       return;
     }
-    if (services.length === 0) { // Check if services array is empty
-      setErrorMessage("At least one service type is required.");
+    if (services.length === 0) {
+      // Check if services array is empty
+      setErrorMessage(t("At least one service type is required."));
       return;
     }
     if (isNaN(workingHours) || workingHours < 5) {
-      setErrorMessage("Minimum 5 Working Hours Required");
+      setErrorMessage(t("Minimum 5 Working Hours Required"));
       return;
     }
-    
+
     if (!shopImage) {
-      setErrorMessage("Please upload a shop picture.");
+      setErrorMessage(t("Please upload a shop picture."));
       return;
     }
 
@@ -66,7 +69,10 @@ const ShopCreate = () => {
     formData.append("shopImage", shopImage);
     formData.append("title", title);
     formData.append("description", description);
-    formData.append("services", JSON.stringify(services.map(service => ({ name: service }))));
+    formData.append(
+      "services",
+      JSON.stringify(services.map((service) => ({ name: service })))
+    );
     formData.append("experience", workingHours);
 
     try {
@@ -78,18 +84,19 @@ const ShopCreate = () => {
       });
 
       setLoading(false); // Hide loader
-      setSuccessMessage("Your shop has been successfully created!");
+      setSuccessMessage(t("Your shop has been successfully created!"));
 
       // Clear form fields
       setTimeout(() => {
-        navigate(-1);        
+        navigate(-1);
       }, 1500);
-
     } catch (error) {
       setLoading(false); // Hide loader
       setErrorMessage(
-        error.response?.data?.error ||
-          "Failed to create the shop. Please try again."
+        t(
+          error.response?.data?.error ||
+            "Failed to create the shop. Please try again."
+        )
       );
     }
   };
@@ -98,9 +105,17 @@ const ShopCreate = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const validImageTypes = ["image/jpeg", "image/png", "image/jpg", "image/jfif", "image/avif"];
+    const validImageTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/jpg",
+      "image/jfif",
+      "image/avif",
+    ];
     if (!validImageTypes.includes(file.type)) {
-      setErrorMessage("Please upload a valid image file (jpg, jpeg, png, jfif, avif).");
+      setErrorMessage(
+        t("Please upload a valid image file (jpg, jpeg, png, jfif, avif).")
+      );
       setShopImage(null);
       return;
     }
@@ -111,10 +126,10 @@ const ShopCreate = () => {
 
   const addService = (index = services.length) => {
     if (newService.trim() === "") {
-      setErrorMessage("Service cannot be empty.");
+      setErrorMessage(t("Service cannot be empty."));
       return;
     }
-    
+
     // Update services array by directly assigning the value at the specified index
     const updatedServices = [...services];
     updatedServices[index] = newService;
@@ -133,7 +148,7 @@ const ShopCreate = () => {
   return (
     <div className="max-w-4xl mt-3 mx-auto p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl text-center font-semibold mb-4">
-        Shop Details
+        {t("Shop Details")}
       </h2>
 
       <form
@@ -143,7 +158,7 @@ const ShopCreate = () => {
         {/* Title Input */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Shop Title: <span className="text-red-500">*</span>
+            {t("Shop Title")}: <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -160,7 +175,8 @@ const ShopCreate = () => {
             htmlFor="shopImage"
             className="block text-sm font-medium text-gray-700"
           >
-            Upload your Shop Picture: <span className="text-red-500">*</span>
+            {t("Upload your Shop Picture")}:{" "}
+            <span className="text-red-500">*</span>
           </label>
           <input
             type="file"
@@ -181,7 +197,7 @@ const ShopCreate = () => {
         {/* Description Input */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Description: <span className="text-red-500">*</span>
+            {t("Description")} <span className="text-red-500">*</span>
           </label>
           <textarea
             value={description}
@@ -195,9 +211,9 @@ const ShopCreate = () => {
         {/* Service Selection */}
         <div className="d-flex flex-col">
           <label className="block text-sm font-medium text-gray-700">
-            Service Type: <span className="text-red-500">*</span>
+            {t("Service Type")}: <span className="text-red-500">*</span>
           </label>
-          <div className="flex" style={{ alignItems: 'center' }}>
+          <div className="flex" style={{ alignItems: "center" }}>
             <input
               type="text"
               value={newService} // Bind to newService state
@@ -207,16 +223,19 @@ const ShopCreate = () => {
             <button
               type="button"
               onClick={() => addService()} // Call addService to add/replace at the next available position
-              className="mt-1 bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition duration-200"
+              className="add-button mt-1 text-white bg-blue-500 p-2 rounded-md hover:bg-blue-600 transition duration-200"
             >
-              Add
+              {t("Add")}
             </button>
           </div>
 
           {/* Display added services */}
           <ul className="mt-4">
             {services.map((service, index) => (
-              <li key={index} className="flex justify-between items-center p-2 border-b border-gray-300">
+              <li
+                key={index}
+                className="flex justify-between items-center p-2 border-b border-gray-300"
+              >
                 {service}
                 <button
                   type="button"
@@ -233,13 +252,13 @@ const ShopCreate = () => {
         {/* Experience Years */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Working hours: <span className="text-red-500">*</span>
+            {t("Working hours")}: <span className="text-red-500">*</span>
           </label>
           <input
             type="number"
             value={workingHours}
             onChange={(e) => setworkingHours(e.target.value)}
-            placeholder="Enter Working hours"
+            placeholder={t("Working hours")}
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
           />
         </div>
@@ -258,10 +277,10 @@ const ShopCreate = () => {
                   isStopped={false}
                   isPaused={false}
                 />
-                <span className="ml-2">Creating...</span>
+                <span className="ml-2">{t("Creating...")}</span>
               </div>
             ) : (
-              "Create Shop"
+              <span>{t("Create Shop")}</span>
             )}
           </button>
         </div>

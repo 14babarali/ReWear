@@ -55,7 +55,7 @@ exports.upload = async (req, res) => {
         category,
         subcategory,
         subChildCategory,
-        size: parsedSizes,
+        sizes: parsedSizes,
         description,
         price: numericPrice,
         condition: type === 'Used' ? condition : undefined,

@@ -1,7 +1,7 @@
 const Order =  require('../models/Order');
 const Product = require('../models/Product'); // Adjust the path as needed
 const Cart = require('../models/cart');
-
+const mongoose = require('mongoose');
 // Place an order
 exports.placeOrder = async (req, res) => {
     const { products, type, address, phone } = req.body;
@@ -18,7 +18,14 @@ exports.placeOrder = async (req, res) => {
                 return res.status(404).json({ message: `Product not found: ${item.product_id}` });
             }
 
-            if (product.qty < item.quantity) {
+            // Find the specific size in the product's sizes array
+            const sizeOption = product.sizes.find(s => s.size === item.size);
+            
+            if (!sizeOption) {
+                return res.status(400).json({ message: `Size not available for product: ${item.product_id}` });
+            }
+
+            if (sizeOption.qty < item.quantity) {
                 return res.status(400).json({ message: `Not enough stock for product: ${item.product_id}` });
             }
 
@@ -48,9 +55,8 @@ exports.placeOrder = async (req, res) => {
             });
 
             await newOrder.save();
-            console.log(newOrder);
-            // Update the product quantity
-            product.qty -= item.quantity;
+            // Update the quantity of the specific size
+            sizeOption.qty -= item.quantity;
             await product.save(); // Save the updated product
 
             // Remove product from the user's cart
@@ -234,14 +240,19 @@ exports.updateOrderStatus = async (req, res) => {
 exports.checkProductInOrders = async (req, res) => {
   try {
     // Extract the current user's ID and productId from the request
-    const userId = mongoose.Types.ObjectId(req.user.id);
-    const productId = mongoose.Types.ObjectId(req.params);
+    const userId = req.user.id;
+    const productId = req.params.productId; // Access productId directly
+
+    // Convert productId to ObjectId if it's a valid 24-character hex string
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return res.status(400).json({ message: 'Invalid product ID.' });
+    }
 
     // Find orders for the current user containing the product with the specified productId
     const order = await Order.findOne({
       buyer_id: userId,
-      'products.product_id': productId,
-    });
+      'products.product_id': mongoose.Types.ObjectId(productId), // Use without 'new'
+    });rs
 
     // If no order is found with the productId, return 404 response
     if (!order) {

@@ -66,7 +66,6 @@ const ProductPage = () => {
   const handleSizeClick = (size, qty) => {
     setSelectedSize(size);
     setSelectedQty(qty); // Set the quantity based on selected size
-    // console.log(size, qty);
   };
 
   const handleIncrement = () => {
@@ -167,9 +166,10 @@ const ProductPage = () => {
   };
 
   // const fetchOrdersStatus = async () => {
+  //   const productId = product._id;
   //   try {
   //     const token = localStorage.getItem('token');
-  //     const response = await axios.get(`http://localhost:3001/api/review_order_status/${product._id}`, {
+  //     const response = await axios.get(`http://localhost:3001/api/review_order_status/${productId}`, {
   //       headers: {
   //         Authorization: `Bearer ${token}`
   //       }
@@ -177,11 +177,11 @@ const ProductPage = () => {
   //     if(response.status === 200)
   //     {
   //       setReviewed(true);
-  //       alert(response.status);
+  //       alert(response.st.atus);
   //     }
   //   } catch (error) {
-  //     console.error('Error fetching reviews:', error.status.message);
-  //     // alert(error.status);
+  //     console.error('Error fetching reviews:', error.response?.data?.message || 'Unknown error');
+  //     alert(error.response?.data?.message || 'An error occurred');
   //     setReviewed(false);
   //   }
   // }
@@ -354,59 +354,66 @@ const ProductPage = () => {
             )}
           </ul>
 
-             {/* Quantity Selector */}
-          <div className="quantity-selector">
-            <div className="flex items-center justify-center border-1 p-2 rounded-32 w-2/4 gap-4">
-              <button onClick={handleDecrement} className=" text-xl px-3 py-2 bg-gray-600 hover:bg-gray-400 rounded-full">-</button>
-              <span>{quantity}</span>
-              <button onClick={handleIncrement} className=" text-xl px-3 py-2 bg-gray-600 hover:bg-gray-400 rounded-full">+</button>
-            </div>
-            {/* <p className="mt-2 text-gray-500">Items left: {selectedQty}</p> */}
-          </div>
-
-          {/* Size Selection */}
-          {sizes.length !== 0 && (
-            <div className="size-selection mt-3">
-              <h4>Available Sizes:</h4>
-              <div className="size-options flex flex-wrap gap-2 mt-2">
-                {sizes.map((sizeObj, index) => (
-                  <button
-                    key={index}
-                    className={`size-button w-12 p-2 rounded ${selectedSize === sizeObj.size ? 'bg-teal-500 text-white' : 'bg-gray-200 hover:bg-gray-400 text-gray-700'}`}
-                    onClick={() => handleSizeClick(sizeObj.size, sizeObj.qty)}
-                  >
-                    {sizeObj.size}
-                  </button>
-                ))}
+          {product?.sizes?.reduce((total, item) => total + item.qty, 0) > 0 ? (
+            <>
+              {/* Quantity Selector */}
+              <div className="quantity-selector">
+                <div className="flex items-center justify-center border-1 p-2 rounded-32 w-2/4 gap-4">
+                  <button onClick={handleDecrement} className="text-xl px-3 py-2 bg-gray-600 hover:bg-gray-400 rounded-full">-</button>
+                  <span>{quantity}</span>
+                  <button onClick={handleIncrement} className="text-xl px-3 py-2 bg-gray-600 hover:bg-gray-400 rounded-full">+</button>
+                </div>
               </div>
-            </div>
-          )}
+
+              {/* Size Selection */}
+              {sizes.length !== 0 && (
+                <div className="size-selection mt-3">
+                  <h4>Available Sizes:</h4>
+                  <div className="size-options flex flex-wrap gap-2 mt-2">
+                    {sizes.map((sizeObj, index) => (
+                      <button
+                        key={index}
+                        className={`size-button w-12 p-2 rounded ${selectedSize === sizeObj.size ? 'bg-teal-500 text-white' : 'bg-gray-200 hover:bg-gray-400 text-gray-700'}`}
+                        onClick={() => handleSizeClick(sizeObj.size, sizeObj.qty)}
+                      >
+                        {sizeObj.size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Quantity Info */}
               <div className="selected-quantity mt-2">
-                {selectedQty? `Items left: ${selectedQty}`: `Items left: ${sizes?.reduce((total, item) => total + item.qty, 0)}` || 'out of stock'}
+                {selectedQty ? `Items left: ${selectedQty}` : `Items left: ${sizes?.reduce((total, item) => total + item.qty, 0)}`}
               </div>
+
+              {/* Action Buttons */}
+              <div className="product-action-buttons d-flex gap-2 mt-6">
+                <button className="add-to-bag-btn w-36 text-white px-4 py-2 rounded-md"
+                  onClick={buyNow}>
+                  <FontAwesomeIcon icon={faDollar}/> Buy Now
+                </button>
+                <button className="bg-teal-500 hover:bg-teal-700 text-white px-4 py-2 rounded-md"
+                  onClick={addToCart}>
+                  {!isLoading ? <FontAwesomeIcon icon={faShoppingCart} /> : 'loading'}
+                </button>
+                <button className="wishlist-btn text-red-500" onClick={handleAddToWishlist}>
+                  <FontAwesomeIcon icon={isWishlistedState ? faHeart : faHeartRegular} />
+                </button>
+              </div>
+
+            </>
+          ) : (
+            <p className="text-red-500">Out of Stock</p>
+          )}
               
-          
-          {/* Action Buttons */}
-          <div className="product-action-buttons d-flex gap-2 mt-6">
-            <button className="add-to-bag-btn w-36 text-white px-4 py-2 rounded-md"
-              onClick={buyNow}>
-              <FontAwesomeIcon icon={faDollar}/> Buy Now
-            </button>
-            <button className="bg-teal-500 hover:bg-teal-700 text-white px-4 py-2 rounded-md"
-              onClick={addToCart}>
-              {!isLoading ? <FontAwesomeIcon icon={faShoppingCart} /> : 'loading'}
-            </button>
-            <button className="wishlist-btn text-red-500" onClick={handleAddToWishlist}>
-              <FontAwesomeIcon icon={isWishlistedState ? faHeart : faHeartRegular} />
-            </button>
-          </div>
           {/* Review Button */}
           {/* {reviewed === true? */}
             <button className="leave-review-btn mt-4 bg-gray-300 p-2 rounded" onClick={handleShowReviewModal}>
               Leave a Review
             </button>
-          {/* :
+           {/* :
             <></>
           } */}
           {showReviewModal && <ReviewModal onClose={()=>handleCloseReviewModal} productId={product._id} />}

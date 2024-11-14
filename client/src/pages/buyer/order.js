@@ -34,7 +34,7 @@ const OrdersPage = () => {
     }
 
     return (
-        <div className="orders-container">
+        <div className="orders-container h-full w-full">
             <h2 className="orders-heading">Your Orders</h2>
             {orders.length === 0 ? (
                 <p className="no-orders-text">No orders found.</p>
@@ -60,6 +60,7 @@ const OrdersPage = () => {
                                             <div>
                                                 <p className="product-name">{item.product_id?.name ? item.product_id?.name : 'Product No Longer Available'}</p>
                                                 <p className="product-quantity">Quantity: {item.quantity}</p>
+                                                <p className="product-quantity">Size: {item.size}</p>
                                             </div>
                                         </div>
                                         <p className="order-type">Payment Method: {order.type}</p>

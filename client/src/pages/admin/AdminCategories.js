@@ -108,27 +108,27 @@ const Catalogue = () => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const data = await getCategories(token);
-                setCategories(data);
-                if (data.length === 0) {
-                    setNoCategoriesMessage('No categories found. Please add a new category.');
-                } else {
-                    setNoCategoriesMessage('');
-                }
-            } catch (error) {
-                console.error('Error fetching categories:', error); // Log the error for debugging purposes
-                if (error.response && error.response.status === 404) {
-                    setNoCategoriesMessage('No categories found');
-                } else {
-                    setNoCategoriesMessage('An error occurred while fetching categories. Please try again later.');
-                }
-            }
-        };
-    
         fetchCategories();
     }, []);
+
+    const fetchCategories = async () => {
+        try {
+            const data = await getCategories(token);
+            setCategories(data);
+            if (data.length === 0) {
+                setNoCategoriesMessage('No categories found. Please add a new category.');
+            } else {
+                setNoCategoriesMessage('');
+            }
+        } catch (error) {
+            console.error('Error fetching categories:', error); // Log the error for debugging purposes
+            if (error.response && error.response.status === 404) {
+                setNoCategoriesMessage('No categories found');
+            } else {
+                setNoCategoriesMessage('An error occurred while fetching categories. Please try again later.');
+            }
+        }
+    };
     
     const handleAddCategory = async (categoryData) => {
         try {
@@ -141,6 +141,7 @@ const Catalogue = () => {
           setCategories([...categories, createdCategory]);
           setNewCategory({ name: '', description: '', parent: '', child: '' }); // Reset state
           setModalOpen(false);
+          alert('Category Created Successfully');
 
         } catch (error) {
             console.error('Error adding category:', error);
@@ -156,7 +157,7 @@ const Catalogue = () => {
         try {
           setLoading(true);
           
-          // Call the API to delete the category and await the response
+            // Call the API to delete the category and await the response
             const response = await deleteCategory(token, categoryId);  
 
             if (response.status === 200) {
@@ -164,7 +165,7 @@ const Catalogue = () => {
                 setCategories((prevCategories) =>
                 prevCategories.filter((category) => category.id !== categoryId)
                 );
-                alert('Category deleted successfully.');
+                fetchCategories();
             }
 
         } catch (error) {
@@ -231,9 +232,31 @@ const Catalogue = () => {
 
                 <div style={styles.categoryContainer}>
                     {categories.filter(category => !category.parent).map(parent => (
-                        <div key={parent._id} style={styles.parentCategory}>
-                            <div onClick={() => toggleExpand(parent._id)} style={styles.parentHeader}>
+                        <div key={parent._id} style={styles.parentCategory}
+                        >
+                            <div onClick={() => toggleExpand(parent._id)} 
+                                style={styles.parentHeader}
+                                onMouseEnter={() => setHoveredCategory(parent._id)}
+                                onMouseLeave={() => setHoveredCategory(null)}
+                            >
                                 {parent.name} {expandedCategories[parent._id] ? '−' : '+'}
+                                {/* Show delete button for parent category */}
+                                {hoveredCategory === parent._id && (
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeleteCategory(parent._id);
+                                        }}
+                                        style={{
+                                            ...styles.deleteButton,
+                                            display: 'inline-block',  // Always show button on hover
+                                        }}
+                                        onMouseEnter={(e) => e.target.style.color = '#dc3545'}
+                                        onMouseLeave={(e) => e.target.style.color = 'grey'}
+                                    >
+                                        <FontAwesomeIcon icon={faTrash} />
+                                    </button>
+                                )}
                             </div>
                             {expandedCategories[parent._id] && (
                                 <div style={styles.childCategories}>
@@ -417,6 +440,8 @@ const styles = {
     },
     parentHeader: {
         fontWeight: 'bold',
+        display: 'flex',
+        justifyContent: 'space-between',
         padding: '10px',
         border: '1px solid #ccc',
         borderRadius: '5px',

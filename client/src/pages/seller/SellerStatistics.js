@@ -1,11 +1,13 @@
 import React from 'react';
 import './SellerStatistics.css';
 import { Line } from 'react-chartjs-2';
+import { useTranslation } from 'react-i18next';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const SellerStatistics = () => {
+  const { t, i18n } = useTranslation();
   // Sale statistics data
   const saleData = {
     labels: ['May 31', 'Jun 30', 'Jul 31', 'Aug 31', 'Sep 30', 'Oct 31'],
@@ -76,17 +78,19 @@ const SellerStatistics = () => {
     <div className="seller-statistics">
       <div className="statistics-container">
         <div className="sale-statistics">
-          <h2>Sale Statistics</h2>
-          <Line data={saleData} options={saleOptions} />
+        <h2>{t("Sale Statistics")}</h2>
+        <Line data={saleData} options={saleOptions} />
         </div>
         <div className="lifetime-sales">
-          <h2>Lifetime Sales</h2>
-          <div className="lifetime-info">
-            <p>10 orders</p>
-            <p>Rs 250000 lifetime sale</p>
-            <p>95% of orders completed</p>
-            <p>5% of orders cancelled</p>
+        <h2>{t("Lifetime Sales")}</h2>
+        <div className="lifetime-info">
+        <p>{t("10 orders")}</p>
+    <p>{t("Rs 250000 lifetime sale")}</p>
+    <p>{t("95% of orders completed")}</p>
+    <p>{t("5% of orders cancelled")}</p>
           </div>
+         
+
           <div className="lifetime-chart">
             <div className="circle-chart">
               <svg viewBox="0 0 36 36" className="circular-chart">
@@ -106,8 +110,8 @@ const SellerStatistics = () => {
       </div>
 
       <div className="recent-orders">
-        <h2>Recent Orders</h2>
-        <div className="orders-list">
+      <h2>{t("Recent Orders")}</h2>
+      <div className="orders-list">
           {orders.map((order) => (
             <div className="order-item" key={order.id}>
               <div className="order-image">

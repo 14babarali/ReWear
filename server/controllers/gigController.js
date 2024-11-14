@@ -103,7 +103,6 @@ const getAllGigs = async (req, res) => {
   }
 };
 
-
 // Get a Gig by ID
 const getGigById = async (req, res) => {
   const { id } = req.params;
@@ -121,7 +120,7 @@ const getGigById = async (req, res) => {
   }
 };
 
-
+// Update a Gig (only for verified users)
 const updateGig = async (req, res) => {
   const { id } = req.params;
   const { title, experience, description } = req.body;
@@ -179,98 +178,6 @@ const updateGig = async (req, res) => {
     res.status(500).json({ message: 'Server error during update', error: error.message });
   }
 };
-
-
-// // Update a Gig (only for verified users)
-// const updateGig = async (req, res) => {
-//   const { id } = req.params;
-//   const { title, experience, description } = req.body;
-
-//   try {
-//     console.log('--- Starting update for gig ---');
-//     console.log('Gig ID:', id);
-//     console.log('Incoming title:', title);
-//     console.log('Incoming experience:', experience);
-//     console.log('Incoming description:', description);
-
-//     // Find the gig
-//     const gig = await Gig.findById(id);
-//     if (!gig) {
-//       console.warn('Gig not found');
-//       return res.status(404).json({ message: 'Gig not found' });
-//     }
-//     console.log('Gig found:', JSON.stringify(gig, null, 2));
-
-//     // Verify the user is the owner of the gig
-//     if (gig.user.toString() !== req.user.id) {
-//       console.warn('Unauthorized update attempt by user:', req.user.id);
-//       return res.status(403).json({ message: 'Unauthorized to update this gig' });
-//     }
-//     console.log('User authorized to update gig:', req.user.id);
-
-//     // Update fields if they are provided in the request
-//     if (title !== undefined && title !== gig.title) {
-//       console.log(`Updating title from "${gig.title}" to "${title}"`);
-//       gig.title = title;
-//       gig.markModified('title');
-//     } else {
-//       console.log('Title not modified or not provided');
-//     }
-
-//     if (experience !== undefined && experience !== gig.experience) {
-//       console.log(`Updating experience from "${gig.experience}" to "${experience}"`);
-//       gig.experience = experience;
-//       gig.markModified('experience');
-//     } else {
-//       console.log('Experience not modified or not provided');
-//     }
-
-//     if (description !== undefined && description !== gig.description) {
-//       console.log(`Updating description from "${gig.description}" to "${description}"`);
-//       gig.description = description;
-//       gig.markModified('description');
-//     } else {
-//       console.log('Description not modified or not provided');
-//     }
-
-//     // Handle gig image update if a new image is uploaded
-//     if (req.file) {
-//       console.log('New file detected, processing image update');
-
-//       // Delete the old image if it exists
-//       if (gig.gigImage) {
-//         const oldImagePath = path.join(__dirname, '..', 'uploads', gig.gigImage);
-//         fs.unlink(oldImagePath, (err) => {
-//           if (err) console.error('Error deleting old image:', err);
-//           else console.log('Old image deleted successfully:', gig.gigImage);
-//         });
-//       } else {
-//         console.log('No previous image to delete');
-//       }
-
-//       // Save the new image filename
-//       gig.gigImage = req.file.filename;
-//       gig.markModified('gigImage');
-//       console.log('New image filename set:', req.file.filename);
-//     } else {
-//       console.log('No new file uploaded');
-//     }
-
-//     // Save the updated gig to the database
-//     console.log('Saving updated gig to database...');
-//     const updatedGig = await gig.save();
-
-//     console.log('--- Gig updated successfully ---');
-//     console.dir(updatedGig, { depth: null });
-    
-//     res.status(200).json({ message: 'Gig updated successfully', gig: updatedGig });
-//   } catch (error) {
-//     console.error('Error updating gig:', error);
-//     res.status(500).json({ message: 'Server error while updating gig', error: error.message });
-//   }
-// };
-
-
 
 // Delete a Gig (only for verified users)
 const deleteGig = async (req, res) => {
