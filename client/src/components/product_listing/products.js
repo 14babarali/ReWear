@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import '../stylesheets/productcard.css';
 import { useLocation, useParams } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 const Products = () => {
   const [productList, setProductList] = useState([]);
@@ -97,6 +98,7 @@ const Products = () => {
 
   return (
     <>
+    <ToastContainer/>
       <div className="container vh-100 w-100" style={{ maxWidth: '100%' }}>
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-semibold text-center flex-grow">{formattedCategory}</h1>

@@ -445,12 +445,12 @@ const Gigs = () => {
                             >
                               Delete Post
                             </li>
-                            <li className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+                            {/* <li className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
                               Edit Post
                             </li>
                             <li className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
                               Report Post
-                            </li>
+                            </li> */}
                           </ul>
                         </div>
                       )}
@@ -481,7 +481,7 @@ const Gigs = () => {
                     )}
                   </div>
 
-                  <div className="flex justify-around text-gray-600 text-xs mt-4">
+                  {/* <div className="flex justify-around text-gray-600 text-xs mt-4">
                     <button className="text-gray-900 bg-transparent hover:text-red-500 transition flex items-center gap-1">
                       <span className="material-icons">favorite</span> Like
                     </button>
@@ -492,7 +492,7 @@ const Gigs = () => {
                     <button className="text-gray-900 bg-transparent hover:text-red-500 transition flex items-center gap-1">
                       <span className="material-icons">ios_share</span> Share
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               ))
             ) : (

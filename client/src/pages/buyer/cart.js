@@ -227,12 +227,10 @@ const Cart = () => {
 
         if (response.status === 200) {
             const products = response.data;
-            // Process the products data as needed
-            // console.log('Products:', products);
-
-            // Save selected items and product details to localStorage
-            localStorage.setItem('selectedProducts', JSON.stringify(products));
-            navigate('/buyer/checkout'); // Navigate to checkout page
+            // Navigate to checkout page with selected products
+            navigate('/buyer/checkout', {
+              state: { products },
+            });
         } else {
             toast.warning('Failed to fetch product details.');
         }

@@ -18,20 +18,28 @@ exports.createCategory = async (req, res) => {
 
   try {
 
-      const slug = generateSlug(name);
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
 
-      const newCategory = new Category({
-          name,
-          slug,
-          description,
-          parent,
-          userId,
-      });
+    // Determine approval status based on user role
+    const isApproved = user.role === 'admin';
 
-      await newCategory.save();
-      res.status(201).json(newCategory);
+    const slug = generateSlug(name);
+
+    const newCategory = new Category({
+      name,
+      slug,
+      description,
+      parent,
+      userId,
+    });
+
+    await newCategory.save();
+    res.status(201).json(newCategory);
   } catch (error) {
-      res.status(400).json({ message: error.message });
+    res.status(400).json({ message: error.message });
   }
 };
 
@@ -80,7 +88,7 @@ exports.getBuyerCategories = async (req, res) => {
       }, 10000); // 10 seconds
 
       try {
-        const categories = await Category.find({});
+        const categories = await Category.find({isDeleted: false});
         clearTimeout(timeout);
         resolve(categories);
       } catch (error) {

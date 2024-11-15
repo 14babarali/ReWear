@@ -366,12 +366,14 @@ const AddProduct = () => {
             isOpen: true,
             title: "Success",
             message: "Product edited successfully!",
+            onClose: () => setModal({ isOpen: false }),
           });
         } else {
           setModal({
             isOpen: true,
             title: "Success",
             message: "Product added successfully!",
+            onClose: () => setModal({ isOpen: false }), 
           });
         }
 
@@ -398,6 +400,7 @@ const AddProduct = () => {
           isOpen: true,
           title: "Error",
           message: "Failed to save product!",
+          onClose: () => setModal({ isOpen: false }), 
         });
       }
     } catch (error) {
@@ -406,23 +409,13 @@ const AddProduct = () => {
         isOpen: true,
         title: "Error",
         message: "An error occurred while saving the product.",
+        onClose: () => setModal({ isOpen: false }), 
       });
     }
   };
 
-  // {console.log(selectedParentName, selectedChildName)}
-  // console.log('Available Sizes:', sizeOptions[selectedParentName]?.[selectedChildName]);
   return (
-    <div className="">
-      <Button
-        className="bg-transparent text-black tracking-wider"
-        style={{ textDecoration: "underline" }}
-        onClick={() => {
-          window.history.back();
-        }}
-      >
-        {"<Back"}
-      </Button>
+    <div className="max-w-4xl mx-auto mt-8 mb-4 bg-white shadow-lg rounded-lg p-6">
       <Modal
         isOpen={modal.isOpen}
         title={modal.title}
@@ -430,10 +423,18 @@ const AddProduct = () => {
         onClose={() => setModal({ ...modal, isOpen: false })}
       />
 
-      <div className="mb-5 m-0 w-full" style={styles.container}>
-        <h2 style={styles.header}>
-          {editproduct ? "Edit Product" : "Add Product"}
-        </h2>
+      <div className="m-0 w-full" style={styles.container}>
+        <div className="flex items-center">
+          <button
+            className="bg-transparent text-black tracking-wider underline mr-auto"
+            onClick={() => window.history.back()}
+          >
+            {"<Back"}
+          </button>
+          <h2 className="text-center flex-1 text-lg font-semibold">
+            {editproduct ? "Edit Product" : "Add Product"}
+          </h2>
+        </div>
         {noCategoriesMessage && (
           <p style={styles.noCategories}>{noCategoriesMessage}</p>
         )}
@@ -442,7 +443,7 @@ const AddProduct = () => {
         <div style={styles.categoryGroup}>
           <h3 style={styles.subHeader}>Category Selection</h3>
           <div style={styles.categorySelect}>
-            <label style={styles.label}>Parent Category:</label>
+            <label className="block text-sm font-medium text-gray-700"  style={styles.label}>Parent Category:</label>
             <select
               value={selectedParent}
               onChange={handleParentChange}
@@ -460,7 +461,7 @@ const AddProduct = () => {
           </div>
 
           <div style={styles.categorySelect}>
-            <label style={styles.label}>Child Category:</label>
+            <label className="block text-sm font-medium text-gray-700"  style={styles.label}>Child Category:</label>
             <select
               value={selectedChild}
               onChange={handleChildChange}
@@ -477,7 +478,7 @@ const AddProduct = () => {
           </div>
 
           <div style={styles.categorySelect}>
-            <label style={styles.label}>Sub-Child Category:</label>
+            <label className="block text-sm font-medium text-gray-700"  style={styles.label}>Sub-Child Category:</label>
             <select
               value={selectedSubChild}
               onChange={(e) => setSelectedSubChild(e.target.value)}
@@ -498,7 +499,7 @@ const AddProduct = () => {
         <form onSubmit={createProduct} style={styles.form}>
           <h3 style={styles.subHeader}>Product Details</h3>
           <div style={styles.section}>
-            <label style={styles.label}>Product Name</label>
+            <label className="block text-sm font-medium text-gray-700"  style={styles.label}>Product Name</label>
             <input
               type="text"
               name="name"
@@ -510,9 +511,9 @@ const AddProduct = () => {
           </div>
 
           <div style={styles.section}>
-            <label style={styles.label}>Product Type</label>
+            <label className="block text-sm font-medium text-gray-700"  style={styles.label}>Product Type</label>
             <div style={styles.radioGroup}>
-              <label style={styles.radioLabel}>
+              <label className="block text-sm font-medium text-gray-700"  style={styles.radioLabel}>
                 <input
                   type="radio"
                   name="type"
@@ -523,7 +524,7 @@ const AddProduct = () => {
                 />
                 &nbsp;New
               </label>
-              <label style={styles.radioLabel}>
+              <label className="block text-sm font-medium text-gray-700"  style={styles.radioLabel}>
                 <input
                   type="radio"
                   name="type"
@@ -537,61 +538,80 @@ const AddProduct = () => {
             </div>
           </div>
 
-          <div className="d-flex gap-x-5">
-            <div style={styles.section}>
-              <label style={styles.label}>Material</label>
+          <div className="space-y-4">
+            {/* Material Input */}
+            <div className="flex flex-col space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Material
+              </label>
               <input
                 type="text"
                 name="material"
                 value={product.material}
                 onChange={handleChange}
                 required
-                style={styles.input}
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-400"
               />
             </div>
 
-            {product.sizes.map((sizeObj, index) => (
-              <div key={index}>
-                <input
-                  type="text"
-                  placeholder="Size"
-                  minLength={1}
-                  maxLength={50}
-                  value={sizeObj.size}
-                  onChange={(e) =>
-                    handleSizeChange(index, "size", e.target.value)
-                  }
-                />
-                <input
-                  type="number"
-                  placeholder="Quantity"
-                  value={sizeObj.qty}
-                  min={1}
-                  max={30}
-                  onChange={(e) =>
-                    handleSizeChange(index, "qty", e.target.value, 10)
-                  }
-                />
-                <button
-                  className=" flex bg-transparent mt-2 border-1 text-gray-500 "
-                  type="button"
-                  onClick={() => removeSize(index)}
-                >
-                  Remove Size
-                </button>
+            {/* Sizes Section */}
+            <div className="space-y-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Sizes
+              </label>
+              <div className="space-y-4">
+                {product.sizes.map((sizeObj, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-x-4 p-2 border border-gray-300 rounded-md"
+                  >
+                    {/* Size Input */}
+                    <input
+                      type="text"
+                      placeholder="Size"
+                      minLength={1}
+                      maxLength={50}
+                      value={sizeObj.size}
+                      onChange={(e) => handleSizeChange(index, "size", e.target.value)}
+                      className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-400"
+                    />
+
+                    {/* Quantity Input */}
+                    <input
+                      type="number"
+                      placeholder="Quantity"
+                      value={sizeObj.qty}
+                      min={1}
+                      max={30}
+                      onChange={(e) => handleSizeChange(index, "qty", e.target.value)}
+                      className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-400"
+                    />
+
+                    {/* Remove Size Button */}
+                    <button
+                      type="button"
+                      onClick={() => removeSize(index)}
+                      className="px-3 py-1 text-sm text-white bg-red-500 rounded-md hover:bg-red-600"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
               </div>
-            ))}
-            <button
-              className=" flex bg-transparent mt-2 border-1 text-gray-500 "
-              type="button"
-              onClick={addSize}
-            >
-              Add Size
-            </button>
+
+              {/* Add Size Button */}
+              <button
+                type="button"
+                onClick={addSize}
+                className="w-full py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
+              >
+                Add Size
+              </button>
+            </div>
           </div>
 
           <div style={styles.section}>
-            <label style={styles.label}>Description</label>
+            <label className="block text-sm font-medium text-gray-700"  style={styles.label}>Description</label>
             <textarea
               name="description"
               value={product.description}
@@ -604,7 +624,7 @@ const AddProduct = () => {
 
           <div className="d-flex gap-x-5">
             <div style={styles.section}>
-              <label style={styles.label}>Price</label>
+              <label className="block text-sm font-medium text-gray-700"  style={styles.label}>Price</label>
               <input
                 type="number"
                 name="price"
@@ -619,7 +639,7 @@ const AddProduct = () => {
 
           {product.type === "Used" && (
             <div style={styles.section}>
-              <label style={styles.label}>Condition</label>
+              <label className="block text-sm font-medium text-gray-700"  style={styles.label}>Condition</label>
               <input
                 type="number"
                 name="condition"
@@ -634,17 +654,18 @@ const AddProduct = () => {
 
           {/* Product Images Section */}
           <div style={styles.section}>
-            <label style={styles.label}>Product Images</label>
+            <label className="block text-sm font-medium text-gray-700"  style={styles.label}>Product Images</label>
             <input
               type="file"
               accept="image/*"
               name="images"
+              className="border-1 p-1 rounded"
               multiple
               onChange={handleImageChange}
               required={!editproduct}
             />
             {previews.length > 0 && (
-              <div className="m-2" style={styles.imagePreviewContainer}>
+              <div className="m-2 border-1 rounded p-1 w-fit" style={styles.imagePreviewContainer}>
                 {previews.map((preview, index) => (
                   <img
                     key={index}
@@ -670,13 +691,11 @@ const AddProduct = () => {
 
 const styles = {
   container: {
-    maxWidth: "600px", // Set a fixed max width for better readability
+    maxWidth: "100%", // Set a fixed max width for better readability
     margin: "auto",
-    marginTop: "15px",
-    padding: "20px",
+    marginTop: "10px",
+    padding: "15px",
     backgroundColor: "#ffffff",
-    borderRadius: "10px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
   },
   header: {
     fontSize: "24px",

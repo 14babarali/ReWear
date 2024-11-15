@@ -6,15 +6,7 @@ const BuyerReviews = () => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem('token');
-  // Static review data
-  const staticReview = {
-    buyerName: 'Talha Masood',
-    buyerAvatar: '/default-avatar.png',
-    date: new Date(),
-    rating: 4,
-    text: 'Great product, highly recommended!'
-  };
-
+  
   useEffect(() => {
     // Fetching reviews data from the server
     const fetchReviews = async () => {
@@ -65,12 +57,11 @@ const BuyerReviews = () => {
                   />
                   <div className='d-flex flex-col'>
                   <span className='text-base'>{review.reviewer_id ? review.reviewer_id.profile.name : 'Name-not-found'}</span>
-                  <span className='text-gray-500 text-sm'>{review.product_id ? review.product_id.name : 'Product-Name not Avaiable'}</span>
+                  <span className='text-gray-500 text-sm'>{review.product_id ? review.product_id.name : 'Product Name not Avaiable'}</span>
                   </div>
-                  <div className="buyer-details">
-                    {/* Display the reviewer's name */}
+                  {/* <div className="buyer-details">
                     <h4>{review.reviewer_id ? review.reviewer_id.name : 'Anonymous'}</h4>
-                  </div>
+                  </div> */}
                 </div>
                 <div>
                     {/* Display the review date */}

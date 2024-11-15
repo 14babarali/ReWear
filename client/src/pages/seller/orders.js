@@ -6,7 +6,7 @@ const OrdersPage = () => {
   const { t } = useTranslation();
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
-  const [filters, setFilters] = useState({ status: "", price: "", date: "" });
+  const [filters, setFilters] = useState({ status: "", price: "", date: "" , sort: "",});
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
   const token = localStorage.getItem("token");
@@ -41,24 +41,22 @@ const OrdersPage = () => {
       filtered = filtered.filter((order) => order.status === filters.status);
     }
 
+    // Date filters
     const now = new Date();
-    if (filters.date === "week") {
-      const lastWeek = new Date(now);
-      lastWeek.setDate(now.getDate() - 7);
+    if (filters.date === "today") {
       filtered = filtered.filter(
-        (order) => new Date(order.created_at) >= lastWeek
+        (order) => new Date(order.created_at).toDateString() === now.toDateString()
+      );
+    } else if (filters.date === "week") {
+      const startOfWeek = new Date(now);
+      startOfWeek.setDate(now.getDate() - now.getDay());
+      filtered = filtered.filter(
+        (order) => new Date(order.created_at) >= startOfWeek
       );
     } else if (filters.date === "month") {
-      const lastMonth = new Date(now);
-      lastMonth.setMonth(now.getMonth() - 1);
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
       filtered = filtered.filter(
-        (order) => new Date(order.created_at) >= lastMonth
-      );
-    } else if (filters.date === "year") {
-      const lastYear = new Date(now);
-      lastYear.setFullYear(now.getFullYear() - 1);
-      filtered = filtered.filter(
-        (order) => new Date(order.created_at) >= lastYear
+        (order) => new Date(order.created_at) >= startOfMonth
       );
     }
 
@@ -66,6 +64,17 @@ const OrdersPage = () => {
       filtered.sort((a, b) => a.total_price - b.total_price);
     } else if (filters.price === "high-to-low") {
       filtered.sort((a, b) => b.total_price - a.total_price);
+    }
+
+    // Sorting by latest or oldest
+    if (filters.sort === "latest") {
+      filtered.sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      );
+    } else if (filters.sort === "oldest") {
+      filtered.sort(
+        (a, b) => new Date(a.created_at) - new Date(b.created_at)
+      );
     }
 
     if (searchTerm) {
@@ -139,10 +148,10 @@ const OrdersPage = () => {
           value={filters.date}
           className="border border-gray-300 rounded-md px-4 py-2 text-gray-700 shadow-sm hover:border-gray-400 focus:border-gray-500 focus:outline-none focus:ring focus:ring-gray-200 transition ease-in-out duration-150"
         >
-          <option value="">{t('All time')}</option>
-          <option value="week">{t('This Week')}</option>
-          <option value="month">{t('This Month')}</option>
-          <option value="year">{t('This Year')}</option>
+          <option value="">{t("All time")}</option>
+          <option value="today">{t("Today")}</option>
+          <option value="week">{t("This Week")}</option>
+          <option value="month">{t("This Month")}</option>
         </select>
 
         <select
@@ -168,6 +177,18 @@ const OrdersPage = () => {
           <option value="shipped">{t('shipped')}</option>
           <option value="delivered">{t('delivered')}</option>
           <option value="cancelled">{t('cancelled')}</option>
+        </select>
+
+        {/* Latest/Oldest Filter */}
+        <select
+          name="sort"
+          onChange={handleFilterChange}
+          value={filters.sort}
+          className="border border-gray-300 rounded-md px-4 py-2 text-gray-700 shadow-sm hover:border-gray-400 focus:border-gray-500 focus:outline-none focus:ring focus:ring-gray-200 transition ease-in-out duration-150"
+        >
+          <option value="">{t("Sort by Date")}</option>
+          <option value="latest">{t("Latest")}</option>
+          <option value="oldest">{t("Oldest")}</option>
         </select>
 
         <input

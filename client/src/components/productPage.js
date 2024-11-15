@@ -204,6 +204,13 @@ const ProductPage = () => {
       toast.warning('Please select a size', { autoClose: 1500 });
       return;
     }
+
+    console.log('Navigating to checkout with state:', {
+      product,
+      selectedSize,
+      quantity,
+    });
+    
   
     // Navigate to checkout page with product data, selected size, and quantity as state
     navigate('/buyer/checkout', {
@@ -302,7 +309,7 @@ const ProductPage = () => {
     setCurrentImageIndex(index);
   };
   // Filter out the current product from suggested products and match the category
-  const suggestedProducts = products.filter(p => p._id !== product._id && p.category === category);
+  const suggestedProducts = products.filter(p => p._id !== product._id && p.subcategory === category);
 
   return (
       <div className="product-page-container mb-10 gap-1">
