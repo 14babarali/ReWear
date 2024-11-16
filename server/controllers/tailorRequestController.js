@@ -5,8 +5,11 @@ const TailorRequest = require('../models/TailorRequest'); // Adjust the path to 
 const createTailorRequest = async (req, res) => {
   const { buyerId, gigId, userCategory, fitType, description } = req.body;
   const measurements = JSON.parse(req.body.measurements); // Parse the JSON string
-  const picture = req.file?.fileName || null;
+
+  const picture = req.file?.filename;
   console.log(req.body);
+  console.log('File:', picture);
+
   try {
     // Validate required fields
     if (!buyerId || !gigId || !userCategory || !fitType || !description || !measurements) {
@@ -20,7 +23,7 @@ const createTailorRequest = async (req, res) => {
       userCategory,
       fitType,
       description,
-      picture,
+      'picture': picture,
       measurements,
     });
 
