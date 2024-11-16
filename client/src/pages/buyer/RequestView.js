@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import Lottie from 'react-lottie';
-import Stiching from './Giff/StichReq.json'; // Replace with the path to your downloaded JSON animation
+import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
+import Lottie from "react-lottie";
+import Stiching from "./Giff/StichReq.json"; // Replace with the correct path to your Lottie animation file
 
 function RequestView() {
   const location = useLocation();
-  const request = location.state; // Retrieve data passed from the previous page
-  console.log(request);
+  const request = location.state?.request || {}; // Ensure request exists
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = () => {
@@ -22,24 +21,28 @@ function RequestView() {
     autoplay: true,
     animationData: Stiching,
     rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice'
-    }
+      preserveAspectRatio: "xMidYMid slice",
+    },
   };
 
   return (
     <div className="container mx-auto p-6 bg-gray-100 min-h-screen">
       <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-lg overflow-hidden">
+        {/* Header */}
         <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-6 text-white text-center">
           <h1 className="text-3xl font-bold">Order Details</h1>
           <p className="text-sm mt-1">Review your measurements and style before submission</p>
         </div>
 
+        {/* Order Details */}
         <div className="p-6">
           {/* Fitting Style */}
           <div className="mb-6">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Fitting Style</h2>
             <div className="p-4 bg-gray-50 rounded-lg shadow-inner text-gray-700">
-              <p><span className="font-semibold">Style:</span> {request?.fitType || "Not specified"}</p>
+              <p>
+                <span className="font-semibold">Style:</span> {request?.fitType || "Not specified"}
+              </p>
             </div>
           </div>
 
@@ -50,16 +53,20 @@ function RequestView() {
               {request.measurements?.shirt && (
                 <>
                   <h3 className="text-xl font-semibold">Shirt Measurements</h3>
-                  {Object.entries(request.measurements.shirt.takensize).map(([key, value]) => (
-                    <p key={key}><span className="font-semibold">{key}:</span> {value || "N/A"} inches</p>
+                  {Object.entries(request.measurements.shirt.takensize || {}).map(([key, value]) => (
+                    <p key={key}>
+                      <span className="font-semibold">{key.replace(/([A-Z])/g, " $1")}:</span> {value || "N/A"} inches
+                    </p>
                   ))}
                 </>
               )}
               {request.measurements?.trouser && (
                 <>
                   <h3 className="text-xl font-semibold">Trouser Measurements</h3>
-                  {Object.entries(request.measurements.trouser.takensize).map(([key, value]) => (
-                    <p key={key}><span className="font-semibold">{key}:</span> {value || "N/A"} inches</p>
+                  {Object.entries(request.measurements.trouser.takensize || {}).map(([key, value]) => (
+                    <p key={key}>
+                      <span className="font-semibold">{key.replace(/([A-Z])/g, " $1")}:</span> {value || "N/A"} inches
+                    </p>
                   ))}
                 </>
               )}
@@ -80,7 +87,7 @@ function RequestView() {
             <div className="p-4 bg-gray-50 rounded-lg shadow-inner text-gray-700">
               {request.picture ? (
                 <img
-                  src={`http://localhost:3001/uploads/${request.picture}`} // Using the full filename with path
+                  src={`http://localhost:3001/uploads/${request.picture}`}
                   alt="Uploaded Design"
                   className="w-full h-auto rounded-md"
                 />
@@ -101,6 +108,7 @@ function RequestView() {
           </div>
         </div>
 
+        {/* Footer */}
         <div className="p-6 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-center">
           <p className="text-sm">Please review all information carefully before submitting.</p>
         </div>

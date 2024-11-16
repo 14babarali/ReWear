@@ -1,18 +1,26 @@
-const TailorRequest = require('../models/tailorRequest.js');  // Assuming your model is in the `models` directory
+const fs = require('fs');
+const path = require('path');
+const TailorRequest = require('../models/TailorRequest'); // Adjust the path to your TailorRequest model
 
-// Create a new tailor request
 const createTailorRequest = async (req, res) => {
+  const { buyerId, gigId, userCategory, fitType, description } = req.body;
+  const measurements = JSON.parse(req.body.measurements); // Parse the JSON string
+  const picture = req.file?.fileName || null;
+  console.log(req.body);
   try {
-    // Destructure data from the request body
-    const { buyerId, gigId, userCategory, fitType, description, measurements } = req.body;
+    // Validate required fields
+    if (!buyerId || !gigId || !userCategory || !fitType || !description || !measurements) {
+      return res.status(400).json({ message: 'All required fields must be provided.' });
+    }
 
-    // Create a new tailor request instance
+    // Create a new tailor request
     const newRequest = new TailorRequest({
       buyerId,
       gigId,
       userCategory,
       fitType,
       description,
+      picture,
       measurements,
     });
 
@@ -25,7 +33,20 @@ const createTailorRequest = async (req, res) => {
       data: newRequest,
     });
   } catch (err) {
-    console.error(err);
+    console.error('Error creating tailor request:', err);
+
+    // Delete the uploaded picture if the request fails
+    if (picture) {
+      const filePath = path.join(__dirname, '../uploads', picture); // Adjust the path based on your file storage
+      fs.unlink(filePath, (unlinkErr) => {
+        if (unlinkErr) {
+          console.error('Failed to delete picture:', unlinkErr);
+        } else {
+          console.log('Picture deleted successfully.');
+        }
+      });
+    }
+
     res.status(500).json({
       message: 'An error occurred while creating the tailor request.',
       error: err.message,
