@@ -9,8 +9,8 @@ const admin = require('./routes/admin');
 const review = require('./routes/reviews');
 const gigsRoute = require('./routes/gigs');
 const services = require('./routes/services');
-const measurementRequestRoutes = require('./routes/measurementRequestRoutes');
-
+// const measurementRequestRoutes = require('./routes/measurementRequestRoutes');
+const tailorRequestRoutes = require('./routes/tailorRequestRoutes');
 const path = require("path");
 const morgan = require('morgan');
 require('./database'); // Import the database connection
@@ -41,6 +41,9 @@ app.use(morgan('dev'));
 // Mount the auth routes
 app.use('/api', authRoutes);
 
+app.use('/api', tailorRequestRoutes);
+
+
 app.use('/category', categoriesRoutes);
 
 app.use('/payment', paymentRoute);
@@ -53,7 +56,7 @@ app.use('/services',services);
 ''
 app.use('/reviews',review);
 
-app.use('/tailoring-requests', measurementRequestRoutes);
+// app.use('/tailoring-requests', measurementRequestRoutes);
 
 // Register error handling middleware
 app.use(errorHandler);
