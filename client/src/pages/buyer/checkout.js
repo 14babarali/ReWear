@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-// import axios from 'axios';
 import { toast, ToastContainer } from "react-toastify";
 import ReactPhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import "./checkout.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
-import CheckoutModal from "../../components/CheckoutModal"; // Import the modal component
-
+import CheckoutModal from "../../components/CheckoutModal";
 import axios from "axios";
 
 const Checkout = () => {
@@ -26,106 +24,91 @@ const Checkout = () => {
   const { product, selectedSize, quantity } = location.state || {};
 
   useEffect(() => {
-    fetchProductDetails();
+    if (location.state && location.state.products) {
+      setSelectedItems(location.state.products);
+    } else if (!product) {
+      toast.error("No products available for checkout.");
+      navigate("/buyer/cart");
+    }
+  }, [location.state, navigate, product]);
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    if (userData) {
+      setUser(userData);
+      setIsLoggedIn(true);
+    }
   }, []);
-
-  // Function to fetch product details by IDs
-  const fetchProductDetails = async () => {
-    const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user")); // Parsing JSON to get the object
-
-    if (user) {
-      setIsLoggedIn(true);
-      setUser(user);
-    }
-    if (token) {
-      setIsLoggedIn(true);
-    }
-
-    try {
-      const products = localStorage.getItem("selectedProducts");
-      if (products) {
-        setSelectedItems(JSON.parse(products));
-      } else {
-        setSelectedItems([]);
-      }
-    } catch (error) {
-      console.error("Error fetching product details:", error);
-      // Handle error
-    }
-  };
 
   const calculateSubtotal = () => {
     if (product) {
-      return product.price * quantity; // Use product from state if available
+      return product.price * quantity;
     }
 
-    // Otherwise, calculate based on localStorage items
     return selectedItems.reduce((subtotal, item) => {
-      const itemPrice = item.product.price;
-      const itemQuantity = item.quantity;
-      return subtotal + itemPrice * itemQuantity;
+      return subtotal + item.product.price * item.quantity;
     }, 0);
   };
 
   const calculateTotal = () => {
-    return calculateSubtotal(); // Adding a fixed delivery fee of 200
+    return calculateSubtotal(); // Adding delivery fee
   };
 
   const handlePayment = async () => {
+    const products = product
+      ? [
+          {
+            product_id: product._id,
+            quantity,
+            size: selectedSize,
+            price: product.price,
+          },
+        ]
+      : selectedItems.map((item) => ({
+          product_id: item.product._id,
+          quantity: item.quantity,
+          size: item.size,
+          price: item.product.price,
+        }));
+
     if (!isLoggedIn) {
-      toast.warning("Please log in to proceed with the payment.", {
-        autoClose: 1500,
-      });
+      toast.warning("Please log in to proceed with the payment.");
       navigate("/login");
       return;
     }
+
     if (!selectedAddress) {
-      toast.warning("Please select an address to proceed with the payment.", {
-        autoClose: 1500,
-      });
+      toast.warning("Please select an address.");
       return;
     }
+
     if (!paymentMethod) {
-      toast.warning("Please select payment method.", {
-        autoClose: 1500,
-      });
+      toast.warning("Please select a payment method.");
       return;
     }
 
-    const products = selectedItems.map((item) => ({
-      product_id: item.product._id,
-      quantity: item.quantity,
-      size: item.size,
-      price: item.price,
-    }));
-
-    // Find the selected address from user profile addresses
     const selectedAddressDetails = user.profile.addresses.find(
       (address) => address._id === selectedAddress
     );
 
     const orderData = {
       buyer_id: user._id,
-      products: products,
+      products,
       type: paymentMethod === "card" ? "Card" : "COD",
       address: {
         street: selectedAddressDetails.street,
         city: selectedAddressDetails.city,
         postalcode: selectedAddressDetails.postalcode,
       },
-      phone: user.profile.phone, // include the phone number
+      phone: user.profile.phone,
     };
 
-    // Handling Card payments
-    if (paymentMethod === "CARD" || paymentMethod === "card") {
-      // Process card payment with cardDetails
-      try {
-        // Create payment intent on the backend
+    try {
+      if (paymentMethod === "card") {
         const { data } = await axios.post(
           "http://localhost:3001/payment/card-payment",
           {
-            amount: calculateTotal(), // totalAmount should be the price to be paid
+            amount: calculateTotal(),
             currency: "PKR",
           },
           {
@@ -134,46 +117,37 @@ const Checkout = () => {
             },
           }
         );
-        console.log({ data });
-        // Navigate to payment page with clientSecret
+
         navigate("/buyer/card-payment", {
           state: { clientSecret: data.clientSecret, orderData },
         });
-      } catch (error) {
-        console.error("Error creating payment intent:", error);
-        toast.error("Server error. Please try again later.");
-      }
-    } else if (paymentMethod === "COD" || paymentMethod === "cod") {
-      try {
+      } else {
         const response = await axios.post(
           "http://localhost:3001/api/orderplace",
           orderData,
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token for authenticated requests
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
         );
 
         if (response.status === 200 || response.status === 201) {
-          // Display success message
+          toast.success("Order placed successfully!");
           setOrderStatus(true);
           setIsModalOpen(true);
         } else {
-          // Display error message
-          setOrderStatus(false);
-          setIsModalOpen(true);
+          toast.error("Failed to place the order. Please try again.");
         }
-      } catch (error) {
-        console.error("Error placing order:", error);
-        toast.error("Server Errors. Please try again after some time.");
       }
+    } catch (error) {
+      console.error("Error placing order:", error);
+      toast.error("Error occurred while placing the order.");
     }
   };
 
-  const handleAddressSelection = (addressId) => {
-    setSelectedAddress(addressId);
-  };
+  const handleAddressSelection = (addressId) => setSelectedAddress(addressId);
+
 
   return (
     <div className="checkout-container">
@@ -216,6 +190,7 @@ const Checkout = () => {
                       {" "}
                       Add New address
                     </a>
+                  </p>
                     <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
                       {(user.profile.addresses || []).map((address, index) => (
                         <li key={index} className="flex mt-3">
@@ -230,7 +205,9 @@ const Checkout = () => {
                           &nbsp;
                           <label
                             className="m-0 text-base font-normal"
+                            id={`address-${index}`}
                             htmlFor={`address-${index}`}
+
                           >
                             {address.street}, {address.city},{" "}
                             {address.postalcode}
@@ -238,7 +215,6 @@ const Checkout = () => {
                         </li>
                       ))}
                     </ul>
-                  </p>
                 </div>
               </div>
             </>

@@ -8,6 +8,8 @@ router.post('/add',authMiddleware.verifyToken,upload.array('images', 10), review
 
 router.get('/get/:id', review.getProductReviews);
 
+router.get('/product/:id',authMiddleware.verifyToken, review.getUserProductReviews);
+
 router.get('/getall',authMiddleware.verifyToken, review.getAllReviews);
 
 module.exports = router;

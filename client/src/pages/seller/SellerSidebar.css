@@ -52,10 +52,9 @@
 
 /* Close Button */
 .sidebar-close-btn {
-  position: absolute;
-  top: 1.7rem;
-  right: 0rem;
   color: white;
+  position: relative;
+  margin: 0;
   background: none;
   border: none;
   cursor: pointer;

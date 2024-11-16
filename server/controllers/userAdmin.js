@@ -98,10 +98,16 @@ exports.fetchOrdersAll = async (req, res) => {
       const orders = await Order.find()
       .populate({
         path: 'products.product_id', // Populate product details
-        populate: {
-          path: 'userId', // Populate seller details from product's userId
-          select: 'email role status isVerified profile.name profile.profilePicture profile.phone profile.addresses', // Selecting the seller's profile details
-        },
+        populate: [
+          {
+            path: 'userId', // Populate seller details from product's userId
+            select: 'email role status isVerified profile.name profile.profilePicture profile.phone profile.addresses', // Selecting the seller's profile details
+          },
+          {
+            path: 'category', // Populate category details
+            select: 'name description', // Select specific fields from category
+          },
+        ],
       })
       .populate({
         path: 'buyer_id', // Populate buyer details

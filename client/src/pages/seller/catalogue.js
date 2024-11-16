@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import {
   getCategories,
   createCategory,
-  deleteCategory,
 } from "../../utility/seller/categoryApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import NoProduct from "../../assests/error-404.png";
@@ -294,39 +293,6 @@ const Catalogue = () => {
     }
   };
 
-  // Handle category deletion
-  // const handleDeleteCategory = async (categoryId) => {
-  //   const confirmDelete = window.confirm('Are you sure you want to delete this category?');
-
-  //   if (confirmDelete) {
-  //     try {
-  //       setLoading(true);
-
-  //       // Call the API to delete the category and await the response
-  //         const response = await deleteCategory(token, categoryId);
-
-  //         if (response.status === 200) {
-  //             // Remove the deleted category from local state
-  //             setCategories((prevCategories) =>
-  //             prevCategories.filter((category) => category.id !== categoryId)
-  //             );
-  //             alert('Category deleted successfully.');
-  //         }
-
-  //     } catch (error) {
-  //          // Check for permission or not found error
-  //          if (error.message.includes("You don't have permission to delete it.")) {
-  //             alert("You don't have permission to delete it.");
-  //         } else {
-  //             alert('Error deleting category. Please try again.');
-  //         }
-  //     }
-  //     finally {
-  //         setLoading(false);
-  //     }
-  //   }
-  // };
-
   const handleOpenModal = () => {
     setModalOpen(true);
     setNewCategory({
@@ -590,24 +556,6 @@ const Catalogue = () => {
                                     >
                                       <div style={styles.subChildHeader}>
                                         {subChild.name}
-
-                                        {/* Show delete button for sub-child category */}
-                                        {/* {hoveredCategory === subChild._id && (
-                                                                    <button
-                                                                        onClick={(e) => {
-                                                                            e.stopPropagation();
-                                                                            handleDeleteCategory(subChild._id);
-                                                                        }}
-                                                                        style={{
-                                                                            ...styles.deleteButton,
-                                                                            display: 'inline-block',  // Always show button on hover
-                                                                        }}
-                                                                        onMouseEnter={(e) => e.target.style.color = '#dc3545'}
-                                                                        onMouseLeave={(e) => e.target.style.color = 'grey'}
-                                                                    >
-                                                                        <FontAwesomeIcon icon={faTrash} />
-                                                                    </button>
-                                                                )} */}
                                       </div>
                                     </div>
                                   ))}

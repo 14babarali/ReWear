@@ -134,7 +134,7 @@ export default function ReviewModal({ onClose, productId }) {
               </button>
               <button
                 type="button"
-                onClick={onclose}
+                onClick={()=>navigate(-1)}
                 className="inline-flex w-full justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-100 sm:mt-0 sm:w-auto"
               >
                 Cancel

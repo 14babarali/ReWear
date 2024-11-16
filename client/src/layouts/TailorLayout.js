@@ -7,11 +7,12 @@ import GigAdd from '../pages/tailor/GigAdd';
 import OrderConfirm from '../pages/tailor/OrderConfirmation';
 import OrderView from '../pages/tailor/TailorOrderView';
 import TailorWork from '../pages/tailor/TailorWork';
-import Catalogue from '../pages/tailor/Tailorcatalogue';
+import Catalogue from '../pages/tailor/catalogue';
+import ProductReviews from '../pages/tailor/ProductReviews';
+import AddProduct from '../pages/tailor/newproduct';
 import TailorProfilePage from '../pages/tailor/Tailorprofile';
 import OrdersPage from '../pages/tailor/TailorOrders';
 import BuyerReviews from '../components/buyerReview';
-import AddProduct from '../pages/tailor/newproduct';
 import TailorSidebar from '../pages/tailor/TailorSidebar';
 import ERR404 from '../components/error404';
 import Gigs from '../pages/tailor/Gigs';
@@ -43,6 +44,7 @@ const TailorLayout = () => {
             <Routes>
               <Route path="/" element={<TailorHome />} />
               <Route path="/catalogue" element={<Catalogue />} />
+              <Route path="/product/reviews" element={<ProductReviews />} />
               <Route path="/product/add" element={<AddProduct />} />
               <Route path="/profile" element={<TailorProfilePage />} />
               <Route path="/Gigs/add" element={<GigAdd />} />
